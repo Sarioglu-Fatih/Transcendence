@@ -14,7 +14,7 @@ class User(models.Model):
     win = models.PositiveIntegerField()
 
     def __str__(self):
-        return "username is %s" % self.username
+        return "%s" % self.username
 
 class Match(models.Model):
     player1_id = models.ForeignKey(User, related_name='player1_matches',on_delete=models.CASCADE)

@@ -27,5 +27,5 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./frontend/index.html:/usr/share/nginx/html/index.html
+      - ./frontend:/usr/share/nginx/html/
       - ./frontend/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
