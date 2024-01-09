@@ -8,8 +8,9 @@ services:
     ports:
       - "5432:5432"
 
-  web:
-    build: .
+  backend:
+    build: 
+      context: ./backend
     command: /app/entrypoint.sh
     volumes:
       - .:/app
@@ -19,3 +20,12 @@ services:
       - db
     env_file:
       - .env
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend/index.html:/usr/share/nginx/html/index.html
+      - ./frontend/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
