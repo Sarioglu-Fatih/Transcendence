@@ -6,7 +6,7 @@ FROM nginx:latest
 COPY . /usr/share/nginx/html/
 
 # Copy the custom Nginx configuration
-COPY nginx/nginx.conf /etc/nginx/conf.d/nginx.conf
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80 (default HTTP port)
 EXPOSE 80
