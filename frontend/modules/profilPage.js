@@ -1,5 +1,6 @@
 const profilBtn = document.getElementById('profil_button');
 const profilPage = document.getElementById('profil_page');
+const avatar = document.getElementById('avatar');
 
 async function displayProfilPage() {
     try {
@@ -17,4 +18,14 @@ async function displayProfilPage() {
     }
 }
 
+async function displayAvatar() {
+    try {
+        const response = await fetch(`http://localhost:8000/api/user`)
+        const userData = await response.json()
+        avatar.innerHTML = `<img src="" alt="default-avatar">`;
+    }
+    catch (err) {
+        profilPage.innerHTML = '<p class="error-msg">There was an error loading the user</p>';
+    }
+}
 export { displayProfilPage, profilBtn, profilPage};

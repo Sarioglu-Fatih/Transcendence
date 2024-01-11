@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Creating Migrations..."
-python backend/manage.py makemigrations base_app
+python backend/manage.py makemigrations api
 echo ====================================
 
 echo "Starting Migrations..."

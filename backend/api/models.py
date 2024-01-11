@@ -7,7 +7,7 @@ class User(models.Model):
     mail =  models.CharField(max_length=50)
     password = models.CharField(max_length=16)
     pseudo = models.CharField(max_length=16)
-    avatar = models.BinaryField()
+    avatar = models.BinaryField(null=True, default=None)
     user_is_connected = models.BooleanField(default=False)
     user_is_in_game = models.BooleanField(default=False)
     lose = models.PositiveIntegerField(default=0)
@@ -15,6 +15,14 @@ class User(models.Model):
 
     def __str__(self):
         return "%s" % self.username
+    
+    def get_avatar(self):
+        if self.avatar:
+            return self.avatar
+        else:
+            with open('img/default_avatar.png', 'rb') as f:
+                return f.read()
+        
 
 class Match(models.Model):
     player1_id = models.ForeignKey(User, related_name='player1_matches',on_delete=models.CASCADE)

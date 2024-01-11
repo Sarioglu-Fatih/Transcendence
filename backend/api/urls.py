@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     path('user', views.user), # GET API
+    path('avatar', views.avatar), # GET API
     path('register',views.register), #POST API
 ]

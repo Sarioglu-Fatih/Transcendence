@@ -10,6 +10,10 @@ def user(request):
     data = serializers.serialize("json",User.objects.all())
     return JsonResponse(json.loads(data), safe=False)
 
+def avatar(request):
+    data = serializers.serialize("json", User.get_avatar(User.objects.get(username='louis')))
+    return JsonResponse(json.loads(data), safe=False)
+
 @csrf_exempt
 def register(request):
     # csrf_token_from_request = request.headers.get('X-CSRFToken')
