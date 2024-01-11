@@ -49,5 +49,5 @@ async function registerUser() {
     }
 }
 
-
 export { getCookie, registerUser, registerBtn } 
+
