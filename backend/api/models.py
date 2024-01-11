@@ -10,8 +10,8 @@ class User(models.Model):
     avatar = models.BinaryField()
     user_is_connected = models.BooleanField(default=False)
     user_is_in_game = models.BooleanField(default=False)
-    lose = models.PositiveIntegerField()
-    win = models.PositiveIntegerField()
+    lose = models.PositiveIntegerField(default=0)
+    win = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return "%s" % self.username

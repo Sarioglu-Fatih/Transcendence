@@ -1,6 +1,6 @@
 const registerBtn = document.getElementById('register_button')
 
-let userData = ['louis', 'louis@gamil.com','1234'];
+let userData = [ 'loui', 'loui@gamil.com'];
 
 function getCookie(name) {
     var cookieValue = null;
@@ -44,4 +44,4 @@ async function registerUser() {
     }
 }
 
-export { getCookie, registerUser, registerBtn } 
+export { getCookie, registerUser, registerBtn }
