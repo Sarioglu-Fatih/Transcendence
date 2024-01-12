@@ -1,14 +1,22 @@
-from django.core import serializers
-from .models import User
-from django.http import JsonResponse
 import json
+from django.core import serializers
+# from django.contrib.auth import _
+from django.http import HttpResponse, HttpResponseNotFound
+from dataclasses import dataclass
+from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt
-from .models import User
+from django.views import View
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 import base64
 
-def user(request):
-    data = serializers.serialize("json",User.objects.all())
-    return JsonResponse(json.loads(data), safe=False)
+from .models import Profile
+
+@dataclass
+class registerPostParameters():
+	username: str
+	mail: str
+	password: str
 
 def avatar(request):
     avatar_data = User.objects.get(username='louis').get_avatar()
@@ -16,25 +24,32 @@ def avatar(request):
     return JsonResponse({'avatar': encoded_avatar})
 
 @csrf_exempt
-def register(request):
-    # csrf_token_from_request = request.headers.get('X-CSRFToken')
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            username = data[0]
-            mail = data[1]
-            password = data[2]
-            if User.objects.filter(username=username).exists():
-                return JsonResponse({'message': 'username already in use'})
-            if User.objects.filter(mail=mail).exists():
-                return JsonResponse({'message': 'email already in use'})
-            new_user = User(username=username, mail=mail, password=password)
-            new_user.save()
-            return JsonResponse({'message': 'user created succesfuly'})
-        except json.JSONDecodeError as e:
-            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
-        except IndexError as e:
-            return JsonResponse({'error': 'Invalid data format: Missing required fields'}, status=400)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
+def user(request):
+	if request.method == 'POST':
+		return create_user(request)
+	elif request.method == 'GET':
+		return get_user(request)
+	else:
+		return HttpResponseNotFound(status=404)
+
+def get_user(request):
+	profiles = Profile.objects.all()
+	for profile in profiles:
+		if profile.user.username == 'toto':
+			return HttpResponse(profile.response_profile(), status=200)
+	return HttpResponseNotFound(status=404)
+
+def create_user(request):
+	try:
+		data = registerPostParameters(**json.loads(request.body))
+	except Exception  as e:
+		return HttpResponse(status=400, reason="Bad request: " + str(e))
+	if User.objects.filter(username=data.username).exists():
+		return HttpResponse(reason="Conflict: Username already exists.", status=409)
+	if Profile.objects.filter(mail=data.mail).exists():
+		return HttpResponse(reason="Conflict: Email already exists.", status=409)
+	django_user = User(username=data.username, password=data.password)
+	django_user.save()
+	new_user = Profile(user=django_user, mail=data.mail)
+	new_user.save()
+	return HttpResponse(status=200)

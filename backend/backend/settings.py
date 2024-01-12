@@ -128,6 +128,9 @@ CORS_ALLOW_HEADERS = [
     'content-type',  
 ]
 
+# CSRF_COOKIE_SECURE = True
+# CSRF_TRUSTED_ORIGINS = ['http://localhost','http://localhost:8000']
+
 CORS_ALLOWED_ORIGINS = [
     'http://localhost',
     'http://127.0.0.1',

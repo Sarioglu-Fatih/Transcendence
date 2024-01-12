@@ -1,7 +1,5 @@
 const registerBtn = document.getElementById('register_button')
 
-let userData = [ 'loui', 'loui@gamil.com'];
-
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -21,19 +19,33 @@ function getCookie(name) {
 async function registerUser() {
     var csrftoken = getCookie('csrftoken');
     console.log(csrftoken);
+
+	var username = document.getElementById("register_form")[0].value; // Get info from the register form
+	var email = document.getElementById("register_form")[1].value;
+	var password = document.getElementById("register_form")[2].value;
+    let body = {
+        'username': username,
+        'mail': email,
+        'password': password
+    }
+	console.log("Les infos du form:", body);
+
+
+
     try {
-        const response = await fetch(`http://localhost:8000/api/register`, { // where we send data
+        const BASE_URL = 'http://localhost:8000'
+        let endpoint = '/api/user';
+        const response = await fetch(BASE_URL + endpoint, { // where we send data
             method: 'POST', // post = sending data
             headers: {
                 'Content-Type': 'application/json', //data type we send
                 'X-CSRFToken': csrftoken // cookie for django
             },
-            body: JSON.stringify(userData), //the data we send
+            body: JSON.stringify(body) // the data we send
         })
 
         if (response.ok) {
-            const data = await response.json();
-            console.log('User registered successfully:', data);
+            console.log('User registered successfully', response);
         }
         else {
             console.error('Failed to register user:', response.statusText);
@@ -44,4 +56,5 @@ async function registerUser() {
     }
 }
 
-export { getCookie, registerUser, registerBtn }
+export { getCookie, registerUser, registerBtn } 
+
