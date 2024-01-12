@@ -1,5 +1,4 @@
 import json
-
 from django.core import serializers
 # from django.contrib.auth import _
 from django.http import HttpResponse, HttpResponseNotFound
@@ -9,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views import View
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+import base64
 
 from .models import Profile
 
@@ -17,6 +17,11 @@ class registerPostParameters():
 	username: str
 	mail: str
 	password: str
+
+def avatar(request):
+    avatar_data = User.objects.get(username='louis').get_avatar()
+    encoded_avatar = base64.b64encode(avatar_data).decode('utf-8')
+    return JsonResponse({'avatar': encoded_avatar})
 
 @csrf_exempt
 def user(request):
