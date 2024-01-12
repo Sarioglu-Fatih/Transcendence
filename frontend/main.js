@@ -2,6 +2,8 @@ import { displayProfilPage, profilBtn, profilPage, displayAvatar} from './module
 import { getCookie, registerUser, registerBtn }  from './modules/register.js';
 
 
+displayAvatar()
+
 profilBtn.addEventListener('click', () => {
   history.pushState({}, '', '/profil');
   displayProfilPage();
@@ -27,4 +29,3 @@ window.addEventListener('load', () => {
     else if (path === '/register')
         registerUser();
 });
-displayAvatar()

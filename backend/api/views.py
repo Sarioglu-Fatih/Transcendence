@@ -2,7 +2,6 @@ from django.core import serializers
 from .models import User
 from django.http import JsonResponse
 import json
-from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt
 from .models import User
 import base64
