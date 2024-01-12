@@ -1,4 +1,4 @@
-import { displayProfilPage, profilBtn, profilPage } from './modules/profilPage.js';
+import { displayProfilPage, profilBtn, profilPage, displayAvatar} from './modules/profilPage.js';
 import { getCookie, registerUser, registerBtn }  from './modules/register.js';
 
 
@@ -27,3 +27,4 @@ window.addEventListener('load', () => {
     else if (path === '/register')
         registerUser();
 });
+displayAvatar()

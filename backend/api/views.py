@@ -5,14 +5,16 @@ import json
 from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt
 from .models import User
+import base64
 
 def user(request):
     data = serializers.serialize("json",User.objects.all())
     return JsonResponse(json.loads(data), safe=False)
 
 def avatar(request):
-    data = serializers.serialize("json", User.get_avatar(User.objects.get(username='louis')))
-    return JsonResponse(json.loads(data), safe=False)
+    avatar_data = User.objects.get(username='louis').get_avatar()
+    encoded_avatar = base64.b64encode(avatar_data).decode('utf-8')
+    return JsonResponse({'avatar': encoded_avatar})
 
 @csrf_exempt
 def register(request):

@@ -1,4 +1,6 @@
 from django.db import models
+from django.conf import settings
+import os
 
 # Create your models here.
 
@@ -20,7 +22,9 @@ class User(models.Model):
         if self.avatar:
             return self.avatar
         else:
-            with open('img/default_avatar.png', 'rb') as f:
+            default_avatar_path = os.path.join(settings.MEDIA_ROOT, 'img', 'default_avatar.png')
+            print("Default Avatar Path:", default_avatar_path)
+            with open(default_avatar_path, 'rb') as f:
                 return f.read()
         
 
