@@ -1,6 +1,7 @@
 import json
 
 from django.core import serializers
+from django.http import JsonResponse
 # from django.contrib.auth import _
 from django.http import HttpResponse, HttpResponseNotFound
 from dataclasses import dataclass
@@ -28,10 +29,13 @@ def user(request):
 		return HttpResponseNotFound(status=404)
 
 def get_user(request):
-	profiles = Profile.objects.all()
-	for profile in profiles:
-		if profile.user.username == 'toto':
-			return HttpResponse(profile.response_profile(), status=200)
+	if User.objects.filter(username='toto').exists():
+		user = User.objects.get(username='toto')
+		data = {
+			'username': user.username,
+			'mail': user.email
+		}
+		return JsonResponse(data, safe=False)
 	return HttpResponseNotFound(status=404)
 
 def create_user(request):
