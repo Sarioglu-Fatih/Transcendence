@@ -10,7 +10,7 @@ async function fetchCsrfToken() {
             const csrfToken = data.csrf_token;
                   
             // Set the CSRF token in the document's cookies
-            document.cookie = `cookie=${csrfToken}; path=/; SameSite=None; Secure`;
+            document.cookie = `csrftoken=${csrfToken}; path=/; SameSite=None; Secure`;
             
             console.log('CSRF Token:', csrfToken);
         } else {
@@ -32,32 +32,6 @@ function getCookie(cookieName) {
     }
     
     return null; // Return null if the cookie is not found
-}
-
-function displayLoginFrom() {
-
-    const MyForm = document.getElementById('div_login_form');
-  
-    MyForm.innerHTML = `
-      <form id="login_form" class="login_form">
-        <div>
-          <label for="inputUsername" class="form-label">Username</label>
-          <input type="text" class="form-control" id="login_Username">
-        </div>
-  
-        <div>
-          <label for="inputPassword" class="form-label">Password</label>
-          <input type="password" class="form-control"  id="login_Password">
-        </div>
-    
-        <button class="button" id="login_button">login</button>
-      </form>
-    `;
-    const loginBtn = document.getElementById('login_button')
-      loginBtn.addEventListener('click', () => {
-        event.preventDefault();
-        login();
-    });
 }
 
 async function login() {
@@ -101,4 +75,4 @@ async function login() {
     }
 }
 
-export { login, displayLoginFrom }
+export { login, }

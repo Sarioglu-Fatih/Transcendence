@@ -7,8 +7,40 @@
         <link rel="stylesheet" href="style.css" />
     </head>
     <body>
-		<div class="div" id="div_register_form"></div>
-        <div class="div" id="div_login_form"></div>
+		<div class="div" id="div_register_form">
+            <form id="register_form" class="register_form">
+                <div>
+                  <label for="inputUsername" class="form-label">Username</label>
+                  <input type="text" class="form-control" id="inputUsername" >
+                </div>
+          
+                <div>
+                  <label for="inputEmail" class="form-label">Email address</label>
+                  <input type="email" class="form-control" id="inputEmail" >
+                </div>
+          
+                <div>
+                  <label for="inputPassword" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="inputPassword" >
+                </div>
+                <button class="button" id="register_button">register</button>
+            </form>
+        </div>
+
+        <div class="div" id="div_login_form">
+            <form id="login_form" class="login_form">
+                <div>
+                  <label for="inputUsername" class="form-label">Username</label>
+                  <input type="text" class="form-control" id="login_Username">
+                </div>
+          
+                <div>
+                  <label for="inputPassword" class="form-label">Password</label>
+                  <input type="password" class="form-control"  id="login_Password">
+                </div>
+                <button class="button" id="login_button">login</button>
+            </form>
+        </div>
 
         <div class="div" id="top_box">
             <button class="button" id="logout_button">logout</button>

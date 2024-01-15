@@ -1,45 +1,75 @@
 import { displayProfilPage, displayAvatar} from './modules/profilPage.js';
-import { registerUser, displayRegisterForm }  from './modules/register.js';
-import { login, displayLoginFrom } from './modules/login.js'
+import { registerUser }  from './modules/register.js';
+import { login } from './modules/login.js'
 
-if (!isUserLoggedIn()) {
+
+document.addEventListener('DOMContentLoaded', function () {
   history.pushState({}, '', '/login');
-  displayRegisterForm()
-  displayLoginFrom()
+  if (isUserLoggedIn()) {
+    history.pushState({}, '', '/home');
+    console.log('yo')
+    hideDivs(['div_register_form', 'div_login_form']);
+    showDivs(['top_box'])
+  } else
+    hideDivs(['top_box'])
+})
+
+const loginBtn = document.getElementById('login_button');
+loginBtn.addEventListener('click', async function (){
+  event.preventDefault();
+  await login();
+  if (isUserLoggedIn()) {
+    history.pushState({}, '', '/home');
+    hideDivs(['div_register_form', 'div_login_form']);
+    showDivs(['top_box'])
+  }
+})
+
+const logoutBtn = document.getElementById('logout_button');
+logoutBtn.addEventListener('click', () => {
+  history.pushState({}, '', '/login');
+  localStorage.removeItem('jwt_token');
+  hideDivs(['top_box', 'profil_page']);
+  showDivs(['div_register_form', 'div_login_form']);
+});
+
+const profilBtn = document.getElementById('profil_button');
+profilBtn.addEventListener('click', () => {
+  history.pushState({}, '', '/profil');
+  displayProfilPage();
+  showDivs(['profil_page']);
+});
+
+const registerBtn = document.getElementById('register_button')
+  registerBtn.addEventListener('click', () => {
+  event.preventDefault();
+  registerUser();
+});
+
+function hideDivs(divIds) {
+  divIds.forEach(function (divId) {
+      var targetDiv = document.getElementById(divId);
+      if (targetDiv) {
+          targetDiv.style.display = 'none';
+      }
+  });
 }
-else {
-  displayProfilPage()
+
+function showDivs(divIds) {
+  divIds.forEach(function (divId) {
+      var targetDiv = document.getElementById(divId);
+      if (targetDiv) {
+          targetDiv.style.display = 'block';
+      }
+  });
 }
 
 function isUserLoggedIn() {
   const jwtToken = localStorage.getItem('jwt_token');
-  if (jwtToken) {
+  if ("toekn",jwtToken) {
     console.log("user connected")
     return (true)
   }
   console.log("user not  connected")
   return (false)
 }
-
-
-const logoutBtn = document.getElementById('logout_button');
-
-logoutBtn.addEventListener('click', () => {
-  localStorage.removeItem('jwt_token');
-});
-
-window.addEventListener('popstate', () => {
-    const path = window.location.pathname;
-    if (path === '/profil')
-        displayProfilPage();
-    else if (path === '/register')
-        registerUser();
-})
-
-window.addEventListener('load', () => {
-    const path = window.location.pathname;
-    if (path === '/profil')
-        displayProfilPage();
-    else if (path === '/register')
-        registerUser();
-});

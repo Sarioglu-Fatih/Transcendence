@@ -1,35 +1,3 @@
-function displayRegisterForm() {
-
-    const MyForm = document.getElementById('div_register_form');
-  
-    MyForm.innerHTML = `
-      <form id="register_form" class="register_form">
-        <div>
-          <label for="inputUsername" class="form-label">Username</label>
-          <input type="text" class="form-control" id="inputUsername" >
-        </div>
-  
-        <div>
-          <label for="inputEmail" class="form-label">Email address</label>
-          <input type="email" class="form-control" id="inputEmail" >
-        </div>
-  
-        <div>
-          <label for="inputPassword" class="form-label">Password</label>
-          <input type="password" class="form-control" id="inputPassword" >
-        </div>
-  
-        <button class="button" id="register_button">register</button>
-      </form>
-    `
-    const registerBtn = document.getElementById('register_button')
-  
-    registerBtn.addEventListener('click', () => {
-      event.preventDefault();
-      registerUser();
-    });
-}
-
 async function registerUser() {
 	var username = document.getElementById("register_form")[0].value; // Get info from the register form
 	var email = document.getElementById("register_form")[1].value;
@@ -65,5 +33,5 @@ async function registerUser() {
     }
 }
 
-export { registerUser, displayRegisterForm } 
+export { registerUser} 
 
