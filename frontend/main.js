@@ -1,36 +1,31 @@
-import { displayProfilPage, profilBtn, profilPage, displayAvatar} from './modules/profilPage.js';
-import { getCookie, registerUser, registerBtn }  from './modules/register.js';
+import { displayProfilPage, displayAvatar} from './modules/profilPage.js';
+import { registerUser, displayRegisterForm }  from './modules/register.js';
+import { login, displayLoginFrom } from './modules/login.js'
 
-const MyForm = document.getElementById('div_register_form');
+if (!isUserLoggedIn()) {
+  history.pushState({}, '', '/login');
+  displayRegisterForm()
+  displayLoginFrom()
+}
+else {
+  displayProfilPage()
+}
 
-displayAvatar();
+function isUserLoggedIn() {
+  const jwtToken = localStorage.getItem('jwt_token');
+  if (jwtToken) {
+    console.log("user connected")
+    return (true)
+  }
+  console.log("user not  connected")
+  return (false)
+}
 
-MyForm.innerHTML = `
-	<form id="register_form">
-	<div>
-		<label for="inputUsername" class="form-label">Username</label>
-		<input type="text" class="form-control" id="inputUsername" >
-	</div>
 
-	<div>
-		<label for="inputEmail" class="form-label">Email address</label>
-		<input type="email" class="form-control" id="inputEmail" >
-	</div>
+const logoutBtn = document.getElementById('logout_button');
 
-	<div>
-		<label for="inputPassword" class="form-label">Password</label>
-		<input type="password" class="form-control" id="inputPassword" >
-	</div>
-	</form>
-`
-profilBtn.addEventListener('click', () => {
-  history.pushState({}, '', '/profil');
-  displayProfilPage();
-});
-
-registerBtn.addEventListener('click', () => {
-  history.pushState({}, '', '/register');
-  registerUser();
+logoutBtn.addEventListener('click', () => {
+  localStorage.removeItem('jwt_token');
 });
 
 window.addEventListener('popstate', () => {

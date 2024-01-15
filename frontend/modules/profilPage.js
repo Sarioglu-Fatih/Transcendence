@@ -1,10 +1,18 @@
-const profilBtn = document.getElementById('profil_button');
 const profilPage = document.getElementById('profil_page');
 const avatar = document.getElementById('avatar');
 
 async function displayProfilPage() {
+
+    const jwtToken = localStorage.getItem('jwt_token');
+    console.log(jwtToken);
     try {
-        const response = await fetch(`http://localhost:8000/api/user`)
+        const response = await fetch(`http://localhost:8000/api/profil`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwtToken}`
+            },
+        })
         const userData = await response.json()
         profilPage.innerHTML = `
             <h2>username = ${userData.username}</h2>
@@ -27,4 +35,5 @@ async function displayAvatar() {
         profilPage.innerHTML = '<p class="error-msg">There was an error loading the avatar</p>';
     }
 }
-export { displayProfilPage, profilBtn, profilPage, displayAvatar};
+
+export { displayProfilPage, displayAvatar};

@@ -1,25 +1,36 @@
-const registerBtn = document.getElementById('register_button')
+function displayRegisterForm() {
 
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
+    const MyForm = document.getElementById('div_register_form');
+  
+    MyForm.innerHTML = `
+      <form id="register_form" class="register_form">
+        <div>
+          <label for="inputUsername" class="form-label">Username</label>
+          <input type="text" class="form-control" id="inputUsername" >
+        </div>
+  
+        <div>
+          <label for="inputEmail" class="form-label">Email address</label>
+          <input type="email" class="form-control" id="inputEmail" >
+        </div>
+  
+        <div>
+          <label for="inputPassword" class="form-label">Password</label>
+          <input type="password" class="form-control" id="inputPassword" >
+        </div>
+  
+        <button class="button" id="register_button">register</button>
+      </form>
+    `
+    const registerBtn = document.getElementById('register_button')
+  
+    registerBtn.addEventListener('click', () => {
+      event.preventDefault();
+      registerUser();
+    });
 }
 
 async function registerUser() {
-    var csrftoken = getCookie('csrftoken');
-    console.log(csrftoken);
-
 	var username = document.getElementById("register_form")[0].value; // Get info from the register form
 	var email = document.getElementById("register_form")[1].value;
 	var password = document.getElementById("register_form")[2].value;
@@ -30,16 +41,14 @@ async function registerUser() {
     }
 	console.log("Les infos du form:", body);
 
-
-
     try {
         const BASE_URL = 'http://localhost:8000'
-        let endpoint = '/api/user';
+        let endpoint = '/api/register';
         const response = await fetch(BASE_URL + endpoint, { // where we send data
             method: 'POST', // post = sending data
             headers: {
                 'Content-Type': 'application/json', //data type we send
-                'X-CSRFToken': csrftoken // cookie for django
+                // 'X-CSRFToken': csrftoken // cookie for django
             },
             body: JSON.stringify(body) // the data we send
         })
@@ -56,5 +65,5 @@ async function registerUser() {
     }
 }
 
-export { getCookie, registerUser, registerBtn } 
+export { registerUser, displayRegisterForm } 
 
