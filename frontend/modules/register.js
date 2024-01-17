@@ -1,3 +1,5 @@
+import {fetchCsrfToken, getCookie} from './utils.js'
+
 async function registerUser() {
 	var username = document.getElementById("register_form")[0].value; // Get info from the register form
 	var email = document.getElementById("register_form")[1].value;
@@ -10,15 +12,20 @@ async function registerUser() {
 	console.log("Les infos du form:", body);
 
     try {
+         // Fetch CSRF token
+        await fetchCsrfToken();
+        const csrfToken = getCookie('csrftoken');
+        
         const BASE_URL = 'http://localhost:8000'
         let endpoint = '/api/register';
         const response = await fetch(BASE_URL + endpoint, { // where we send data
             method: 'POST', // post = sending data
             headers: {
                 'Content-Type': 'application/json', //data type we send
-                // 'X-CSRFToken': csrftoken // cookie for django
+                'X-CSRFToken': csrfToken, // cookie for django
             },
-            body: JSON.stringify(body) // the data we send
+            body: JSON.stringify(body), // the data we send
+            credentials: 'include',
         })
 
         if (response.ok) {

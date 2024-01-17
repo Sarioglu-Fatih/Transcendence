@@ -24,11 +24,19 @@ async function displayProfilPage() {
 }
 
 async function displayAvatar() {
+    const jwtToken = localStorage.getItem('jwt_token');
     try {
-        const response = await fetch(`http://localhost:8000/api/avatar`)
+        const response = await fetch(`http://localhost:8000/api/avatar`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwtToken}`
+            }
+        })
         const avatarData = await response.json()
         const encodedAvatar = avatarData.avatar;
         const dataUri = 'data:image/png;base64,' + encodedAvatar;
+        console.log('avatar');
         avatar.innerHTML = `<img class="avatar-image" src="${dataUri}" alt="default-avatar">`;
     }
     catch (err) {

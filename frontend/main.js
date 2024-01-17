@@ -20,6 +20,7 @@ loginBtn.addEventListener('click', async function (){
   await login();
   if (isUserLoggedIn()) {
     history.pushState({}, '', '/home');
+    displayAvatar();
     hideDivs(['div_register_form', 'div_login_form']);
     showDivs(['top_box'])
   }
@@ -66,10 +67,11 @@ function showDivs(divIds) {
 
 function isUserLoggedIn() {
   const jwtToken = localStorage.getItem('jwt_token');
-  if ("toekn",jwtToken) {
+  if (jwtToken !== null) {
     console.log("user connected")
     return (true)
   }
   console.log("user not  connected")
   return (false)
 }
+ 
