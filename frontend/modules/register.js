@@ -40,5 +40,5 @@ async function registerUser() {
     }
 }
 
-export { registerUser} 
+export { registerUser } 
 

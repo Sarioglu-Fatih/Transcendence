@@ -27,7 +27,7 @@ async function login() {
       })
       if (response.ok) {
         const data = await response.json();
-        if (data.token === undefined){
+        if (data.token === undefined){ 
           console.log(data);
           return;
         }

@@ -1,18 +1,18 @@
 .avatar-image {
-    width: 100px; 
+    width: 75px; 
     height: auto;
-    position: absolute;
-    top: 0;
-    right: 0;
 }
 
-.register_form{
-    float: left;
-    width:40%;
-    margin-left: 5%;
+#top_box, #div_register_form, #div_login_form, #game_launcher, #friend_list{
+    display: none;
 }
-.login_form{
-    float: right;
-    width: 40%;
-    margin-right: 5%;
+
+#game_card {
+    width: 75vw;
+    height: 90vh;
+}
+
+#friend_list {
+    width: 22vw;
+    height: 90vh;
 }
