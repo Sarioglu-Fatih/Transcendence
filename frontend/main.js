@@ -84,8 +84,8 @@ profilBtn.addEventListener('click', () => {
   showDivs(['profil_page']);
 });
 
-const registerBtn = document.getElementById('register_button')
-  registerBtn.addEventListener('click', () => {
+const registerBtn = document.getElementById('register_form')
+registerBtn.addEventListener('submit', () => {
   event.preventDefault();
   registerUser();
   document.getElementById('register_form').reset();
