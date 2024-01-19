@@ -55,8 +55,8 @@ window.onpopstate = function(event) {
   console.log("load")
  }
 
-const loginBtn = document.getElementById('login_button');
-loginBtn.addEventListener('click', async function (){
+const loginForm = document.getElementById('login_form');
+loginForm.addEventListener('submit', async function () {
   event.preventDefault();
   await login();
   if (isUserLoggedIn()) {
@@ -84,8 +84,8 @@ profilBtn.addEventListener('click', () => {
   showDivs(['profil_page']);
 });
 
-const registerBtn = document.getElementById('register_button')
-  registerBtn.addEventListener('click', () => {
+const registerForm = document.getElementById('register_form')
+registerForm.addEventListener('submit', () => {
   event.preventDefault();
   registerUser();
   document.getElementById('register_form').reset();
