@@ -132,12 +132,12 @@ CORS_ALLOW_HEADERS = [
     'Authorization'
 ]
 
-# CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = True
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost',
+    'https://localhost:8001',
     'http://localhost:8000', 
-    'http://127.0.0.1', 
+    'https://127.0.0.1:8001', 
     'http://127.0.0.1:8000']
 
 CORS_ALLOW_CREDENTIALS = True
@@ -145,8 +145,8 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     'http://localhost',
     'http://127.0.0.1',
-    'http://localhost:80',
-    'http://127.0.0.1:80',
+    'https://localhost:8001',
+    'https://127.0.0.1:8001',
     'http://localhost:8000',
     'http://127.0.0.1:8000'
 ]

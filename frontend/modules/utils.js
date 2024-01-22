@@ -10,8 +10,7 @@ async function fetchCsrfToken() {
             const csrfToken = data.csrf_token;
                   
             // Set the CSRF token in the document's cookies
-            document.cookie = `csrftoken=${csrfToken}; path=/; SameSite=None; Secure`;
-            
+            document.cookie = `csrftoken=${csrfToken}; path=/; SameSite=None; Secure`;            
             console.log('CSRF Token:', csrfToken);
         } else {
             console.error('Failed to fetch CSRF token:', response.statusText);
