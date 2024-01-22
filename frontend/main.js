@@ -85,7 +85,19 @@ profilBtn.addEventListener('click', () => {
   showDivs(['profil_page']);
 });
 
-//const myInput = document.getElementById("inputPassword");
+const myInput = document.getElementById("inputPassword");
+const letter = document.getElementById("letter");
+const capital = document.getElementById("capital");
+const number = document.getElementById("number");
+const length = document.getElementById("length");
+
+// When the user starts to type something inside the password field
+myInput.onkeyup = function() {
+  // Perform the validation
+  var isValid = updateValidationState();
+  console.log(isValid);
+};
+
 const registerForm = document.getElementById('register_button')
 registerForm.addEventListener('click', () => {
   event.preventDefault();

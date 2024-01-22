@@ -48,9 +48,3 @@ export function updateValidationClass(element, isValid) {
   }
 }
 
-// When the user starts to type something inside the password field
-myInput.onkeyup = function() {
-  // Perform the validation
-  var isValid = updateValidationState();
-  console.log(isValid);
-};
