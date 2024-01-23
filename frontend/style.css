@@ -18,7 +18,7 @@
 }
 
 /* The message box is shown when the user clicks on the password field */
-#message {
+#pwd_checkbox {
     display:none;
     background: #f1f1f1;
     color: #000;
@@ -27,7 +27,7 @@
     margin-top: 10px;
   }
   
-  #message p {
+  #pwd_checkbox p {
     padding: 10px 35px;
     font-size: 18px;
   }

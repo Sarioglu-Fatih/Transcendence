@@ -26,7 +26,7 @@ services:
     build:
       context: ./frontend
     ports:
-      - "80:80"
+      - "8001:8001"
     volumes:
       - ./frontend:/usr/share/nginx/html/
       - ./frontend/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf

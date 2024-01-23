@@ -4,14 +4,17 @@ var capital = document.getElementById("capital");
 var number = document.getElementById("number");
 var length = document.getElementById("length");
 
-// When the user clicks on the password field, show the message box
+// When the user clicks on the password field, show the pwd_checkbox box
 myInput.onfocus = function() {
-  document.getElementById("message").style.display = "block";
+  document.getElementById("pwd_checkbox").style.display = "block";
 }
 
-// When the user clicks outside of the password field, hide the message box
+// When the user clicks outside of the password field, hide the pwd_checkbox box
 myInput.onblur = function() {
-  document.getElementById("message").style.display = "none";
+  setTimeout(() => {
+    document.getElementById("pwd_checkbox").style.display = "none";
+
+  }, 100);
 }
 
 export function updateValidationState() {
