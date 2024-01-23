@@ -1,7 +1,7 @@
 import { displayProfilPage, displayAvatar} from './modules/profilPage.js';
 import { registerUser }  from './modules/register.js';
 import { login } from './modules/login.js'
-import { updateValidationState, updateValidationClass } from './modules/parsingPwd.js'
+import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number } from './modules/parsingPwd.js'
 
 var path = window.location.pathname;
 console.log(path);
@@ -85,21 +85,8 @@ profilBtn.addEventListener('click', () => {
   showDivs(['profil_page']);
 });
 
-const myInput = document.getElementById("inputPassword");
-const letter = document.getElementById("letter");
-const capital = document.getElementById("capital");
-const number = document.getElementById("number");
-const length = document.getElementById("length");
-
-// When the user starts to type something inside the password field
-myInput.onkeyup = function() {
-  // Perform the validation
-  var isValid = updateValidationState();
-  console.log(isValid);
-};
-
-const registerForm = document.getElementById('register_button')
-registerForm.addEventListener('click', () => {
+const registerForm = document.getElementById('register_form')
+registerForm.addEventListener('submit', () => {
   event.preventDefault();
   var isValid = updateValidationState(myInput, letter, capital, number, length);
   if (isValid) {
@@ -107,8 +94,7 @@ registerForm.addEventListener('click', () => {
     document.getElementById('register_form').reset();
   }
   else {
-    console.log("C NON");
-
+    console.log("Form not valid");
   }
 });
 
