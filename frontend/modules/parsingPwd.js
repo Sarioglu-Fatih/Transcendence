@@ -13,7 +13,6 @@ myInput.onfocus = function() {
 myInput.onblur = function() {
   setTimeout(() => {
     document.getElementById("pwd_checkbox").style.display = "none";
-
   }, 100);
 }
 
