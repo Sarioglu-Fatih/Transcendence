@@ -45,7 +45,7 @@
   
   /* Add a red text color and an "x" icon when the requirements are wrong */
   .invalid {
-    color: red;
+    color: #ff0000;
   }
   
   .invalid:before {

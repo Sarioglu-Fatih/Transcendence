@@ -92,6 +92,7 @@ registerForm.addEventListener('submit', () => {
   if (isValid) {
     registerUser();
     document.getElementById('register_form').reset();
+    updateValidationState(); // Reset the color of pwd_checkbox
   }
   else {
     console.log("Form not valid");
