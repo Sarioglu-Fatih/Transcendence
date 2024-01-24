@@ -12,6 +12,7 @@ class registerPostParameters():
 	mail: str
 	password: str
 
+@csrf_exempt
 def create_user(request):
 	if request.method == 'POST':
 		try:
@@ -28,6 +29,7 @@ def create_user(request):
 	else:
 		return HttpResponseNotFound(status=404)
 
+@csrf_exempt
 def user_login(request):
 	print(json.loads(request.body))
 	if request.method == 'POST':

@@ -1,6 +1,7 @@
 import { displayProfilPage, displayAvatar} from './modules/profilPage.js';
 import { registerUser }  from './modules/register.js';
 import { login } from './modules/login.js'
+import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number } from './modules/parsingPwd.js'
 
 var path = window.location.pathname;
 console.log(path);
@@ -87,8 +88,15 @@ profilBtn.addEventListener('click', () => {
 const registerForm = document.getElementById('register_form')
 registerForm.addEventListener('submit', () => {
   event.preventDefault();
-  registerUser();
-  document.getElementById('register_form').reset();
+  var isValid = updateValidationState(myInput, letter, capital, number, length);
+  if (isValid) {
+    registerUser();
+    document.getElementById('register_form').reset();
+    updateValidationState(); // Reset the color of pwd_checkbox
+  }
+  else {
+    console.log("Form not valid");
+  }
 });
 
 function hideDivs(divIds) {
