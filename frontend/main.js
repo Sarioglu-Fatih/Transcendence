@@ -1,7 +1,7 @@
 import { displayProfilPage, displayAvatar} from './modules/profilPage.js';
 import { registerUser }  from './modules/register.js';
 import { login } from './modules/login.js'
-import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number } from './modules/parsingPwd.js'
+import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
 
 var path = window.location.pathname;
 console.log(path);
@@ -88,7 +88,7 @@ profilBtn.addEventListener('click', () => {
 const registerForm = document.getElementById('register_form')
 registerForm.addEventListener('submit', () => {
   event.preventDefault();
-  var isPwdValid = updateValidationState(myInput, letter, capital, number, length);
+  var isPwdValid = updateValidationState(myInput, letter, capital, number, length, ForbiddenCharElement);
   if (isPwdValid) {
     registerUser();
     document.getElementById('register_form').reset();

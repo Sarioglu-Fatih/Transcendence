@@ -3,6 +3,7 @@ var letter = document.getElementById("letter");
 var capital = document.getElementById("capital");
 var number = document.getElementById("number");
 var length = document.getElementById("length");
+var ForbiddenCharElement = document.getElementById("forbiddenChar");
 
 // When the user clicks on the password field, show the pwd_checkbox box
 myInput.onfocus = function() {
@@ -15,7 +16,6 @@ myInput.onblur = function() {
     document.getElementById("pwd_checkbox").style.display = "none";
   }, 100);
 }
-
 export function updateValidationState() {
   // Validate lowercase letters
   var lowerCaseLetters = /[a-z]/g;
@@ -36,8 +36,13 @@ export function updateValidationState() {
   var hasValidLength = myInput.value.length >= 8;
   updateValidationClass(length, hasValidLength);
 
+  // Validate special characters
+  var ForbiddenCharRegex = /[@$!%#?&]/
+  var hasForbiddenChar = myInput.value.match(ForbiddenCharRegex);
+  updateValidationClass(ForbiddenCharElement, hasForbiddenChar);
+
   // Return true if all criteria are met, otherwise return false
-  return hasLowerCase && hasUpperCase && hasNumbers && hasValidLength;
+  return myInput.checkValidity();
 }
 
 export function updateValidationClass(element, isValid) {
@@ -57,5 +62,5 @@ myInput.onkeyup = function() {
   console.log(isValid);
 };
 
-export { myInput, letter, capital, number, length}
+export { myInput, letter, capital, number, length, ForbiddenCharElement }
 
