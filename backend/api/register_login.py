@@ -25,7 +25,6 @@ def create_user(request):
 		if User.objects.filter(mail=data.mail).exists():
 			return HttpResponse(reason="Conflict: Email already exists.", status=409)
 		new_user = User(username=data.username, mail=data.mail, password=make_password(data.password))
-		print(new_user.password)
 		new_user.save()
 		return HttpResponse(status=200)
 	else:
