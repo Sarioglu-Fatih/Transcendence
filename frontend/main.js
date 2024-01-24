@@ -88,8 +88,8 @@ profilBtn.addEventListener('click', () => {
 const registerForm = document.getElementById('register_form')
 registerForm.addEventListener('submit', () => {
   event.preventDefault();
-  var isValid = updateValidationState(myInput, letter, capital, number, length);
-  if (isValid) {
+  var isPwdValid = updateValidationState(myInput, letter, capital, number, length);
+  if (isPwdValid) {
     registerUser();
     document.getElementById('register_form').reset();
     updateValidationState(); // Reset the color of pwd_checkbox
