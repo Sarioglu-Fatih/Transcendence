@@ -15,7 +15,7 @@ async function registerUser() {
          // Fetch CSRF token
         await fetchCsrfToken();
         const csrfToken = getCookie('csrftoken');
-        
+        console.log('CSRF Token in cookie:', csrfToken);
         const BASE_URL = 'http://localhost:8000'
         let endpoint = '/api/register';
         const response = await fetch(BASE_URL + endpoint, { // where we send data
@@ -27,7 +27,6 @@ async function registerUser() {
             body: JSON.stringify(body), // the data we send
             credentials: 'include',
         })
-
         if (response.ok) {
             console.log('User registered successfully', response);
         }
