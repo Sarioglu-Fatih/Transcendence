@@ -1,4 +1,4 @@
-import {fetchCsrfToken, getCookie} from './utils.js'
+import { getCookie} from './utils.js'
 
 async function registerUser() {
 	var username = document.getElementById("register_form")[1].value; // Get info from the register form

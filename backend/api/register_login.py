@@ -1,7 +1,6 @@
 import json
 from django.http import HttpResponse, HttpResponseNotFound
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from dataclasses import dataclass
 from .models import User
 from .utils import generate_jwt

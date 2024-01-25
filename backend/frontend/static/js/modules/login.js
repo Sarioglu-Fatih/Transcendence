@@ -1,4 +1,4 @@
-import {fetchCsrfToken, getCookie} from './utils.js'
+import {getCookie} from './utils.js'
 
 async function login() {
 
@@ -41,4 +41,4 @@ async function login() {
     }
 }
 
-export { login, fetchCsrfToken, getCookie}
+export { login, getCookie}
