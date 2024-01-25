@@ -1,5 +1,6 @@
 #!/bin/bash
 echo "Creating Migrations..."
+sleep 10
 python backend/manage.py makemigrations api
 echo ====================================
 
