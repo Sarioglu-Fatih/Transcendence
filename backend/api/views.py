@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseNotFound
 from .utils import decode_Payload
 import base64
 from .models import User
+from django.shortcuts import render
 
 def avatar(request):
 	if request.method == 'GET':
@@ -29,4 +30,5 @@ def get_user(request):
 		return HttpResponseNotFound(status=404)
 	else:
 		return HttpResponseNotFound(status=404)
+
 
