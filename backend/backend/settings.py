@@ -123,7 +123,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = False
 
 CSRF_TRUSTED_ORIGINS = [
     'https://localhost:8001',

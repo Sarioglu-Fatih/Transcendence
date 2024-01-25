@@ -11,10 +11,7 @@ async function login() {
     console.log("Les infos du form:", body);
     
     try {
-      // Fetch CSRF token
-      await fetchCsrfToken();
       const csrfToken = getCookie('csrftoken');
-  
       // Perform login
       const response = await fetch('http://localhost:8000/api/login', {
         method: 'POST',
