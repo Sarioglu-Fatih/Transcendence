@@ -86,10 +86,16 @@ profilBtn.addEventListener('click', () => {
 });
 
 const registerForm = document.getElementById('register_form')
-registerForm.addEventListener('submit', () => {
+registerForm.addEventListener('submit', async (event) => {
   event.preventDefault();
+
+  var inputEmail = document.getElementById('inputEmail');
+  var userEmail = inputEmail.value;
+  var regex = /\S+@\S+\.\S+/;
+  console.log("-----------  ", regex.test(userEmail), userEmail);
+
   var isPwdValid = updateValidationState(myInput, letter, capital, number, length, ForbiddenCharElement);
-  if (isPwdValid) {
+  if (isPwdValid && regex.test(userEmail)) {
     registerUser();
     document.getElementById('register_form').reset();
     updateValidationState(); // Reset the color of pwd_checkbox
