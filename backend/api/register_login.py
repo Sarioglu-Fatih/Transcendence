@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from dataclasses import dataclass
 from .models import User
 from .utils import generate_jwt
-from django.contribs.auth.hashers import make_password, check_password
+from django.contrib.auth.hashers import make_password, check_password
 
 @dataclass
 class registerPostParameters():
