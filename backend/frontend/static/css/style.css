@@ -53,3 +53,14 @@
     left: -35px;
     content: "\2715";    
   }
+
+  .error {
+    border: 1px solid red;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+  }

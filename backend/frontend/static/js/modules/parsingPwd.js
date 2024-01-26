@@ -19,8 +19,11 @@ myInput.onblur = function() {
 export function updateValidationState() {
   // Validate lowercase letters
   var lowerCaseLetters = /[a-z]/g;
+  console.log("A");
   var hasLowerCase = myInput.value.match(lowerCaseLetters);
+  console.log("B");
   updateValidationClass(letter, hasLowerCase);
+  console.log("C");
 
   // Validate capital letters
   var upperCaseLetters = /[A-Z]/g;
