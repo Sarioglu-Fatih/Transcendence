@@ -1,7 +1,6 @@
 import json
 from django.http import HttpResponse, HttpResponseNotFound
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from dataclasses import dataclass
 from .models import User
 from .utils import generate_jwt
@@ -12,7 +11,7 @@ class registerPostParameters():
 	mail: str
 	password: str
 
-@csrf_exempt
+
 def create_user(request):
 	if request.method == 'POST':
 		try:
@@ -29,7 +28,7 @@ def create_user(request):
 	else:
 		return HttpResponseNotFound(status=404)
 
-@csrf_exempt
+
 def user_login(request):
 	print(json.loads(request.body))
 	if request.method == 'POST':
