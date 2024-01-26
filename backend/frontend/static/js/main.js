@@ -90,24 +90,35 @@ const registerForm = document.getElementById('register_form')
 registerForm.addEventListener('submit', async (event) => {
   event.preventDefault();
 
+  var inputUsername = document.getElementById('inputUsername');
+  var userName = inputUsername.value;
+  var username_regex = /^[a-zA-Z0-9-_]+$/;
+
+  
   var inputEmail = document.getElementById('inputEmail');
   var userEmail = inputEmail.value;
   var regex = /\S+@\S+\.\S+/;
-  if (regex.test(userEmail)) {
-  document.getElementById('emailError').innerHTML = '';
-    var isPwdValid = updateValidationState(myInput, letter, capital, number, length, ForbiddenCharElement);
-    if (isPwdValid) {
-      registerUser();
-      document.getElementById('register_form').reset();
-      updateValidationState(); // Reset the color of pwd_checkbox
-    }
-    else {
-      console.log("Form not valid");
-    }
-  } else {
-      emailError.textContent = 'Please enter a valid e-mail address.';
-     // inputEmail.classList.add('error');
-      console.log("Email not valid");
+  if (username_regex.test(userName)) {
+    document.getElementById('usernameError').innerHTML = '';
+    if (regex.test(userEmail)) {
+    document.getElementById('emailError').innerHTML = '';
+      var isPwdValid = updateValidationState(myInput, letter, capital, number, length, ForbiddenCharElement);
+      if (isPwdValid) {
+        registerUser();
+        document.getElementById('register_form').reset();
+        updateValidationState(); // Reset the color of pwd_checkbox
+      }
+      else {
+        console.log("Form not valid");
+      }
+    } else {
+        emailError.textContent = 'Please enter a valid e-mail address.';
+       // inputEmail.classList.add('error');
+        console.log("Email not valid");
+      }
+    } else {
+      usernameError.textContent = "Please enter letters, numbers, '-' and '_'."
+      console.log("Username not valide");
     }
  });
 

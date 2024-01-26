@@ -17,6 +17,7 @@ def create_user(request):
 	if request.method == 'POST':
 		try:
 			data = registerPostParameters(**json.loads(request.body))
+			print ("----------", data.username)
 		except Exception  as e:
 			return HttpResponse(status=400, reason="Bad request: " + str(e))
 		if User.objects.filter(username=data.username).exists():
