@@ -1,9 +1,9 @@
 import { getCookie} from './utils.js'
 
 async function registerUser() {
-	var username = document.getElementById("register_form")[1].value; // Get info from the register form
-	var email = document.getElementById("register_form")[2].value;
-	var password = document.getElementById("register_form")[3].value;
+	var username = document.getElementById("inputUsername").value; // Get info from the register form
+	var email = document.getElementById("inputEmail").value;
+	var password = document.getElementById("inputPassword").value;
     let body = {
         'username': username,
         'mail': email,
