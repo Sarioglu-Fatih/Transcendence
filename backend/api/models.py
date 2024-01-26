@@ -27,7 +27,7 @@ from django.contrib.auth.models import User
 class User(models.Model):
     username = models.CharField(max_length=16)
     mail =  models.CharField(max_length=50)
-    password = models.CharField(max_length=16)
+    password = models.CharField(max_length=128)
     pseudo = models.CharField(max_length=16)
     avatar = models.BinaryField()
     user_is_connected = models.BooleanField(default=False)
