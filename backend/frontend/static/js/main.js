@@ -93,30 +93,22 @@ registerForm.addEventListener('submit', async (event) => {
   var inputEmail = document.getElementById('inputEmail');
   var userEmail = inputEmail.value;
   var regex = /\S+@\S+\.\S+/;
-  console.log("-----------  ", regex.test(userEmail), userEmail);
   if (regex.test(userEmail)) {
   document.getElementById('emailError').innerHTML = '';
-    console.log("1");
     var isPwdValid = updateValidationState(myInput, letter, capital, number, length, ForbiddenCharElement);
     if (isPwdValid) {
-      console.log("2");
       registerUser();
       document.getElementById('register_form').reset();
-      console.log("3");
       updateValidationState(); // Reset the color of pwd_checkbox
     }
     else {
-      console.log("4");
       console.log("Form not valid");
     }
   } else {
       emailError.textContent = 'Please enter a valid e-mail address.';
-      console.log("5");
      // inputEmail.classList.add('error');
       console.log("Email not valid");
-      console.log("6");
     }
-    console.log("7");
  });
 
 function hideDivs(divIds) {
