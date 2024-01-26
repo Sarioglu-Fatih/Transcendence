@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from dataclasses import dataclass
 from .models import User
 from .utils import generate_jwt
+from django.contrib.auth.hashers import make_password, check_password
 
 @dataclass
 class registerPostParameters():
@@ -22,7 +23,7 @@ def create_user(request):
 			return HttpResponse(reason="Conflict: Username already exists.", status=409)
 		if User.objects.filter(mail=data.mail).exists():
 			return HttpResponse(reason="Conflict: Email already exists.", status=409)
-		new_user = User(username=data.username, mail=data.mail, password=data.password)
+		new_user = User(username=data.username, mail=data.mail, password=make_password(data.password))
 		new_user.save()
 		return HttpResponse(status=200)
 	else:
@@ -39,7 +40,7 @@ def user_login(request):
 		if (not User.objects.filter(username=username).exists()):
 			return (JsonResponse({'error': 'No user by this name'}))
 		user = User.objects.get(username=username)
-		if user.password == password and user.username == username:
+		if check_password(password, user.password) and user.username == username:
 			jwt_token = generate_jwt(user)
 			print('token = ', jwt_token)
 			return JsonResponse({'token': jwt_token})
