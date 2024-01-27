@@ -1,6 +1,7 @@
 import { displayProfilPage, displayAvatar} from './modules/profilPage.js';
 import { registerUser }  from './modules/register.js';
 import { login } from './modules/login.js'
+import { logout } from './modules/logout.js'
 import { updateValidationState, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
 
 var path = window.location.pathname;
@@ -71,6 +72,7 @@ loginForm.addEventListener('submit', async function () {
 
 const logoutBtn = document.getElementById('logout_button');
 logoutBtn.addEventListener('click', () => {
+  logout();
   history.pushState({}, '', '/login');
   localStorage.removeItem('jwt_token');
   hideDivs(['top_box',  'game_launcher', 'friend_list', 'profil_page']);
