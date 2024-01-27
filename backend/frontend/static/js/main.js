@@ -99,6 +99,7 @@ registerForm.addEventListener('submit', async (event) => {
   var inputEmail = document.getElementById('inputEmail');
   var userEmail = inputEmail.value;
   var regex = /\S+@\S+\.\S+/;
+  var secRegexEmail = /^[a-zA-Z0-9@.]+$/;
  
   var count = 0;
 
@@ -112,7 +113,7 @@ registerForm.addEventListener('submit', async (event) => {
     usernameError.textContent = "Please enter letters, numbers, '-' and '_'."
     console.log("Username not valide");
   }
-  if (regex.test(userEmail))
+  if (regex.test(userEmail) && secRegexEmail.test(userEmail))
   {
     document.getElementById('emailError').innerHTML = '';
     count++;

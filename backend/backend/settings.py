@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-5ku3tfr%jfod2m-06u^q6^63(v4&2=mg4lle!n(k@)vkb$d$tz
 TOKEN_EXPIRATION_TIME = 36000
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 

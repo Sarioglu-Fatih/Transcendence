@@ -1,3 +1,4 @@
+import re
 import json
 from django.http import HttpResponse, HttpResponseNotFound
 from django.http import JsonResponse
@@ -17,9 +18,18 @@ def create_user(request):
 	if request.method == 'POST':
 		try:
 			data = registerPostParameters(**json.loads(request.body))
-			print ("----------", data.username)
 		except Exception  as e:
 			return HttpResponse(status=400, reason="Bad request: " + str(e))
+		regexUsername = r'^[a-zA-Z0-9_-]+$'
+		regexEmail = r'\A\S+@\S+\.\S+\Z'
+		secRegexEmail = r'^[a-zA-Z0-9@.]+$'
+		regexPwd = r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
+		if not re.match(regexUsername, data.username):
+			return JsonResponse({'error': 'Username not valide'})
+		if not (re.match(regexEmail, data.mail) and re.match(secRegexEmail, data.mail)):
+			return JsonResponse({'error': 'Email not valide'})
+		if  not re.match(regexPwd, data.password):
+			return JsonResponse({'error': "Special characters allowed : @$!%#?&"})
 		if User.objects.filter(username=data.username).exists():
 			return HttpResponse(reason="Conflict: Username already exists.", status=409)
 		if User.objects.filter(mail=data.mail).exists():
