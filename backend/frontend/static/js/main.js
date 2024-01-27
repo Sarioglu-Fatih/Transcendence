@@ -72,6 +72,7 @@ loginForm.addEventListener('submit', async function (event) {
 const logoutBtn = document.getElementById('logout_button');
 logoutBtn.addEventListener('click', () => {
   document.getElementById('emailError').innerHTML = '';
+  document.getElementById('usernameError').innerHTML = '';
   history.pushState({}, '', '/login');
   localStorage.removeItem('jwt_token');
   hideDivs(['top_box',  'game_launcher', 'friend_list', 'profil_page']);
@@ -98,29 +99,42 @@ registerForm.addEventListener('submit', async (event) => {
   var inputEmail = document.getElementById('inputEmail');
   var userEmail = inputEmail.value;
   var regex = /\S+@\S+\.\S+/;
-  if (username_regex.test(userName)) {
+ 
+  var count = 0;
+
+  if (username_regex.test(userName))
+  {
     document.getElementById('usernameError').innerHTML = '';
-    if (regex.test(userEmail)) {
+    count++;
+  }
+  else
+  {
+    usernameError.textContent = "Please enter letters, numbers, '-' and '_'."
+    console.log("Username not valide");
+  }
+  if (regex.test(userEmail))
+  {
     document.getElementById('emailError').innerHTML = '';
-      var isPwdValid = updateValidationState(myInput, letter, capital, number, length, ForbiddenCharElement);
-      if (isPwdValid) {
-        registerUser();
-        document.getElementById('register_form').reset();
-        updateValidationState(); // Reset the color of pwd_checkbox
-      }
-      else {
-        console.log("Form not valid");
-      }
-    } else {
-        emailError.textContent = 'Please enter a valid e-mail address.';
+    count++;
+  }
+  else
+  {
+    emailError.textContent = 'Please enter a valid e-mail address.';
        // inputEmail.classList.add('error');
         console.log("Email not valid");
-      }
-    } else {
-      usernameError.textContent = "Please enter letters, numbers, '-' and '_'."
-      console.log("Username not valide");
-    }
- });
+  }
+  var isPwdValid = updateValidationState(myInput, letter, capital, number, length, ForbiddenCharElement);
+  if (isPwdValid && count == 2)
+  {
+    registerUser();
+    document.getElementById('register_form').reset();
+    updateValidationState(); // Reset the color of pwd_checkbox
+  }
+  else
+  {
+    console.log("Form not valid");
+  }
+});
 
 function hideDivs(divIds) {
   divIds.forEach(function (divId) {
