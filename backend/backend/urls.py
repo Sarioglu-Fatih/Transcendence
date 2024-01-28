@@ -23,3 +23,4 @@ urlpatterns = [
     path('', include('frontend.urls')),
     path('pong/', include('pong.urls')),
 ]
+

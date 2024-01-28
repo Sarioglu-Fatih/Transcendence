@@ -1,4 +1,4 @@
-import {fetchCsrfToken, getCookie} from './utils.js'
+import {getCookie} from './utils.js'
 
 async function login() {
 
@@ -11,10 +11,7 @@ async function login() {
     console.log("Les infos du form:", body);
     
     try {
-      // Fetch CSRF token
-      await fetchCsrfToken();
       const csrfToken = getCookie('csrftoken');
-  
       // Perform login
       const response = await fetch('http://localhost:8000/api/login', {
         method: 'POST',
@@ -27,13 +24,11 @@ async function login() {
       })
       if (response.ok) {
         const data = await response.json();
-        if (data.token === undefined){ 
-          console.log(data);
-          return;
+        if (data.token) {
+          const token = data.token;
+          localStorage.setItem('jwt_token', token);
+          console.log('Login successful. Token:', token);
         }
-        const token = data.token;
-        localStorage.setItem('jwt_token', token);
-        console.log('Login successful. Token:', token);
       }
       else {
         console.error('Error login user:', response.status);
@@ -44,4 +39,4 @@ async function login() {
     }
 }
 
-export { login, fetchCsrfToken, getCookie}
+export { login, getCookie}

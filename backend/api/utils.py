@@ -2,16 +2,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 import jwt
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
-import datetime
 from django.conf import settings
-
-def generate_jwt(user):
-    payload = {
-        'user_id': user.id,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=settings.TOKEN_EXPIRATION_TIME),
-    }
-    return jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
-
 
 @ensure_csrf_cookie
 def get_csrf_token(request):
