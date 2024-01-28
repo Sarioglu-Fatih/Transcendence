@@ -1,6 +1,6 @@
 async function logout() {
     try {
-      const response = await fetch('http://localhost:8000/api/logout', {
+      const response = await fetch('https://localhost:8000/api/logout', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

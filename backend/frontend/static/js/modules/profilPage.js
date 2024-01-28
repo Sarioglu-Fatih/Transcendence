@@ -6,7 +6,7 @@ async function displayProfilPage() {
     const jwtToken = localStorage.getItem('jwt_token');
     console.log(jwtToken);
     try {
-        const response = await fetch(`http://localhost:8000/api/profil`, {
+        const response = await fetch(`https://localhost:8000/api/profil`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ async function displayAvatar() {
     if (!avatarData) {
         // If the avatar data is not in local storage, fetch it from the server
         try {
-            const response = await fetch(`http://localhost:8000/api/avatar`, {
+            const response = await fetch(`https://localhost:8000/api/avatar`, {
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',
