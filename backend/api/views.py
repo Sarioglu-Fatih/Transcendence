@@ -32,7 +32,3 @@ def get_user(request):
 	else:
 		return HttpResponseNotFound(status=404)
 
-
-
-
-

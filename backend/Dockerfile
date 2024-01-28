@@ -7,11 +7,14 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-COPY requirements.txt /app/
+COPY requirements.txt /app
+
+RUN apt-get update && apt-get install -y inotify-tools
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . /app/
+
+COPY . /app
 
 RUN mkdir -p /app/
 
