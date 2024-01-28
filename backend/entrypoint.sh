@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Creating Migrations..."
-sleep 3
+sleep 5
 python manage.py makemigrations api
 echo ====================================
 

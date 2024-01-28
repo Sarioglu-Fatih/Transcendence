@@ -36,19 +36,19 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'api',
-    'frontend',
-    'channels',
-    'pong',
-	  'rest_framework',
-	  'rest_framework_simplejwt',
+	'daphne',
+	'django.contrib.admin',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
+	'api',
+	'frontend',
+	'channels',
+	'pong',
+	'rest_framework',
+	'rest_framework_simplejwt',
 ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
@@ -90,9 +90,9 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 ASGI_APPLICATION = 'backend.asgi.application'
 
 CHANNEL_LAYERS = { 
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
-    }   
+	"default": {
+		"BACKEND": "channels.layers.InMemoryChannelLayer"
+	}   
 }
 
 
@@ -158,9 +158,9 @@ USE_TZ = True
 CSRF_COOKIE_HTTPONLY = False
 
 CORS_ALLOW_HEADERS = [
-    'X-CSRFToken', 
-    'content-type',
-    'Authorization'
+	'X-CSRFToken', 
+	'content-type',
+	'Authorization'
 ]
 
 CORS_ALLOW_CREDENTIALS = True

@@ -28,7 +28,7 @@ def create_user(request):
 		regexPwd = r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
 		if not re.match(regexUsername, data.username):
 			return JsonResponse({'error': 'Username not valide'})
-		if not (re.match(regexEmail, data.mail) and re.match(secRegexEmail, data.mail)):
+		if not (re.match(regexEmail, data.email) and re.match(secRegexEmail, data.email)):
 			return JsonResponse({'error': 'Email not valide'})
 		if  not re.match(regexPwd, data.password):
 			return JsonResponse({'error': "Special characters allowed : @$!%#?&"})
@@ -50,8 +50,8 @@ def user_login(request):
 		password = data.get('password')
 		regexUsername = r'^[a-zA-Z0-9_-]+$'																# login page parsing
 		if (not re.match(regexUsername, username)):
-      return JsonResponse({'error': 'Username not valide'})
-    user = authenticate(request, username=username, password=password)
+	  		return JsonResponse({'error': 'Username not valide'})
+		user = authenticate(request, username=username, password=password)
 		if user is not None:
 			login(request, user)
 			# Generate JWT token
