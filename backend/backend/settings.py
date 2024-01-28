@@ -32,19 +32,23 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
-	'django.contrib.admin',
-	'django.contrib.auth',
-	'django.contrib.contenttypes',
-	'django.contrib.sessions',
-	'django.contrib.messages',
-	'django.contrib.staticfiles',
-	'api',
-	'frontend',
-	'rest_framework',
-	'rest_framework_simplejwt',
+    'daphne',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'api',
+    'frontend',
+    'channels',
+    'pong',
+	  'rest_framework',
+	  'rest_framework_simplejwt',
 ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
@@ -82,6 +86,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
+
+ASGI_APPLICATION = 'backend.asgi.application'
+
+CHANNEL_LAYERS = { 
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }   
+}
 
 
 # Database
@@ -159,7 +171,9 @@ CSRF_TRUSTED_ORIGINS = [
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, '../staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

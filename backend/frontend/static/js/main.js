@@ -1,8 +1,14 @@
 import { displayProfilPage, displayAvatar} from './modules/profilPage.js';
 import { registerUser }  from './modules/register.js';
 import { login } from './modules/login.js'
+import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
+import { launchGame  } from './modules/pong.js';
 import { logout } from './modules/logout.js'
 import { updateValidationState, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
+
+const playBtn = document.getElementById("play_button");
+playBtn.addEventListener('click', ()=> {
+  launchGame();
 
 var path = window.location.pathname;
 console.log(path);

@@ -1,4 +1,4 @@
-version: '3'
+version: '3.2'
 
 services:
   db:
@@ -9,15 +9,24 @@ services:
       - "5432:5432"
 
   backend:
-    build: 
+    build:
       context: ./backend
-    command: /app/entrypoint.sh
     volumes:
-      - .:/app
-    ports:
-      - "8000:8000"
+      - $PWD:/app
     depends_on:
       - db
     env_file:
       - .env
     tty: true
+    working_dir: /app/backend
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - $PWD:/app
+    depends_on:
+      - backend
