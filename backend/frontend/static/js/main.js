@@ -1,6 +1,7 @@
 import { displayProfilPage, displayAvatar} from './modules/profilPage.js';
 import { registerUser }  from './modules/register.js';
 import { login } from './modules/login.js'
+import { logout } from './modules/logout.js'
 import { updateValidationState, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
 
 var path = window.location.pathname;
@@ -19,7 +20,7 @@ window.onload = function() {
       displayAvatar();
       hideDivs(['div_register_form', 'div_login_form']);
       showDivs(['top_box', 'game_launcher', 'friend_list'])
-      break;
+      break;decode_Payload
     case "/profil":
       displayAvatar();
       displayProfilPage();
@@ -27,8 +28,17 @@ window.onload = function() {
       showDivs(['top_box'])
       break;
     case "/login":
-      showDivs(['div_register_form', 'div_login_form']);
-      hideDivs(['top_box', 'game_launcher', 'friend_list', 'profil_page']);
+      if (isUserLoggedIn()) {
+        history.pushState({}, '', '/home');
+        displayAvatar();
+        displayProfilPage();
+        hideDivs(['div_register_form', 'div_login_form']);
+        showDivs(['top_box', 'game_launcher', 'friend_list'])
+      }
+      else {
+        showDivs(['div_register_form', 'div_login_form']);
+        hideDivs(['top_box', 'game_launcher', 'friend_list', 'profil_page']);
+      }
       break;
   }
   console.log("load")
@@ -86,6 +96,7 @@ loginForm.addEventListener('submit', async function (event) {
 
 const logoutBtn = document.getElementById('logout_button');
 logoutBtn.addEventListener('click', () => {
+  logout();
   document.getElementById('emailError').innerHTML = '';
   document.getElementById('usernameError').innerHTML = '';
   history.pushState({}, '', '/login');

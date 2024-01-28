@@ -24,13 +24,11 @@ async function login() {
       })
       if (response.ok) {
         const data = await response.json();
-        if (data.token === undefined){ 
-          console.log(data);
-          return;
+        if (data.token) {
+          const token = data.token;
+          localStorage.setItem('jwt_token', token);
+          console.log('Login successful. Token:', token);
         }
-        const token = data.token;
-        localStorage.setItem('jwt_token', token);
-        console.log('Login successful. Token:', token);
       }
       else {
         console.error('Error login user:', response.status);

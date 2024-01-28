@@ -24,7 +24,7 @@ def get_user(request):
 			user = User.objects.get(id=user_id)
 			data = {
 				'username': user.username,
-				'mail': user.mail
+				'email': user.email
 			}
 			return JsonResponse(data, safe=False)
 		return HttpResponseNotFound(status=404)
