@@ -1,5 +1,4 @@
-from django.urls import path, include
-from .models import User
+from django.urls import path
 from . import views
 from . import register_login
 from . import utils

@@ -6,7 +6,7 @@ async function registerUser() {
 	var password = document.getElementById("inputPassword").value;
     let body = {
         'username': username,
-        'mail': email,
+        'email': email,
         'password': password
     }
 	console.log("Les infos du form:", body);

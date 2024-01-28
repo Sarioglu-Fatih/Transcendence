@@ -20,7 +20,7 @@ window.onload = function() {
       displayAvatar();
       hideDivs(['div_register_form', 'div_login_form']);
       showDivs(['top_box', 'game_launcher', 'friend_list'])
-      break;
+      break;decode_Payload
     case "/profil":
       displayAvatar();
       displayProfilPage();
@@ -28,8 +28,17 @@ window.onload = function() {
       showDivs(['top_box'])
       break;
     case "/login":
-      showDivs(['div_register_form', 'div_login_form']);
-      hideDivs(['top_box', 'game_launcher', 'friend_list', 'profil_page']);
+      if (isUserLoggedIn()) {
+        history.pushState({}, '', '/home');
+        displayAvatar();
+        displayProfilPage();
+        hideDivs(['div_register_form', 'div_login_form']);
+        showDivs(['top_box', 'game_launcher', 'friend_list'])
+      }
+      else {
+        showDivs(['div_register_form', 'div_login_form']);
+        hideDivs(['top_box', 'game_launcher', 'friend_list', 'profil_page']);
+      }
       break;
   }
   console.log("load")
