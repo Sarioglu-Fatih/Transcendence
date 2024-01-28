@@ -1,7 +1,7 @@
 const profilPage = document.getElementById('profil_page');
 const avatar = document.getElementById('avatar');
 
-async function displayProfilPage() {
+async function renderProfilPage() {
 
     const jwtToken = localStorage.getItem('jwt_token');
     console.log(jwtToken);
@@ -62,4 +62,4 @@ async function displayAvatar() {
   }
   
 
-export { displayProfilPage, displayAvatar};
+export { renderProfilPage, displayAvatar};
