@@ -50,7 +50,7 @@ def user_login(request):
 		password = data.get('password')
 		regexUsername = r'^[a-zA-Z0-9_-]+$'																# login page parsing
 		if (not re.match(regexUsername, username)):
-	  		return JsonResponse({'error': 'Username not valide'})
+			return JsonResponse({'error': 'Username not valide'})
 		user = authenticate(request, username=username, password=password)
 		if user is not None:
 			login(request, user)

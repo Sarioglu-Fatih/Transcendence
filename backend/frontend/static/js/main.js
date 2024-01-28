@@ -26,7 +26,7 @@ window.onload = function() {
       displayAvatar();
       hideDivs(['div_register_form', 'div_login_form']);
       showDivs(['top_box', 'game_launcher', 'friend_list'])
-      break;decode_Payload
+      break;
     case "/profil":
       displayAvatar();
       displayProfilPage();
