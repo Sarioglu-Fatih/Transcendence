@@ -67,21 +67,38 @@ window.onpopstate = function(event) {
  }
 
 const loginForm = document.getElementById('login_form');
-loginForm.addEventListener('submit', async function () {
+loginForm.addEventListener('submit', async function (event) {
   event.preventDefault();
-  await login();
-  if (isUserLoggedIn()) {
-    history.pushState({}, '', '/home');
-    displayAvatar();
-    hideDivs(['div_register_form', 'div_login_form']);
-    showDivs(['top_box', 'game_launcher', 'friend_list'])
+
+  var inputUsername = document.getElementById('login_Username');   // username login parsing
+  var userName = inputUsername.value;
+  var username_regex = /^[a-zA-Z0-9-_]+$/;
+
+  console.log(inputUsername.value);
+  if (username_regex.test(userName))
+  {
+    document.getElementById('loginUsernameError').innerHTML = '';
+    await login();
+    if (isUserLoggedIn()) {
+      history.pushState({}, '', '/home');
+      displayAvatar();
+      hideDivs(['div_register_form', 'div_login_form']);
+      showDivs(['top_box', 'game_launcher', 'friend_list'])
+    }
+    document.getElementById('login_form').reset();
   }
-  document.getElementById('login_form').reset();
+  else
+  {
+    loginUsernameError.textContent = "Please enter letters, numbers, '-' or '_'."
+    console.log("Username not valide");
+  }
 })
 
 const logoutBtn = document.getElementById('logout_button');
 logoutBtn.addEventListener('click', () => {
   logout();
+  document.getElementById('emailError').innerHTML = '';
+  document.getElementById('usernameError').innerHTML = '';
   history.pushState({}, '', '/login');
   localStorage.removeItem('jwt_token');
   hideDivs(['top_box',  'game_launcher', 'friend_list', 'profil_page']);
@@ -97,15 +114,51 @@ profilBtn.addEventListener('click', () => {
 });
 
 const registerForm = document.getElementById('register_form')
-registerForm.addEventListener('submit', () => {
+registerForm.addEventListener('submit', async (event) => {
   event.preventDefault();
+
+  var inputUsername = document.getElementById('inputUsername');   // register page parsing
+  var userName = inputUsername.value;
+  var username_regex = /^[a-zA-Z0-9-_]+$/;
+
+  
+  var inputEmail = document.getElementById('inputEmail');
+  var userEmail = inputEmail.value;
+  var regex = /\S+@\S+\.\S+/;
+  var secRegexEmail = /^[a-zA-Z0-9@.]+$/;
+ 
+  var count = 0;
+
+  if (username_regex.test(userName))
+  {
+    document.getElementById('usernameError').innerHTML = '';
+    count++;
+  }
+  else
+  {
+    usernameError.textContent = "Please enter letters, numbers, '-' or '_'."
+    console.log("Username not valide");
+  }
+  if (regex.test(userEmail) && secRegexEmail.test(userEmail))
+  {
+    document.getElementById('emailError').innerHTML = '';
+    count++;
+  }
+  else
+  {
+    emailError.textContent = 'Please enter a valid e-mail address.';
+       // inputEmail.classList.add('error');
+        console.log("Email not valid");
+  }
   var isPwdValid = updateValidationState(myInput, letter, capital, number, length, ForbiddenCharElement);
-  if (isPwdValid) {
+  if (isPwdValid && count == 2)
+  {
     registerUser();
     document.getElementById('register_form').reset();
     updateValidationState(); // Reset the color of pwd_checkbox
   }
-  else {
+  else
+  {
     console.log("Form not valid");
   }
 });
@@ -125,8 +178,8 @@ function showDivs(divIds) {
       if (targetDiv) {
           targetDiv.style.display = 'block';
       }
-  });
-}
+    });
+  }
 
 function isUserLoggedIn() {
   const jwtToken = localStorage.getItem('jwt_token');

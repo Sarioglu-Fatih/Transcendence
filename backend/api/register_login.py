@@ -1,3 +1,4 @@
+import re
 import json
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from dataclasses import dataclass
@@ -21,6 +22,16 @@ def create_user(request):
 			data = registerPostParameters(**json.loads(request.body))
 		except Exception  as e:
 			return HttpResponse(status=400, reason="Bad request: " + str(e))
+		regexUsername = r'^[a-zA-Z0-9_-]+$'																# register page parsing
+		regexEmail = r'\A\S+@\S+\.\S+\Z'
+		secRegexEmail = r'^[a-zA-Z0-9@.]+$'
+		regexPwd = r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
+		if not re.match(regexUsername, data.username):
+			return JsonResponse({'error': 'Username not valide'})
+		if not (re.match(regexEmail, data.mail) and re.match(secRegexEmail, data.mail)):
+			return JsonResponse({'error': 'Email not valide'})
+		if  not re.match(regexPwd, data.password):
+			return JsonResponse({'error': "Special characters allowed : @$!%#?&"})
 		if User.objects.filter(username=data.username).exists():
 			return HttpResponse(reason="Conflict: Username already exists.", status=409)
 		if User.objects.filter(email=data.email).exists():
@@ -37,18 +48,10 @@ def user_login(request):
 		data = json.loads(request.body.decode('utf-8'))
 		username = data.get('username')
 		password = data.get('password')
-		print(User.objects.filter(username=username).exists())
-		user1 = User.objects.get(username=username)
-		if check_password(password, user1.password):
-			print("OUI")
-		else:
-			print("NON")
-		if user1.is_active:
-			print("OUI1")
-		else:
-			print("NON1")
-		user = authenticate(request, username=username, password=password)
-		print("USER after authenticate", user)
+		regexUsername = r'^[a-zA-Z0-9_-]+$'																# login page parsing
+		if (not re.match(regexUsername, username)):
+      return JsonResponse({'error': 'Username not valide'})
+    user = authenticate(request, username=username, password=password)
 		if user is not None:
 			login(request, user)
 			# Generate JWT token
