@@ -1,6 +1,7 @@
 async function logout() {
     try {
-      const response = await fetch('https://localhost:8000/api/logout', {
+      const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+      const response = await fetch(`${baseURL}/api/logout`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

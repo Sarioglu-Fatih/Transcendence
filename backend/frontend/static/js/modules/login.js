@@ -12,8 +12,9 @@ async function login() {
     
     try {
       const csrfToken = getCookie('csrftoken');
+      const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
       // Perform login
-      const response = await fetch('https://localhost:8000/api/login', {
+      const response = await fetch(`${baseURL}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

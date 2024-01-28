@@ -14,9 +14,8 @@ async function registerUser() {
     try {
         const csrfToken = getCookie('csrftoken');
         console.log('CSRF Token in cookie REGISTER:', csrfToken);
-        const BASE_URL = 'https://localhost:8000'
-        let endpoint = '/api/register';
-        const response = await fetch(BASE_URL + endpoint, { // where we send data
+        const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+        const response = await fetch(`${baseURL}/api/register`, { // where we send data
             method: 'POST', // post = sending data
             headers: {
                 'Content-Type': 'application/json', //data type we send
