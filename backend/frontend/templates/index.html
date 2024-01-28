@@ -12,6 +12,7 @@
       <div class="row" id="form_page">
         <div class="col-md-6 p-3" id="div_register_form">
           <form id="register_form" class="register_form" >
+            {% csrf_token %}
             <div class="card">
               <div class="card-body">
                 <label for="inputUsername" class="form-label">Username</label>

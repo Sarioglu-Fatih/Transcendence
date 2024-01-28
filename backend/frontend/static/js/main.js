@@ -1,7 +1,7 @@
 import { displayProfilPage, displayAvatar} from './modules/profilPage.js';
 import { registerUser }  from './modules/register.js';
 import { login } from './modules/login.js'
-import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
+import { updateValidationState, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
 
 var path = window.location.pathname;
 console.log(path);
