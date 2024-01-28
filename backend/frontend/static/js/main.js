@@ -59,14 +59,29 @@ window.onpopstate = function(event) {
 const loginForm = document.getElementById('login_form');
 loginForm.addEventListener('submit', async function (event) {
   event.preventDefault();
-  await login();
-  if (isUserLoggedIn()) {
-    history.pushState({}, '', '/home');
-    displayAvatar();
-    hideDivs(['div_register_form', 'div_login_form']);
-    showDivs(['top_box', 'game_launcher', 'friend_list'])
+
+  var inputUsername = document.getElementById('login_Username');   // username login parsing
+  var userName = inputUsername.value;
+  var username_regex = /^[a-zA-Z0-9-_]+$/;
+
+  console.log(inputUsername.value);
+  if (username_regex.test(userName))
+  {
+    document.getElementById('loginUsernameError').innerHTML = '';
+    await login();
+    if (isUserLoggedIn()) {
+      history.pushState({}, '', '/home');
+      displayAvatar();
+      hideDivs(['div_register_form', 'div_login_form']);
+      showDivs(['top_box', 'game_launcher', 'friend_list'])
+    }
+    document.getElementById('login_form').reset();
   }
-  document.getElementById('login_form').reset();
+  else
+  {
+    loginUsernameError.textContent = "Please enter letters, numbers, '-' or '_'."
+    console.log("Username not valide");
+  }
 })
 
 const logoutBtn = document.getElementById('logout_button');
@@ -91,7 +106,7 @@ const registerForm = document.getElementById('register_form')
 registerForm.addEventListener('submit', async (event) => {
   event.preventDefault();
 
-  var inputUsername = document.getElementById('inputUsername');
+  var inputUsername = document.getElementById('inputUsername');   // register page parsing
   var userName = inputUsername.value;
   var username_regex = /^[a-zA-Z0-9-_]+$/;
 
@@ -110,7 +125,7 @@ registerForm.addEventListener('submit', async (event) => {
   }
   else
   {
-    usernameError.textContent = "Please enter letters, numbers, '-' and '_'."
+    usernameError.textContent = "Please enter letters, numbers, '-' or '_'."
     console.log("Username not valide");
   }
   if (regex.test(userEmail) && secRegexEmail.test(userEmail))

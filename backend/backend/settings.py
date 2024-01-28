@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-5ku3tfr%jfod2m-06u^q6^63(v4&2=mg4lle!n(k@)vkb$d$tz
 TOKEN_EXPIRATION_TIME = 36000
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -136,10 +136,9 @@ CORS_ALLOW_HEADERS = [
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://localhost:8001',
     'http://localhost:8000', 
-    'https://127.0.0.1:8001', 
-    'http://127.0.0.1:8000']
+    'http://127.0.0.1:8000',
+    'http://0.0.0.0:8000']
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',
@@ -150,7 +149,7 @@ CORS_ALLOWED_ORIGINS = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'api'),
+    os.path.join(BASE_DIR, 'frontend'),
 ]
 
 STATIC_URL = 'static/'

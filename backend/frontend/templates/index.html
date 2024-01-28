@@ -44,12 +44,13 @@
         </div>
 
         <div class="col-md-6 p-3" id="div_login_form">
-          <form id="login_form" class="login_form{% load static %}">
+          <form id="login_form" class="login_form">
             <div class="card">
               <div class="card-body">
                 <label for="inputUsername" class="form-label">Username</label>
                 <input type="text" class="form-control" id="login_Username" placeholder="Username" maxlength="16" required/>
-        
+                <span id="loginUsernameError" class="error-message"></span>
+
                 <label for="inputPassword" class="form-label">Password</label>
                 <input type="password" class="form-control"  id="login_Password" placeholder="Password" maxlength="16" required/>
               </div>

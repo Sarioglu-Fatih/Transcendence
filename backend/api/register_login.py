@@ -20,7 +20,7 @@ def create_user(request):
 			data = registerPostParameters(**json.loads(request.body))
 		except Exception  as e:
 			return HttpResponse(status=400, reason="Bad request: " + str(e))
-		regexUsername = r'^[a-zA-Z0-9_-]+$'
+		regexUsername = r'^[a-zA-Z0-9_-]+$'																# register page parsing
 		regexEmail = r'\A\S+@\S+\.\S+\Z'
 		secRegexEmail = r'^[a-zA-Z0-9@.]+$'
 		regexPwd = r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
@@ -48,14 +48,19 @@ def user_login(request):
 		print(data)
 		username = data.get('username')
 		password = data.get('password')
-		if (not User.objects.filter(username=username).exists()):
-			return (JsonResponse({'error': 'No user by this name'}))
-		user = User.objects.get(username=username)
-		if user.password == password and user.username == username:
-			jwt_token = generate_jwt(user)
-			print('token = ', jwt_token)
-			return JsonResponse({'token': jwt_token})
+		regexUsername = r'^[a-zA-Z0-9_-]+$'																# login page parsing
+		if (re.match(regexUsername, username)):
+			if (not User.objects.filter(username=username).exists()):
+				return (JsonResponse({'error': 'No user by this name'}))
+			user = User.objects.get(username=username)
+			if user.password == password and user.username == username:
+				jwt_token = generate_jwt(user)
+				print('token = ', jwt_token)
+				return JsonResponse({'token': jwt_token})
+			else:
+				return JsonResponse({'error': 'Invalid login credentials'})
 		else:
-			return JsonResponse({'error': 'Invalid login credentials'})
+			return JsonResponse({'error': 'Username not valide'})
+
 	else:
 		return JsonResponse({'error': 'Invalid request method'})
