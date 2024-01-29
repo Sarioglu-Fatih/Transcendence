@@ -5,6 +5,7 @@ async function renderProfilPage() {
 
     const jwtToken = localStorage.getItem('jwt_token');
     console.log(jwtToken);
+    console.log("profile");
     try {
         const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
         const response = await fetch(`${baseURL}/api/profil`, {

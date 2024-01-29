@@ -17,7 +17,7 @@ function displayProfilPage() {
     displayAvatar();
     renderProfilPage();
     hideDivs(['div_register_form', 'div_login_form', 'game_launcher', 'friend_list']);
-    showDivs(['top_box'])
+    showDivs(['top_box', "profil_page"])
 }
 
 function displayHomePage() {
