@@ -1,3 +1,5 @@
+import { hideDivs, showDivs } from "./utils.js";
+
 async function logout() {
     try {
       const response = await fetch('https://localhost:8000/api/logout', {
@@ -9,6 +11,13 @@ async function logout() {
       });
   
       if (response.ok) {
+        document.getElementById('emailError').innerHTML = '';
+        document.getElementById('usernameError').innerHTML = '';
+        history.pushState({}, '', '/login');
+        localStorage.removeItem('jwt_token');
+        localStorage.removeItem('refresh_token');
+        hideDivs(['top_box',  'game_launcher', 'friend_list', 'profil_page']);
+        showDivs(['div_register_form', 'div_login_form']);
         console.log('Logout successful.');
       }
       else {

@@ -54,10 +54,11 @@ def user_login(request):
 		user = authenticate(request, username=username, password=password)
 		if user is not None:
 			login(request, user)
-			# Generate JWT token
+			# Generate JWT token, access and refresh
 			refresh = RefreshToken.for_user(user)
 			jwt_token = str(refresh.access_token)
-			return JsonResponse({'status': 'success', 'message': 'Login successful', 'token': jwt_token})
+			refresh_token = str(refresh)
+			return JsonResponse({'status': 'success', 'message': 'Login successful', 'token': jwt_token, 'refresh_token': refresh_token})
 		else:
 			# Authentication failed. Return an error response.
 			return JsonResponse({'status': 'error', 'message': 'Invalid login credentials'}, status=401)

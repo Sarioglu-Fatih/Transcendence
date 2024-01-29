@@ -1,18 +1,11 @@
+import { makeApiRequest } from "./utils.js";
+
 const profilPage = document.getElementById('profil_page');
 const avatar = document.getElementById('avatar');
 
 async function displayProfilPage() {
-
-    const jwtToken = localStorage.getItem('jwt_token');
-    console.log(jwtToken);
     try {
-        const response = await fetch(`https://localhost:8000/api/profil`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${jwtToken}`
-            },
-        })
+        const response = await makeApiRequest("profil")
         const userData = await response.json()
         profilPage.innerHTML = `
             <h2>username = ${userData.username}</h2>
@@ -33,13 +26,7 @@ async function displayAvatar() {
     if (!avatarData) {
         // If the avatar data is not in local storage, fetch it from the server
         try {
-            const response = await fetch(`https://localhost:8000/api/avatar`, {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${jwtToken}`
-                }
-            })
+            const response = await makeApiRequest("avatar")
             avatarData = await response.json()
             const encodedAvatar = avatarData.avatar;
             const dataUri = 'data:image/png;base64,' + encodedAvatar;

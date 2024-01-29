@@ -20,16 +20,3 @@ def decode_Payload(request):
 	decoded_payload = jwt.decode(jwt_token, key=settings.SECRET_KEY, algorithms=['HS256'])
 	print(decoded_payload)
 	return (decoded_payload)
-
-def isJwtTokenValid():
-    jwt_token = localStorage.getItem('jwt_token')
-
-    if jwt_token:
-        try:
-            decoded_token = jwt.decode(jwt_token, settings.SECRET_KEY, algorithms=['HS256'])
-            print("User connected:", decoded_token)
-            return True
-        except InvalidTokenError:
-            print("Invalid token")
-    print("User not connected")
-    return False

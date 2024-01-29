@@ -24,9 +24,11 @@ async function login() {
       })
       if (response.ok) {
         const data = await response.json();
-        if (data.token) {
+        if (data.token && data.refresh_token) {
           const token = data.token;
+          const refreshToken = data.refresh_token;
           localStorage.setItem('jwt_token', token);
+          localStorage.setItem('refresh_token', refreshToken);
           console.log('Login successful. Token:', token);
         }
       }

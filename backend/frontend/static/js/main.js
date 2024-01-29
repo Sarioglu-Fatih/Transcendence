@@ -4,6 +4,7 @@ import { login } from './modules/login.js'
 import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
 import { launchGame  } from './modules/pong.js';
 import { logout } from './modules/logout.js'
+import { hideDivs, showDivs } from './modules/utils.js'
 
 const playBtn = document.getElementById("play_button");
 playBtn.addEventListener('click', ()=> {
@@ -103,16 +104,11 @@ loginForm.addEventListener('submit', async function (event) {
 const logoutBtn = document.getElementById('logout_button');
 logoutBtn.addEventListener('click', () => {
   logout();
-  document.getElementById('emailError').innerHTML = '';
-  document.getElementById('usernameError').innerHTML = '';
-  history.pushState({}, '', '/login');
-  localStorage.removeItem('jwt_token');
-  hideDivs(['top_box',  'game_launcher', 'friend_list', 'profil_page']);
-  showDivs(['div_register_form', 'div_login_form']);
 });
 
 const profilBtn = document.getElementById('profil_button');
-profilBtn.addEventListener('click', () => {
+profilBtn.addEventListener('click',  () => {
+  //await makeApiRequest('profil');
   history.pushState({}, '', '/profil');
   displayProfilPage();
   hideDivs(['game_launcher', 'friend_list']);
@@ -168,24 +164,6 @@ registerForm.addEventListener('submit', async (event) => {
     console.log("Form not valid");
   }
 });
-
-function hideDivs(divIds) {
-  divIds.forEach(function (divId) {
-      var targetDiv = document.getElementById(divId);
-      if (targetDiv) {
-          targetDiv.style.display = 'none';
-      }
-  });
-}
-
-function showDivs(divIds) {
-  divIds.forEach(function (divId) {
-      var targetDiv = document.getElementById(divId);
-      if (targetDiv) {
-          targetDiv.style.display = 'block';
-      }
-    });
-  }
 
 function isUserLoggedIn() {
   const jwtToken = localStorage.getItem('jwt_token');
