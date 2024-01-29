@@ -26,7 +26,7 @@ async function displayAvatar() {
     if (!avatarData) {
         // If the avatar data is not in local storage, fetch it from the server
         try {
-            const response = await makeApiRequest("avatar")er
+            const response = await makeApiRequest("avatar")
             avatarData = await response.json()
             const encodedAvatar = avatarData.avatar;
             const dataUri = 'data:image/png;base64,' + encodedAvatar;

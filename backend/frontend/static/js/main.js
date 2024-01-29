@@ -82,11 +82,6 @@ profilBtn.addEventListener('click',  () => {
   document.getElementById('emailError').innerHTML = '';
   document.getElementById('usernameError').innerHTML = '';
   localStorage.removeItem('jwt_token');
-  displayLoginPage();
-});
-
-const profilBtn = document.getElementById('profil_button');
-profilBtn.addEventListener('click', () => {
   displayProfilPage();
 });
 
