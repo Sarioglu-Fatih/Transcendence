@@ -3,7 +3,7 @@ import { makeApiRequest } from "./utils.js";
 const profilPage = document.getElementById('profil_page');
 const avatar = document.getElementById('avatar');
 
-async function displayProfilPage() {
+async function renderProfilPage() {
     try {
         const response = await makeApiRequest("profil")
         const userData = await response.json()
@@ -26,7 +26,7 @@ async function displayAvatar() {
     if (!avatarData) {
         // If the avatar data is not in local storage, fetch it from the server
         try {
-            const response = await makeApiRequest("avatar")
+            const response = await makeApiRequest("avatar")er
             avatarData = await response.json()
             const encodedAvatar = avatarData.avatar;
             const dataUri = 'data:image/png;base64,' + encodedAvatar;
@@ -47,4 +47,4 @@ async function displayAvatar() {
   }
   
 
-export { displayProfilPage, displayAvatar};
+export { renderProfilPage, displayAvatar};

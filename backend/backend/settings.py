@@ -170,21 +170,18 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_SECURE = True
 
 CSRF_TRUSTED_ORIGINS = [
-  'http://localhost:8000',
   'https://localhost:8000',
+  'https://10.12.4.8:8000'
 ]
 
 CORS_TRUSTED_ORIGINS = [
-    'http://localhost:8000',
     'https://localhost:8000',
+	'https://10.12.4.8:8000'
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-    'http://0.0.0.0:8000',
 	'https://localhost:8000',
-	'https://10.12.4.8:8443',
+	'https://10.12.4.8:8000',
 ]
 
 

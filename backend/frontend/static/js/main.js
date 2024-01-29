@@ -1,10 +1,9 @@
-import { displayProfilPage, displayAvatar} from './modules/profilPage.js';
 import { registerUser }  from './modules/register.js';
 import { login } from './modules/login.js'
 import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
 import { launchGame  } from './modules/pong.js';
 import { logout } from './modules/logout.js'
-import { hideDivs, showDivs } from './modules/utils.js'
+import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js'
 
 const playBtn = document.getElementById("play_button");
 playBtn.addEventListener('click', ()=> {
@@ -24,53 +23,30 @@ window.onload = function() {
   var path = window.location.pathname;
   switch(path) {
     case "/home":
-      displayAvatar();
-      hideDivs(['div_register_form', 'div_login_form']);
-      showDivs(['top_box', 'game_launcher', 'friend_list'])
+      displayHomePage();
       break;
     case "/profil":
-      displayAvatar();
       displayProfilPage();
-      hideDivs(['div_register_form', 'div_login_form', 'game_launcher', 'friend_list']);
-      showDivs(['top_box'])
       break;
     case "/login":
-      if (isUserLoggedIn()) {
-        history.pushState({}, '', '/home');
-        displayAvatar();
-        displayProfilPage();
-        hideDivs(['div_register_form', 'div_login_form']);
-        showDivs(['top_box', 'game_launcher', 'friend_list'])
-      }
-      else {
-        showDivs(['div_register_form', 'div_login_form']);
-        hideDivs(['top_box', 'game_launcher', 'friend_list', 'profil_page']);
-      }
+      displayLoginPage();
       break;
   }
-  console.log("load")
 }
 
 window.onpopstate = function(event) {
   var path = window.location.pathname;
   switch(path) {
     case "/home":
-      displayAvatar();
-      hideDivs(['div_register_form', 'div_login_form']);
-      showDivs(['top_box', 'game_launcher', 'friend_list'])
+      displayHomePage();
       break;
     case "/profil":
-      displayAvatar();
       displayProfilPage();
-      hideDivs(['div_register_form', 'div_login_form', 'game_launcher', 'friend_list']);
-      showDivs(['top_box'])
       break;
     case "/login":
-      showDivs(['div_register_form', 'div_login_form']);
-      hideDivs(['top_box', 'game_launcher', 'friend_list', 'profil_page']);
+      displayLoginPage();
       break;
   }
-  console.log("load")
  }
 
 const loginForm = document.getElementById('login_form');
@@ -86,12 +62,7 @@ loginForm.addEventListener('submit', async function (event) {
   {
     document.getElementById('loginUsernameError').innerHTML = '';
     await login();
-    if (isUserLoggedIn()) {
-      history.pushState({}, '', '/home');
-      displayAvatar();
-      hideDivs(['div_register_form', 'div_login_form']);
-      showDivs(['top_box', 'game_launcher', 'friend_list'])
-    }
+    displayLoginPage();
     document.getElementById('login_form').reset();
   }
   else
@@ -108,11 +79,15 @@ logoutBtn.addEventListener('click', () => {
 
 const profilBtn = document.getElementById('profil_button');
 profilBtn.addEventListener('click',  () => {
-  //await makeApiRequest('profil');
-  history.pushState({}, '', '/profil');
+  document.getElementById('emailError').innerHTML = '';
+  document.getElementById('usernameError').innerHTML = '';
+  localStorage.removeItem('jwt_token');
+  displayLoginPage();
+});
+
+const profilBtn = document.getElementById('profil_button');
+profilBtn.addEventListener('click', () => {
   displayProfilPage();
-  hideDivs(['game_launcher', 'friend_list']);
-  showDivs(['profil_page']);
 });
 
 const registerForm = document.getElementById('register_form')
@@ -175,5 +150,5 @@ function isUserLoggedIn() {
   return (false)
 }
 
-
+export { isUserLoggedIn}
  
