@@ -36,7 +36,7 @@ async function displayAvatar() {
         // If the avatar data is not in local storage, fetch it from the server
         try {
             const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-            const response = await fetch(`${baseURL}:8000/api/avatar`, {
+            const response = await fetch(`${baseURL}/api/avatar`, {
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',
