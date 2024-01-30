@@ -2,10 +2,10 @@ from django.http import JsonResponse
 from django.http import HttpResponse, HttpResponseNotFound
 from .utils import decode_Payload
 from api.models import User
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
 import base64
 
 
@@ -34,3 +34,15 @@ def get_user(request):
 		return JsonResponse(data, safe=False)
 	return HttpResponseNotFound(status=404)
 
+@login_required
+def add_friend_request(request, userToAddId):
+	# Get the two user
+	currentUser = request.user
+	userToAdd = get_object_or_404(User, id=userToAddId)
+	# Add the userToAdd to the friendlist if is not already in
+	if userToAdd not in  currentUser.friendlist.all():
+		currentUser.friendlist.add(userToAdd)
+		currentUser.save()
+		return HttpResponse("Friend added to the friendlist", status=200)
+	else:
+		return HttpResponse("Friend is already in the friendlist", status=400)

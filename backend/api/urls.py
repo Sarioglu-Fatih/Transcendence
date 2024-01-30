@@ -13,4 +13,5 @@ urlpatterns = [
     path('logout/', register_login.user_logout),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('add_friend/<int:userToAddId>/', views.add_friend_request),
 ]
