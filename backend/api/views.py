@@ -24,8 +24,13 @@ def get_user(request):
 		if user_id:
 			user = User.objects.get(id=user_id)
 			data = {
+				'User_ID': user_id,
 				'username': user.username,
-				'email': user.email
+				'pseudo': user.pseudo,
+				'email': user.email,
+				'win': user.win,
+				'lose': user.lose,
+				
 			}
 			return JsonResponse(data, safe=False)
 		return HttpResponseNotFound(status=404)

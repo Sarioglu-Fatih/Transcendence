@@ -16,9 +16,32 @@ async function renderProfilPage() {
             },
         })
         const userData = await response.json()
-        profilPage.innerHTML = `
-            <h2>username = ${userData.username}</h2>
-    `;
+
+        var username_type = document.getElementById('username_key');
+        var pseudo_type = document.getElementById('pseudo_key');
+        var email_type = document.getElementById('email_key');
+        var win_type = document.getElementById('win_key');
+        var lose_type = document.getElementById('lose_key');
+        var resulte_type = document.getElementById('win_lose_key');
+
+        let win_string = userData.win.toString();
+        let lose_string = userData.lose.toString();
+
+        
+        username_type.textContent = "username : ";
+        username_type.textContent += userData.username;
+
+        pseudo_type.textContent = "pseudo   : ";
+        pseudo_type.textContent += userData.pseudo;
+
+        email_type.textContent = "email     : ";
+        email_type.textContent += userData.email;
+
+        resulte_type.textContent = "win  ";
+        resulte_type.textContent += win_string;
+        resulte_type.textContent += " : ";
+        resulte_type.textContent += lose_string;
+        resulte_type.textContent += "  lose";
     }
     catch (err) {
         profilPage.innerHTML = '<p class="error-msg">There was an error loading the user</p>';
@@ -36,7 +59,7 @@ async function displayAvatar() {
         // If the avatar data is not in local storage, fetch it from the server
         try {
             const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-            const response = await fetch(`${baseURL}:8000/api/avatar`, {
+            const response = await fetch(`${baseURL}/api/avatar`, {
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',
@@ -56,9 +79,9 @@ async function displayAvatar() {
         }
     }
   
+    console.log('avatar');
     const encodedAvatar = avatarData.avatar;
     const dataUri = 'data:image/png;base64,' + encodedAvatar;
-    console.log('avatar');
     avatar.innerHTML = `<img class="avatar-image" src="${dataUri}" alt="default-avatar">`;
   }
   

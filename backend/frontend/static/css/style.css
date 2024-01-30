@@ -3,19 +3,26 @@
     height: auto;
 }
 
-#top_box, #div_register_form, #div_login_form, #game_launcher, #friend_list{
+#top_box, #div_register_form, #div_login_form, #game_launcher, #friend_list, #history, #profile_settings {
     display: none;
 }
 
-#game_card {
+#game_card, #profile_settings_card {
     width: 75vw;
     height: 90vh;
+    padding: 60px;
+    font-size: 40px;
 }
 
-#friend_list {
+
+
+#friend_list, #history {
     width: 22vw;
     height: 90vh;
+    padding: 50px;
 }
+
+
 
 /* The message box is shown when the user clicks on the password field */
 #pwd_checkbox {
@@ -32,6 +39,10 @@
     font-size: 18px;
   }
   
+  .element {
+    margin-bottom: 200px;
+  }
+
   /* Add a green text color and a checkmark when the requirements are right */
   .valid {
     color: green;

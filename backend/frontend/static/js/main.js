@@ -86,6 +86,56 @@ profilBtn.addEventListener('click', () => {
   displayProfilPage();
 });
 
+const updateForm = document.getElementById('update_form');
+updateForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  
+
+  var inputUsername = document.getElementById('updateUsername');   // update page parsing
+  var userName = inputUsername.value;
+  var username_regex = /^[a-zA-Z0-9-_]+$/;
+  
+  
+  var inputEmail = document.getElementById('updateEmail');
+  var userEmail = inputEmail.value;
+  var regex = /\S+@\S+\.\S+/;
+  var secRegexEmail = /^[a-zA-Z0-9@.]+$/;
+  
+
+  if (username_regex.test(userName))
+  {
+    document.getElementById('usernameError').innerHTML = '';
+  }
+  else
+  {
+    usernameError.textContent = "Please enter letters, numbers, '-' or '_'."
+    console.log("Username not valide");
+  }
+  if (regex.test(userEmail) && secRegexEmail.test(userEmail))
+  {
+    document.getElementById('emailError').innerHTML = '';
+    count++;
+  }
+  else
+  {
+    emailError.textContent = 'Please enter a valid e-mail address.';
+       // inputEmail.classList.add('error');
+        console.log("Email not valid");
+  }
+  var isPwdValid = updateValidationState(myInput, letter, capital, number, length, ForbiddenCharElement);
+  if (isPwdValid)
+  {
+    // registerUser();
+    document.getElementById('register_form').reset();
+    updateValidationState(); // Reset the color of pwd_checkbox
+  }
+  else
+  {
+    console.log("Form not valid");
+  }
+
+});
+
 const registerForm = document.getElementById('register_form')
 registerForm.addEventListener('submit', async (event) => {
   event.preventDefault();
