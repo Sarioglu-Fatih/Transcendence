@@ -4,23 +4,6 @@ import os
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
 
-# class Profile(models.Model):
-#     username = models.OneToOneField(User, on_delete=models.CASCADE)
-#     email =  models.CharField(max_length=50)
-#     pseudo = models.CharField(max_length=16)
-#     avatar = models.BinaryField(null=True, default=None)
-#     user_is_connected = models.BooleanField(default=False)
-#     user_is_in_game = models.BooleanField(default=False)
-#     lose = models.PositiveIntegerField(default=0)
-#     win = models.PositiveIntegerField(default=0)
-
-#     def response_profile(self):
-#         # Create custom response here
-#         return self
-
-#     def __str__(self):
-#         return "%s" % self.user.username
-
 class User(AbstractUser):
 	pseudo = models.CharField(max_length=16)
 	avatar = models.BinaryField()
@@ -28,6 +11,7 @@ class User(AbstractUser):
 	user_is_in_game = models.BooleanField(default=False)
 	lose = models.PositiveIntegerField(default=0)
 	win = models.PositiveIntegerField(default=0)
+	friendlist = models.ManyToManyField("User", blank=True)
 
 	def get_avatar(self):
 		if self.avatar:
@@ -48,4 +32,4 @@ class Match(models.Model):
 	win_lose = models.PositiveIntegerField()
 
 	def __str__(self):
-		return "%s won" % self.player1_id.username
+		return "%s won" % self.player1_id.usernddame

@@ -74,14 +74,14 @@ loginForm.addEventListener('submit', async function (event) {
 
 const logoutBtn = document.getElementById('logout_button');
 logoutBtn.addEventListener('click', () => {
+  document.getElementById('emailError').innerHTML = '';
+  document.getElementById('usernameError').innerHTML = '';
+  localStorage.removeItem('jwt_token');
   logout();
 });
 
 const profilBtn = document.getElementById('profil_button');
 profilBtn.addEventListener('click',  () => {
-  document.getElementById('emailError').innerHTML = '';
-  document.getElementById('usernameError').innerHTML = '';
-  localStorage.removeItem('jwt_token');
   displayProfilPage();
 });
 
