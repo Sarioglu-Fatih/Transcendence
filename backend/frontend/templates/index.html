@@ -66,7 +66,9 @@
           <div class="card-body d-flex flex-column justify-content-between" style="width:100vw;">
             <div class="row">
               <div class="col-md-4">
-                <div class="img img-fluid" id="avatar"></div>
+                <div class="img img-fluid" id="avatar">
+                  <img id="avatar-image" class="avatar-image" src="" alt="user-avatar">
+              </div>
               </div>
               <div class="col-md-4">
                 <button class="btn btn-primary " id="profil_button">profil</button>
@@ -99,7 +101,20 @@
 
         <div class="div" id="profil_page"></div>
 
-        <script type="module" src="{% static 'js/main.js' %}"></script>
-      </div>
-    </body>
+
+
+
+
+        <form id="avatar_upload_form" enctype="multipart/form-data">
+          {% csrf_token %}
+          <label for="id_avatar">Choose Avatar:</label>
+          <input type="file" id="id_avatar" name="avatar" accept="image/*" required/>
+          <button type="button" id="upload_avatar_button" onclick="uploadAvatar()">Upload Avatar</button>
+        </form>
+
+
+
+    </div>
+    <script type="module" src="{% static 'js/main.js' %}"></script>
+  </body>
 </html>

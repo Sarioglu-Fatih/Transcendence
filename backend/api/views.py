@@ -1,8 +1,8 @@
 from django.http import JsonResponse
 from django.http import HttpResponse, HttpResponseNotFound
 from .utils import decode_Payload
-from api.models import User
-from django.shortcuts import get_object_or_404
+from api.models import User, AvatarUploadForm
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -12,13 +12,21 @@ import base64
 def avatar(request):
 	if request.method == 'GET':
 		payload = decode_Payload(request)
-		print(payload)
 		user_id = payload.get('user_id')
 		if user_id:
 			print('avatar')
 			user = User.objects.get(id=user_id)
-			encoded_avatar = base64.b64encode(user.get_avatar()).decode('utf-8')
-			return JsonResponse({'avatar': encoded_avatar})
+			avatar_url = user.avatar.url if user.avatar else None
+			return JsonResponse({'avatar': avatar_url})
+		
+@login_required	
+def upload_avatar(request):
+	if request.method == 'POST':
+		form = AvatarUploadForm(request.POST, request.FILES, instance=request.user)
+		if form.is_valid() and request.user == form.instance:
+			form.save()
+			return JsonResponse({'message': 'Avatar uploaded successfully'})
+	return JsonResponse({'error': 'Invalid form submission'}, status=400)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
