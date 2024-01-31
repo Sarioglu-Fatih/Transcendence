@@ -1,4 +1,4 @@
-import { registerUser }  from './modules/register.js';
+import { registerUser, updateUser }  from './modules/register.js';
 import { login } from './modules/login.js'
 import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
 import { launchGame  } from './modules/pong.js';
@@ -100,40 +100,53 @@ updateForm.addEventListener('submit', async (event) => {
   var userEmail = inputEmail.value;
   var regex = /\S+@\S+\.\S+/;
   var secRegexEmail = /^[a-zA-Z0-9@.]+$/;
-  
 
-  if (username_regex.test(userName))
+  var inputPassword = document.getElementById('updatePassword');
+  var userPassword = inputPassword.value;
+  var password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+  
+  let isValid = true;
+
+  if (username_regex.test(userName) || (userName === null || userName === undefined || userName === ''))
   {
-    document.getElementById('usernameError').innerHTML = '';
+    document.getElementById('updateUsernameError').innerHTML = '';
   }
   else
   {
-    usernameError.textContent = "Please enter letters, numbers, '-' or '_'."
+    updateUsernameError.textContent = "Please enter letters, numbers, '-' or '_'."
     console.log("Username not valide");
+    isValid = false;
   }
-  if (regex.test(userEmail) && secRegexEmail.test(userEmail))
+  if ((regex.test(userEmail) && secRegexEmail.test(userEmail)) || (userEmail === null || userEmail === undefined || userEmail === ''))
   {
-    document.getElementById('emailError').innerHTML = '';
-    count++;
+    document.getElementById('updateEmailError').innerHTML = '';
   }
   else
   {
-    emailError.textContent = 'Please enter a valid e-mail address.';
+    updateEmailError.textContent = 'Please enter a valid e-mail address.';
        // inputEmail.classList.add('error');
         console.log("Email not valid");
+        isValid = false;
   }
-  var isPwdValid = updateValidationState(myInput, letter, capital, number, length, ForbiddenCharElement);
-  if (isPwdValid)
+  if (password_regex.test(userPassword) || (userPassword === null || userPassword === undefined || userPassword === ''))
   {
-    // registerUser();
-    document.getElementById('register_form').reset();
-    updateValidationState(); // Reset the color of pwd_checkbox
+    document.getElementById('updatePasswordError').innerHTML = '';
+  }
+  else
+  {
+    updatePasswordError.textContent = "Password must contain the following: lowercase letter, uppercase letter, number, 8 characters and special character(!@#$%&?)"
+    console.log("Username not valide");
+    isValid = false;
+  }
+  if (isValid)
+  {
+    updateUser();
+    document.getElementById('update_form').reset();
   }
   else
   {
     console.log("Form not valid");
   }
-
 });
 
 const registerForm = document.getElementById('register_form')

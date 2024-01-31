@@ -25,7 +25,7 @@
 
 
                 <label for="inputPassword" class="form-label">Password</label>
-                <input type="password" class="form-control" id="inputPassword" placeholder="Password" maxlength="16" pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$" title="Special characters allowed : @$!%#?&" required/>
+                <input type="password" class="form-control" id="inputPassword" placeholder="Password" maxlength="16" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$" title="Special characters allowed : @$!%#?&" required/>
                 <div id="pwd_checkbox">
                   <h3>Password must contain the following:</h3>
                   <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
@@ -94,32 +94,34 @@
             <p>friend_list</p>
           </div>
         </div>
+
+
         <form id="update_form" class="update_form">
-          <div class="card" id="profile_settings">   <!-- main box -->
+          <div class="card" id="profile_settings">   <!-- main box profile -->
             <div class="card-body"  id="profile_settings_card">
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 text-center">
                   <div class="element" id="username_key"></div>
                   <div class="element" id="pseudo_key"></div>
                   <div class="element" id="email_key"></div>
                   <div class="element" id="win_lose_key"></div>
                   <script src="profilePage.js"></script>
                 </div>
-                <div class="col-md-4 element">
+                <div class="col-md-4 element text-center">
                   <label for="inputUsername" class="form-label"></label>
                   <input type="text" class="form-control" id="updateUsername" placeholder="Username" maxlength="16">
                   <span id="updateUsernameError" class="error-message"></span>
 
                 
-                  <label for="inputEmail" class="form-label"></label>
+                  <label for="inputEmail" class="form-label element"></label>
                   <input type="email" class="form-control" id="updateEmail" placeholder="yourmail@random.com" maxlength="50">
                   <span id="updateEmailError" class="error-message"></span>
                 
-                  <label for="inputPassword" class="form-label"></label>
+                  <label for="inputPassword" class="form-label element"></label>
                   <input type="password" class="form-control" id="updatePassword" placeholder="Password" maxlength="16">
                   <span id="updatePasswordError" class="error-message"></span>
                   
-                  <div class="card-footer text-center">
+                  <div class="card-footer text-center element">
                     <button class="btn btn-primary" id="register_button">register</button>
                   </div>
                 </div>
@@ -127,7 +129,7 @@
             </div>
           </div>
         </form>
-        <div class="card">                      <!-- side box -->
+        <div class="card">                      <!-- side box profile -->
           <div class="card-body" id="history">
             <p>History</p>
           </div>

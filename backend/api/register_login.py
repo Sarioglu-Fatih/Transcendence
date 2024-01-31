@@ -15,9 +15,18 @@ class registerPostParameters():
     email: str
     password: str
 
+def updateUser(request):
+    if request.method == 'PATCH':
+        try:
+             data = registerPostParameters(**json.loads(request.body))
+        except Exception  as e:
+            return HttpResponse(status=400, reason="Bad rrequest: " + str(e))
+        if (User.object.filter)
+        # print(request.PATCH.get('username'))
+        return HttpResponse(status=200)
 
 def create_user(request):
-    if request.method == 'POST':
+    if request.method == 'PUT':
         try:
             data = registerPostParameters(**json.loads(request.body))
         except Exception  as e:
@@ -25,7 +34,7 @@ def create_user(request):
         regexUsername = r'^[a-zA-Z0-9_-]+$'																# register page parsing
         regexEmail = r'\A\S+@\S+\.\S+\Z'
         secRegexEmail = r'^[a-zA-Z0-9@.]+$'
-        regexPwd = r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
+        regexPwd = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
         if not re.match(regexUsername, data.username):
             return JsonResponse({'error': 'Username not valide'})
         if not (re.match(regexEmail, data.email) and re.match(secRegexEmail, data.email)):
