@@ -45,6 +45,8 @@ class User(AbstractUser):
 
 class Match(models.Model):
 	player1_id = models.ForeignKey(User, related_name='player1_matches',on_delete=models.CASCADE)
+	player1_channel = models.CharField(max_length=255, null=True, blank=True)
+	player2_channel = models.CharField(max_length=255, null=True, blank=True)
 	player2_id = models.ForeignKey(User, related_name='player2_matches', on_delete=models.CASCADE)
 	paddle1_pos = models.PositiveIntegerField(default=55)
 	paddle2_pos = models.PositiveIntegerField(default=55)

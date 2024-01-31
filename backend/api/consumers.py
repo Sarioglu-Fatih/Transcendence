@@ -2,35 +2,72 @@ import json
 import uuid
 import jwt
 from django.conf import settings
+import asyncio
 
-from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from .utils import decode_Payload
 from api.models import User, Match
 from channels.db import database_sync_to_async
 from django.utils import timezone
+from datetime import datetime
 
-class MultiplayerConsumer(WebsocketConsumer):
+class MultiplayerConsumer(AsyncWebsocketConsumer):
+	players = {}
 
-	def connect(self):
-		self.accept()
+	update_lock = asyncio.Lock()
 
-	def disconnect(self, close_code):
+	async def connect(self):
+		await self.accept()
+
+	async def disconnect(self, close_code):
 		print("deco")
 		pass
 
-	def receive(self, text_data):
+	async def receive(self, text_data):
+		current_time = datetime.now()
+		formatted_time = current_time.strftime("%H:%M:%S.%f")[:-3]
+		print("Current Time:", formatted_time)
 		print(text_data)
 		data = json.loads(text_data)      
-		if data.get('type') == 'open':
-			user = self.get_user_id(data)
-			self.update_user_status(user)
-			print(user)
-			self.find_match(user)
 		if data.get('type') == 'keyPress':
-			self.processInput(data)
+			await self.processInput(data)
+		if data.get('type') == 'open':
+			user = await self.get_user_id(data)
+			await self.update_user_status(user)
+			print(user)
+			match = await self.find_match(user)
+			self.player_id = user.id
 
+			async with self.update_lock:
+				self.players[self.player_id] = {
+					"id": self.player_id,
+					'p1': 55,
+					'p2': 55,
+					'bx': 75,
+					'by': 75,
+				}
+			if (match):
+				asyncio.create_task(self.game_loop())
+		
+	async def game_loop(self):
+		print("send pos outside loop")
+		while True:
+			async with self.update_lock:
+				for player in self.players.values():
+					player['p1'] += 1
+					player['p2'] += 1
+					print(f"{player['p1']} and {player['p2']}")
+
+			await self.send(text_data=json.dumps({
+				'type': 'position.update',
+				'p1': str(player['p1']),
+				'p2': str(player['p2']),
+			}))
+			await asyncio.sleep(0.5)  
+
+	@database_sync_to_async
 	def get_user_id(self, data):
 		payload = jwt.decode(data.get('jwtToken'), key=settings.SECRET_KEY, algorithms=['HS256'])
 		user_id = payload.get('user_id')
@@ -42,10 +79,8 @@ class MultiplayerConsumer(WebsocketConsumer):
 			return user
 		except User.DoesNotExist:
 			self.disconnect()
-		self.update_user_status(user)
-		print(user)
-		self.find_match(user)
-		
+
+	@database_sync_to_async	
 	def update_user_status(self, user):
 		user.user_is_connected = True
 		user.user_is_in_game = False
@@ -53,32 +88,46 @@ class MultiplayerConsumer(WebsocketConsumer):
 		print(user.channel_name)
 		user.save()
 
-	def find_match(self, user):
-		opponent = User.objects.filter(user_is_connected=True, user_is_in_game=False).exclude(id=user.id).first()
-		print('oppenent')
-		if opponent:
-			# Create a new match instance in the database
-			match = Match.objects.create(player1_id=user, player2_id=opponent, active_game=True, date=timezone.now(), win_lose=0, paddle1_pos=55, paddle2_pos=55)
-			# Set up a game room name for the match and the player
-			game_room = match.id
-			# Mark both users as in-game
+	@database_sync_to_async	
+	def find_opponent(self, user):
+		return (User.objects.filter(user_is_connected=True, user_is_in_game=False).exclude(id=user.id).first())
+	
+	@database_sync_to_async
+	def create_match(self, user, opponent):
+		return Match.objects.create(player1_id=user, player2_id=opponent, active_game=True, date=timezone.now(), win_lose=0, paddle1_pos=55, paddle2_pos=55)
+
+	@database_sync_to_async
+	def put_player_in_game(self, user, opponent, game_room):
+		# Mark both users as in-game
 			user.user_is_in_game = True
 			user.game_room = game_room
 			user.save()
 			opponent.user_is_in_game = True
 			opponent.game_room = game_room
 			opponent.save()
+
+	async def find_match(self, user):
+		opponent = await self.find_opponent(user)
+		print('oppenent')
+		if opponent:
+			# Create a new match instance in the database
+			match = await self.create_match(user, opponent)
+			# Set up a game room name for the match and the player
+			game_room = match.id
+			# Mark both users as in-game
+			await self.put_player_in_game(user, opponent, game_room)
 			# Add both users to the same channel group
-			async_to_sync(self.channel_layer.group_add)(str(game_room), str(user.channel_name))
-			async_to_sync(self.channel_layer.group_add)(str(game_room), str(opponent.channel_name))
+			await self.channel_layer.group_add(str(game_room), str(user.channel_name))
+			await self.channel_layer.group_add(str(game_room), str(opponent.channel_name))
 			# Send the match details to the users
 			print(game_room)
-			self.send_match_details(game_room, game_room)
+			await self.send_match_details(game_room, game_room)
+			return (match)
 
 
-	def send_match_details(self, game_room, data):
+	async def send_match_details(self, game_room, data):
 		# Send match details to both players through the common channel group
-		async_to_sync(self.channel_layer.group_send)(
+		await self.channel_layer.group_send(
 			str(game_room),
 			{
 				'type': 'send.message',
@@ -86,42 +135,49 @@ class MultiplayerConsumer(WebsocketConsumer):
 			}
 		)
 	
-	def send_message(self, event):
-		self.send(text_data=event["text"])
+	async def send_message(self, event):
+		await self.send(text_data=event["text"])
 
-	def position_update(self, event):
-		self.send(text_data=json.dumps({
-        'type': 'position_update',
-        'p1': event['p1'],
-        'p2': event['p2'],
-    }))
+	async def position_update(self, event):
+		await self.send(text_data=json.dumps({
+		'type': 'position_update',
+		'p1': event['p1'],
+		'p2': event['p2'],
+	}))
+
+	@database_sync_to_async
+	def get_updated_match(self, match_id):
+		# Fetch the latest match object from the database
+		return Match.objects.get(id=match_id)
+
+
+	@database_sync_to_async
+	def get_user(self):
+		return User.objects.get(channel_name=self.channel_name)
 	
-	def processInput(self, data):
-		user = User.objects.get(channel_name=self.channel_name)
-		match = Match.objects.get(id=user.game_room)
-		print(match.player1_id)
-		if (match.player1_id == user):
+	@database_sync_to_async
+	def get_match(self, user):
+		return Match.objects.get(id=user.game_room)
+
+	@database_sync_to_async
+	def save_input(self, user, match, data):
+		if match.player1_id == user:
 			print("player 1")
-			if (data.get('content')  == 'w'):
-				match.paddle1_pos += 3
-			elif (data.get('content') == 's'):
-				match.paddle1_pos -= 3
-		else :
+			if data.get('content') == 'w' and match.paddle1_pos >= 5:
+				Match.objects.filter(id=match.id).update(paddle1_pos=match.paddle1_pos - 4)
+			elif data.get('content') == 's' and match.paddle1_pos <= 105:
+				Match.objects.filter(id=match.id).update(paddle1_pos=match.paddle1_pos + 4)
+		else:
 			print("player 2")
-			if (data.get('content')  == 'w'):
-				match.paddle2_pos += 3
-			elif (data.get('content') == 's'):
-				match.paddle2_pos -= 3
-		match.save()
-		p1 = match.paddle1_pos
-		p2 = match.paddle2_pos 
-		print(f"{p1} and {p2}")
-		print(user)
-		async_to_sync(self.channel_layer.group_send)(
-			str(user.game_room),
-			{
-				'type': 'position.update',
-				'p1': str(p1),
-				'p2': str(p2),
-			}
-		)
+			if data.get('content') == 'w' and match.paddle2_pos >= 5:
+				Match.objects.filter(id=match.id).update(paddle2_pos=match.paddle2_pos - 4)
+			elif data.get('content') == 's' and match.paddle2_pos <= 105:
+				Match.objects.filter(id=match.id).update(paddle2_pos=match.paddle2_pos + 4)
+
+	async def processInput(self, data):
+		user = await self.get_user()
+		match = await self.get_match(user)
+		await self.save_input(user, match, data)
+		current_time = datetime.now()
+		formatted_time = current_time.strftime("%H:%M:%S.%f")[:-3]
+		print("Current Time:", formatted_time)
