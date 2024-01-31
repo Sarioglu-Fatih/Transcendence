@@ -18,45 +18,28 @@ async function renderProfilPage() {
 
 async function displayAvatar() {
     const jwtToken = localStorage.getItem('jwt_token');
-    let avatarData = null;
 
-    // Try to get the avatar data from local storage
-    avatarData = JSON.parse(localStorage.getItem('avatar'));
+    try {
+        const response = await makeApiRequest("avatar");
+        const avatarData = await response.json();
 
-    if (!avatarData) {
-        // If the avatar data is not in local storage, fetch it from the server
-        try {
-            const response = await makeApiRequest("avatar");
-            avatarData = await response.json();
-            const encodedAvatar = avatarData.avatar;
-            const dataUri = 'data:image/jpeg;base64,' + encodedAvatar;
-
-            // Store the avatar data in local storage
-            localStorage.setItem('avatar', JSON.stringify(avatarData));
-        } catch (err) {
-            // Handle error
-            console.error('Error loading avatar:', err);
-            // Display default avatar or handle the error in your preferred way
-            return;
+        if (avatarData.avatar) {
+            const dataUri = 'data:image/jpeg;base64,' + avatarData.avatar;
+            updateAvatarImage(dataUri);
         }
-    }
-
-    // Check if avatarData is defined and contains the 'avatar' property
-    if (avatarData && avatarData.avatar) {
-        const encodedAvatar = avatarData.avatar;
-        const dataUri = 'data:image/png;base64,' + encodedAvatar;
-
-        // Set the inner HTML of the avatar element
-        const avatarImage = document.getElementById('avatar-image');
-        if (avatarImage) {
-            avatarImage.src = dataUri;
-            avatarImage.alt = 'user-avatar';
-        }
-    } else {
-        console.error('Invalid avatar data received:', avatarData);
-        // Display default avatar or handle the error in your preferred way
+    } catch (error) {
+        console.error('Avatar fetch failed:', error);
+        // Handle error (e.g., display a default avatar or show an error message)
+        updateAvatarImage(defaultAvatarDataUri);
     }
 }
 
-
+function updateAvatarImage(dataUri) {
+    const avatarImage = document.getElementById('avatar-image');
+    if (avatarImage) {
+        avatarImage.src = '';  // Clear the current source
+        avatarImage.src = dataUri;  // Set the new source
+        avatarImage.alt = 'user-avatar';
+    }
+}
 export { renderProfilPage, displayAvatar};

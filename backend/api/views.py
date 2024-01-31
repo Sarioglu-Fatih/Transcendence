@@ -10,14 +10,19 @@ import base64
 
 
 def avatar(request):
-	if request.method == 'GET':
-		payload = decode_Payload(request)
-		user_id = payload.get('user_id')
-		if user_id:
-			print('avatar')
-			user = User.objects.get(id=user_id)
-			avatar_url = user.avatar.url if user.avatar else None
-			return JsonResponse({'avatar': avatar_url})
+    if request.method == 'GET':
+        payload = decode_Payload(request)
+        user_id = payload.get('user_id')
+        if user_id:
+            print('avatar')
+            user = User.objects.get(id=user_id)
+            avatar_data = None
+
+            if user.avatar:
+                with open(user.avatar.path, 'rb') as avatar_file:
+                    avatar_data = base64.b64encode(avatar_file.read()).decode('utf-8')
+
+            return JsonResponse({'avatar': avatar_data})
 		
 @login_required	
 def upload_avatar(request):
