@@ -28,8 +28,6 @@ class User(AbstractUser):
 	user_is_in_game = models.BooleanField(default=False)
 	lose = models.PositiveIntegerField(default=0)
 	win = models.PositiveIntegerField(default=0)
-	channel_name = models.CharField(max_length=255, null=True, blank=True)
-	game_room = models.PositiveIntegerField(default=0)
 
 	def get_avatar(self):
 		if self.avatar:
@@ -45,13 +43,8 @@ class User(AbstractUser):
 
 class Match(models.Model):
 	player1_id = models.ForeignKey(User, related_name='player1_matches',on_delete=models.CASCADE)
-	player1_channel = models.CharField(max_length=255, null=True, blank=True)
-	player2_channel = models.CharField(max_length=255, null=True, blank=True)
 	player2_id = models.ForeignKey(User, related_name='player2_matches', on_delete=models.CASCADE)
-	paddle1_pos = models.PositiveIntegerField(default=55)
-	paddle2_pos = models.PositiveIntegerField(default=55)
 	active_game = models.BooleanField(default=True)
-	websocket_channel_name = models.CharField(max_length=255)
 	date = models.DateTimeField()
 	win_lose = models.PositiveIntegerField()
 

@@ -26,13 +26,12 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 		pass
 
 	async def receive(self, text_data):
-		current_time = datetime.now()
-		formatted_time = current_time.strftime("%H:%M:%S.%f")[:-3]
-		print("Current Time:", formatted_time)
 		print(text_data)
 		data = json.loads(text_data)      
 		if data.get('type') == 'keyPress':
 			await self.processInput(data)
+			# A FAIRE
+			#process input, avoir 2 jouer dans la meme room pas dans la db
 		if data.get('type') == 'open':
 			user = await self.get_user_id(data)
 			await self.update_user_status(user)
@@ -79,14 +78,6 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 			return user
 		except User.DoesNotExist:
 			self.disconnect()
-
-	@database_sync_to_async	
-	def update_user_status(self, user):
-		user.user_is_connected = True
-		user.user_is_in_game = False
-		user.channel_name = self.channel_name
-		print(user.channel_name)
-		user.save()
 
 	@database_sync_to_async	
 	def find_opponent(self, user):
@@ -138,46 +129,3 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 	async def send_message(self, event):
 		await self.send(text_data=event["text"])
 
-	async def position_update(self, event):
-		await self.send(text_data=json.dumps({
-		'type': 'position_update',
-		'p1': event['p1'],
-		'p2': event['p2'],
-	}))
-
-	@database_sync_to_async
-	def get_updated_match(self, match_id):
-		# Fetch the latest match object from the database
-		return Match.objects.get(id=match_id)
-
-
-	@database_sync_to_async
-	def get_user(self):
-		return User.objects.get(channel_name=self.channel_name)
-	
-	@database_sync_to_async
-	def get_match(self, user):
-		return Match.objects.get(id=user.game_room)
-
-	@database_sync_to_async
-	def save_input(self, user, match, data):
-		if match.player1_id == user:
-			print("player 1")
-			if data.get('content') == 'w' and match.paddle1_pos >= 5:
-				Match.objects.filter(id=match.id).update(paddle1_pos=match.paddle1_pos - 4)
-			elif data.get('content') == 's' and match.paddle1_pos <= 105:
-				Match.objects.filter(id=match.id).update(paddle1_pos=match.paddle1_pos + 4)
-		else:
-			print("player 2")
-			if data.get('content') == 'w' and match.paddle2_pos >= 5:
-				Match.objects.filter(id=match.id).update(paddle2_pos=match.paddle2_pos - 4)
-			elif data.get('content') == 's' and match.paddle2_pos <= 105:
-				Match.objects.filter(id=match.id).update(paddle2_pos=match.paddle2_pos + 4)
-
-	async def processInput(self, data):
-		user = await self.get_user()
-		match = await self.get_match(user)
-		await self.save_input(user, match, data)
-		current_time = datetime.now()
-		formatted_time = current_time.strftime("%H:%M:%S.%f")[:-3]
-		print("Current Time:", formatted_time)
