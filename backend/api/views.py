@@ -1,9 +1,12 @@
 from django.http import JsonResponse
 from django.http import HttpResponse, HttpResponseNotFound
 from .utils import decode_Payload
+from api.models import User
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 import base64
-from .models import User
-from django.shortcuts import render
 
 
 def avatar(request):
@@ -17,6 +20,8 @@ def avatar(request):
 			encoded_avatar = base64.b64encode(user.get_avatar()).decode('utf-8')
 			return JsonResponse({'avatar': encoded_avatar})
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_user(request):
 	if request.method == 'GET':
 		payload = decode_Payload(request)
@@ -35,3 +40,16 @@ def get_user(request):
 		return HttpResponseNotFound(status=404)
 	else:
 		return HttpResponseNotFound(status=404)
+  
+@login_required
+def add_friend_request(request, userToAddId):
+	# Get the two user
+	currentUser = request.user
+	userToAdd = get_object_or_404(User, id=userToAddId)
+	# Add the userToAdd to the friendlist if is not already in
+	if userToAdd not in  currentUser.friendlist.all():
+		currentUser.friendlist.add(userToAdd)
+		currentUser.save()
+		return HttpResponse("Friend added to the friendlist", status=200)
+	else:
+		return HttpResponse("Friend is already in the friendlist", status=400)

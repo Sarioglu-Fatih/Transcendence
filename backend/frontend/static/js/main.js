@@ -74,15 +74,14 @@ loginForm.addEventListener('submit', async function (event) {
 
 const logoutBtn = document.getElementById('logout_button');
 logoutBtn.addEventListener('click', () => {
-  logout();
   document.getElementById('emailError').innerHTML = '';
   document.getElementById('usernameError').innerHTML = '';
   localStorage.removeItem('jwt_token');
-  displayLoginPage();
+  logout();
 });
 
 const profilBtn = document.getElementById('profil_button');
-profilBtn.addEventListener('click', () => {
+profilBtn.addEventListener('click',  () => {
   displayProfilPage();
 });
 

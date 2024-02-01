@@ -1,20 +1,11 @@
+import { makeApiRequest } from "./utils.js";
+
 const profilPage = document.getElementById('profil_page');
 const avatar = document.getElementById('avatar');
 
 async function renderProfilPage() {
-
-    const jwtToken = localStorage.getItem('jwt_token');
-    console.log(jwtToken);
-    console.log("profile");
     try {
-        const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-        const response = await fetch(`${baseURL}/api/profil`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${jwtToken}`
-            },
-        })
+        const response = await makeApiRequest("profil")
         const userData = await response.json()
 
         var username_type = document.getElementById('username_key');
