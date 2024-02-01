@@ -15,18 +15,9 @@ class registerPostParameters():
     email: str
     password: str
 
-def updateUser(request):
-    if request.method == 'PATCH':
-        try:
-             data = registerPostParameters(**json.loads(request.body))
-        except Exception  as e:
-            return HttpResponse(status=400, reason="Bad rrequest: " + str(e))
-        if (User.object.filter)
-        # print(request.PATCH.get('username'))
-        return HttpResponse(status=200)
 
 def create_user(request):
-    if request.method == 'PUT':
+    if request.method == 'POST':
         try:
             data = registerPostParameters(**json.loads(request.body))
         except Exception  as e:
@@ -66,6 +57,7 @@ def user_login(request):
             # Generate JWT token
             refresh = RefreshToken.for_user(user)
             jwt_token = str(refresh.access_token)
+        
             return JsonResponse({'status': 'success', 'message': 'Login successful', 'token': jwt_token})
         else:
             # Authentication failed. Return an error response.
@@ -79,3 +71,38 @@ def user_logout(request):
     logout(request)
     Session.objects.filter(session_key=request.session.session_key).delete()
     return JsonResponse({'status': 'success', 'message': 'User logged out'})
+
+
+def updateUser(request):
+    if request.method == 'PATCH':
+        try:
+             data = registerPostParameters(**json.loads(request.body))
+        except Exception  as e:
+            return HttpResponse(status=400, reason="Bad request: " + str(e))
+        
+        regexUsername = r'^[a-zA-Z0-9_-]+$'																# register page parsing
+        regexEmail = r'\A\S+@\S+\.\S+\Z'
+        secRegexEmail = r'^[a-zA-Z0-9@.]+$'
+        regexPwd = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
+
+        user = request.user
+        if User.objects.filter(username=data.username).exists():
+            return HttpResponse(reason="Conflict: Username already exists.", status=409)
+        if User.objects.filter(email=data.email).exists():
+            return HttpResponse(reason="Conflict: Email already exists.", status=409)
+        if (data.username):
+            if not re.match(regexUsername, user.username):
+                return JsonResponse({'error': 'Username not valide'})
+            user.username = data.username
+        if (data.email):
+            if not (re.match(regexEmail, user.email) and re.match(secRegexEmail, user.email)):
+                return JsonResponse({'error': 'Email not valide'})
+            user.email = data.email
+        if (data.password):
+            if  not re.match(regexPwd, data.password):
+                return JsonResponse({'error': "Special characters allowed : @$!%#?&"})
+            user.password = make_password(data.password)
+        user.save()
+        
+        # print(request.PATCH.get('username'))
+        return HttpResponse(status=200)

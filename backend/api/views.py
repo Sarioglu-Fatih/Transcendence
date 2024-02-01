@@ -30,10 +30,8 @@ def get_user(request):
 				'email': user.email,
 				'win': user.win,
 				'lose': user.lose,
-				
 			}
 			return JsonResponse(data, safe=False)
 		return HttpResponseNotFound(status=404)
 	else:
 		return HttpResponseNotFound(status=404)
-
