@@ -14,7 +14,7 @@
           <form id="register_form" class="register_form" >
             {% csrf_token %}
             <div class="card">
-              <div class="card-body">
+              <div class="card-body">         <!-- register -->
                 <label for="inputUsername" class="form-label">Username</label>
                 <input type="text" class="form-control" id="inputUsername" placeholder="Username" maxlength="16" required/>
                 <span id="usernameError" class="error-message"></span>
@@ -25,7 +25,7 @@
 
 
                 <label for="inputPassword" class="form-label">Password</label>
-                <input type="password" class="form-control" id="inputPassword" placeholder="Password" maxlength="16" pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$" title="Special characters allowed : @$!%#?&" required/>
+                <input type="password" class="form-control" id="inputPassword" placeholder="Password" maxlength="16" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$" title="Special characters allowed : @$!%#?&" required/>
                 <div id="pwd_checkbox">
                   <h3>Password must contain the following:</h3>
                   <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
@@ -44,7 +44,7 @@
           </form>
         </div>
 
-        <div class="col-md-6 p-3" id="div_login_form">
+        <div class="col-md-6 p-3" id="div_login_form">    <!-- login -->
           <form id="login_form" class="login_form">
             <div class="card">
               <div class="card-body">
@@ -62,40 +62,78 @@
           </form>
         </div>
 
-        <div class="card" id="top_box">
-          <div class="card-body d-flex flex-column justify-content-between" style="width:100vw;">
-            <div class="row">
-              <div class="col-md-4">
-                <div class="img img-fluid" id="avatar"></div>
-              </div>
-              <div class="col-md-4">
-                <button class="btn btn-primary " id="profil_button">profil</button>
-              </div>
-              <div class="col-md-4">
-                <button class="btn btn-primary" id="logout_button">logout</button>
-              </div>
+        <div class="card" id="top_box">         <!-- top box -->
+          <div class="card-body d-flex justify-content-between" style="width:100vw;">
+            <div class="col-md-4">
+              <div class="img img-fluid" id="avatar"></div>
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-primary btn-lg" id="profil_button">profil</button>
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-primary btn-lg" id="logout_button">logout</button>
             </div>
           </div>
         </div>
 
-        <div class="card" id="game_launcher">
+        <div class="card" id="game_launcher">   <!-- main box -->
           <div class="card-body"  id="game_card">
             <div class="row">
-              <div class="col-md-8">
-                <button class="btn btn-primary " id="play_button">play</button>
+              <div class="col-md-6 text-center">
+                <button class="btn btn-primary btn-block" id="play_button">play</button>
               </div>
-              <div class="col-md-4">
-                <button class="btn btn-primary" id="tournament">Tournament</button>
+              <div class="col-md-6 text-center">
+                <button class="btn btn-primary btn-block" id="tournament">Tournament</button>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="card">
+        <div class="card">                      <!-- side box home -->
           <div class="card-body" id="friend_list">
               <p>Friend List</p>
           </div>
       </div>
+
+
+        <form id="update_form" class="update_form">
+          <div class="card" id="profile_settings">   <!-- main box profile -->
+            <div class="card-body"  id="profile_settings_card">
+              <div class="row">
+                <div class="col-md-6 text-center">
+                  <div class="element" id="username_key"></div>
+                  <div class="element" id="pseudo_key"></div>
+                  <div class="element" id="email_key"></div>
+                  <div class="element" id="win_lose_key"></div>
+                  <script src="profilePage.js"></script>
+                </div>
+                <div class="col-md-4 element text-center">
+                  <label for="inputUsername" class="form-label"></label>
+                  <input type="text" class="form-control" id="updateUsername" placeholder="Username" maxlength="16">
+                  <span id="updateUsernameError" class="error-message"></span>
+
+                
+                  <label for="inputEmail" class="form-label element"></label>
+                  <input type="email" class="form-control" id="updateEmail" placeholder="yourmail@random.com" maxlength="50">
+                  <span id="updateEmailError" class="error-message"></span>
+                
+                  <label for="inputPassword" class="form-label element"></label>
+                  <input type="password" class="form-control" id="updatePassword" placeholder="Password" maxlength="16">
+                  <span id="updatePasswordError" class="error-message"></span>
+                  
+                  <div class="card-footer text-center element">
+                    <button class="btn btn-primary" id="register_button">register</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="card">                      <!-- side box profile -->
+          <div class="card-body" id="history">
+            <p>History</p>
+          </div>
+        </div>
 
         <div class="div" id="profil_page"></div>
 

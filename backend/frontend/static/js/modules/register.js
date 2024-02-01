@@ -36,5 +36,41 @@ async function registerUser() {
     }
 }
 
-export { registerUser } 
+async function updateUser() {
+    var username = document.getElementById("updateUsername").value; // Get info from the register form
+    var email = document.getElementById("updateEmail").value;
+    var password = document.getElementById("updatePassword").value;
+    let body = {
+        'username': username,
+        'email': email,
+        'password': password
+    }
+
+    try {
+        const csrfToken = getCookie('csrftoken');
+        const jwtToken = localStorage.getItem('jwt_token');
+        const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+        const response = await fetch(`${baseURL}/api/update`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+                'Authorization': `Bearer ${jwtToken}`
+            },
+            body: JSON.stringify(body), // the data we send
+            credentials: 'include',
+        })
+        if (response.ok) {
+            console.log('UPDATED OKKKKK', response);
+        }
+        else {
+            console.error('Failed to register user:', response.statusText);
+        }
+    }
+    catch (error) {
+        console.error('Error registering user:', error);
+    }
+}
+
+export { registerUser, updateUser } 
 

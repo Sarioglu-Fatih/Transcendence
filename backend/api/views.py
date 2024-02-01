@@ -23,17 +23,24 @@ def avatar(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user(request):
-	payload = decode_Payload(request)
-	user_id = payload.get('user_id')
-	if user_id:
-		user = User.objects.get(id=user_id)
-		data = {
-			'username': user.username,
-			'email': user.email
-		}
-		return JsonResponse(data, safe=False)
-	return HttpResponseNotFound(status=404)
-
+	if request.method == 'GET':
+		payload = decode_Payload(request)
+		user_id = payload.get('user_id')
+		if user_id:
+			user = User.objects.get(id=user_id)
+			data = {
+				'User_ID': user_id,
+				'username': user.username,
+				'pseudo': user.pseudo,
+				'email': user.email,
+				'win': user.win,
+				'lose': user.lose,
+			}
+			return JsonResponse(data, safe=False)
+		return HttpResponseNotFound(status=404)
+	else:
+		return HttpResponseNotFound(status=404)
+  
 @login_required
 def add_friend_request(request, userToAddId):
 	# Get the two user

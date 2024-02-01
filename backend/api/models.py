@@ -9,8 +9,8 @@ class User(AbstractUser):
 	avatar = models.BinaryField()
 	user_is_connected = models.BooleanField(default=False)
 	user_is_in_game = models.BooleanField(default=False)
-	lose = models.PositiveIntegerField(default=0)
-	win = models.PositiveIntegerField(default=0)
+	lose = models.IntegerField(default=0)
+	win = models.IntegerField(default=0)
 	friendlist = models.ManyToManyField("User", blank=True)
 
 	def get_avatar(self):

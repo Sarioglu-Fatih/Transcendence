@@ -27,7 +27,7 @@ function launchGame() {
     socket.addEventListener('close', (event) => {
         console.log('WebSocket connection closed:', event);
     });
-
+  
     // Connection error
     socket.addEventListener('error', (event) => {
         console.error('WebSocket error:', event);
