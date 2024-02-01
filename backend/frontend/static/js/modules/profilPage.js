@@ -29,7 +29,6 @@ async function displayAvatar() {
         }
     } catch (error) {
         console.error('Avatar fetch failed:', error);
-        // Handle error (e.g., display a default avatar or show an error message)
         updateAvatarImage(defaultAvatarDataUri);
     }
 }
