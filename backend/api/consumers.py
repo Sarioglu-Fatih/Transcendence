@@ -3,6 +3,7 @@ import uuid
 import jwt
 from django.conf import settings
 import asyncio
+import math
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.layers import get_channel_layer
@@ -22,7 +23,6 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 		await self.accept()
 
 	async def disconnect(self, close_code):
-		print("deco")
 		pass
 
 	async def receive(self, text_data):
@@ -34,33 +34,31 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 			player = self.players.get(user_id)
 			opponent = self.players.get(player['opponent_id'])
 			if not player:
-				print("nooo")
 				return
 			async with self.update_lock:
 				if player['player'] == 'p1':
 					if data.get('content') == 's':
 						if player['p1'] <= 105:
-							player['p1'] += 2
-							opponent['p1'] += 2
+							player['p1'] += 4
+							opponent['p1'] += 4
 					else:
 						if player['p1'] >= 5:
-							player['p1'] -= 2
-							opponent['p1'] -= 2
+							player['p1'] -= 4
+							opponent['p1'] -= 4
 				else:
 					if data.get('content') == 's':
 						if player['p2'] <= 105:
-							player['p2'] += 2
-							opponent['p2'] += 2
+							player['p2'] += 4
+							opponent['p2'] += 4
 					else:
 						if player['p2'] >= 5:
-							player['p2'] -= 2
-							opponent['p2'] -= 2
+							player['p2'] -= 4
+							opponent['p2'] -= 4
 			# A FAIRE
 			#process input, avoir 2 jouer dans la meme room pas dans la db
 		if data.get('type') == 'open':
 			user = await self.get_user_id(data)
 			await self.update_user_status(user)
-			print(user)
 			self.player_id = user.id
 
 			async with self.update_lock:
@@ -79,36 +77,38 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 				asyncio.create_task(self.game_loop(user))
 	
 	async def game_loop(self, user):
+		paddle_height = 40
 		b_pos_x = 150
 		b_pos_y = 75
-		dx = 0.80
-		dy = 0.20
-		speed = 2
+		Vx = 0.3
+		Vy = 0
+		speed = 0.5
 		p1_score = 0
 		p2_score = 0 
 		player = self.players.get(user.id)
-		
-		print("send pos outside loop")
 		while p1_score < 5 and p2_score < 5:
-			print(f"p1 = {player['p1']} and p2 = {player['p2']} bx = {b_pos_x} and by = {b_pos_y}")
-			b_pos_x += dx * speed
-			b_pos_y += dy * speed
+			# print(f"p1 = {player['p1']} and p2 = {player['p2']} bx = {b_pos_x} and by = {b_pos_y}")
+			b_pos_x += Vx * 3
+			b_pos_y += Vy * 3
 
 			if b_pos_y < 3 or b_pos_y > 147:
-				dy = -dy
+				Vy = -Vy
 
 			if b_pos_x > 280:
 				if (b_pos_y >= player['p2'] and b_pos_y <= player['p2'] + 40):
-					dx = -dx
-					if (b_pos_y <= player['p2'] + 10):
-						dy = -dy 
-					
+					relative_intersection = player['p2'] + 20 - b_pos_y
+					normalize_relative_intersection = relative_intersection / 20
+					bounce_angle = normalize_relative_intersection * math.radians(75)
+					Vx = -(speed * math.cos(bounce_angle))
+					Vy = speed * -math.sin(bounce_angle)
 					
 			if b_pos_x < 15:
 				if (b_pos_y >= player['p1'] and b_pos_y <= player['p1'] + 40):
-					dx = -dx
-					if (b_pos_y <= player['p1'] + 20):
-						dy = -dy
+					relative_intersection = player['p1'] + 20 - b_pos_y
+					normalize_relative_intersection = relative_intersection / 20
+					bounce_angle = normalize_relative_intersection * math.radians(75)
+					Vx = (speed * math.cos(bounce_angle))
+					Vy = speed* -math.sin(bounce_angle)
 
 			if b_pos_x > 300:
 				p1_score += 1
@@ -133,7 +133,7 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 					'p2_score': str(p2_score),
 				}
 			)
-			await asyncio.sleep(0.02)
+			await asyncio.sleep(0.01)
 
 	async def position_update(self, event):
 		await self.send(text_data=json.dumps({
@@ -153,7 +153,6 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 		user_id = payload.get('user_id')
 		if (not user_id): #check if token contain a user_id
 			self.disconnect()
-		print(user_id)
 		try:
 			user = User.objects.get(id=user_id)
 			return user
@@ -187,7 +186,6 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 
 	async def find_match(self, user):
 		opponent = await self.find_opponent(user)
-		print('oppenent')
 		if opponent:
 			# Create a new match instance in the database
 			match = await self.create_match(user, opponent)
