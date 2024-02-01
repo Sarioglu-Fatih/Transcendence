@@ -28,6 +28,7 @@ class User(AbstractUser):
 	user_is_in_game = models.BooleanField(default=False)
 	lose = models.PositiveIntegerField(default=0)
 	win = models.PositiveIntegerField(default=0)
+	channel_name = models.CharField(max_length=255, null=True, blank=True)
 
 	def get_avatar(self):
 		if self.avatar:

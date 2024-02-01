@@ -2,11 +2,11 @@ function launchGame() {
     
     const socketURL = 'wss://localhost:8000/ws/game/';
     const socket = new WebSocket(socketURL)
+    const jwtToken = localStorage.getItem('jwt_token');
     // Connection opened
 
     socket.addEventListener('open', (event) => {
         console.log('WebSocket connection opened:', event);
-        const jwtToken = localStorage.getItem('jwt_token');
         // Send a message to the server
         const message = {
             type: 'open',
@@ -21,12 +21,17 @@ function launchGame() {
         console.log('Received message from server:', event.data);
         // Parse the JSON string
         const data = JSON.parse(event.data);
-
+ 
         // Extract values as integers
         let p1 = parseInt(data.p1);
         let p2 = parseInt(data.p2);
+        let bx = parseInt(data.bx);
+        let by = parseInt(data.by);
+        let score1 = parseInt(data.p1_score);
+        let score2 = parseInt(data.p2_score);
 
-        drawPong(150, 75, p1, p2);
+
+        drawPong(bx, by, p1, p2);
     });
 
     // Connection closed
@@ -47,6 +52,7 @@ function launchGame() {
                 const keyMsg = {
                     type: 'keyPress',
                     content: event.key,
+                    jwtToken: jwtToken,
                 };
                 socket.send(JSON.stringify(keyMsg));
                 break;
