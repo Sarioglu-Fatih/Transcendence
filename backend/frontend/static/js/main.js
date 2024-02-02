@@ -4,6 +4,7 @@ import { updateValidationState, updateValidationClass, myInput, length, letter, 
 import { launchGame, drawPong } from './modules/pong.js';
 import { logout } from './modules/logout.js'
 import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js'
+import { makeApiRequest } from './modules/utils.js';
 
 const playBtn = document.getElementById("play_button");
 playBtn.addEventListener('click', ()=> {
@@ -16,40 +17,32 @@ var path = window.location.pathname;
 console.log(path);
 if (!isUserLoggedIn())
   history.pushState({}, '', '/login');
-else if (path === '/')
-  history.pushState({}, '', '/home');
+else if (path === '/'){
+  console.log('ici')
+  history.pushState({}, '', '/home');}
 else
   history.pushState({}, '', path);
 
 window.onload = function() {
   var path = window.location.pathname;
-  switch(path) {
-    case "/home":
+  if (path === "/home")
       displayHomePage();
-      break;
-    case "/profil":
-      displayProfilPage();
-      break;
-    case "/login":
+  else if (path === '/login')
       displayLoginPage();
-      break;
+  else if (path.startsWith('/profil/')){
+      displayProfilPage(path);
   }
 }
 
 window.onpopstate = function(event) {
   var path = window.location.pathname;
-  switch(path) {
-    case "/home":
+  if (path === "/home")
       displayHomePage();
-      break;
-    case "/profil":
+  else if (path === '/login')
+    displayLoginPage();
+  else if (path.startsWith('/profil/'))
       displayProfilPage();
-      break;
-    case "/login":
-      displayLoginPage();
-      break;
-  }
- }
+}
 
 const loginForm = document.getElementById('login_form');
 loginForm.addEventListener('submit', async function (event) {
@@ -83,8 +76,10 @@ logoutBtn.addEventListener('click', () => {
 });
 
 const profilBtn = document.getElementById('profil_button');
-profilBtn.addEventListener('click',  () => {
-  displayProfilPage();
+profilBtn.addEventListener('click', async () => {
+  const response = await makeApiRequest("username");
+  const data = await response.json()
+  displayProfilPage("/profil/" + data.username);
 });
 
 const updateForm = document.getElementById('update_form');

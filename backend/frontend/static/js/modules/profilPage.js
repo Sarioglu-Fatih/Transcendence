@@ -3,9 +3,13 @@ import { makeApiRequest } from "./utils.js";
 const profilPage = document.getElementById('profil_page');
 const avatar = document.getElementById('avatar');
 
+
+
 async function renderProfilPage() {
     try {
-        const response = await makeApiRequest("profil")
+        const currentPath = window.location.pathname.substring(1) ;
+        console.log(currentPath)
+        const response = await makeApiRequest(currentPath)
         const userData = await response.json()
 
         var username_type = document.getElementById('username_key');
@@ -25,8 +29,12 @@ async function renderProfilPage() {
         pseudo_type.textContent = "pseudo   : ";
         pseudo_type.textContent += userData.pseudo;
 
-        email_type.textContent = "email     : ";
-        email_type.textContent += userData.email;
+        if (userData.email){
+            email_type.textContent = "email     : ";
+            email_type.textContent += userData.email;
+        }
+        else 
+            email_type.textContent = "";
 
         resulte_type.textContent = "win  ";
         resulte_type.textContent += win_string;

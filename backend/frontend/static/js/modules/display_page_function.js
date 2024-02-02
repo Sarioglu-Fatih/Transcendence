@@ -16,8 +16,8 @@ function displayLoginPage() {
     }
 }
 
-function displayProfilPage() {
-    history.pushState({}, '', '/profil');
+function displayProfilPage(path) {
+    history.pushState({}, '', path);
     hideAllDivs();
     displayAvatar();
     renderProfilPage();
