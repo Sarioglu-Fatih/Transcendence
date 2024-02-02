@@ -4,7 +4,7 @@ import { updateValidationState, updateValidationClass, myInput, length, letter, 
 import { launchGame  } from './modules/pong.js';
 import { logout } from './modules/logout.js'
 import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js'
-import { displayAvatar } from './modules/profilPage.js';
+import { handleAvatarUpload } from './modules/avatar_upload.js'
 
 const playBtn = document.getElementById("play_button");
 playBtn.addEventListener('click', ()=> {
@@ -148,29 +148,8 @@ function isUserLoggedIn() {
 
 
 window.uploadAvatar = async function () {
-  const form = document.getElementById('avatar_upload_form');
-  const formData = new FormData(form);
-  const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-  try {
-    const response = await fetch(`${baseURL}/api/upload_avatar/`, {
-      method: 'POST',
-      headers: {
-        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-      },
-      body: formData,
-    });
-
-    if (response.ok) {
-      // Optionally, update the displayed avatar immediately
-      await displayAvatar();
-      // Provide feedback to the user if needed
-    } else {
-      console.error('Avatar upload failed');
-    }
-  } catch (error) {
-    console.error('Avatar upload failed:', error);
-  }
-};
+	handleAvatarUpload()
+}
 
 export { isUserLoggedIn}
  

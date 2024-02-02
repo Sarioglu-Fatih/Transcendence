@@ -8,7 +8,7 @@ function displayLoginPage() {
     else {
         history.pushState({}, '', '/login');
         showDivs(['div_register_form', 'div_login_form']);
-        hideDivs(['top_box', 'game_launcher', 'friend_list', 'profil_page']);
+        hideDivs(['top_box', 'game_launcher', 'friend_list', 'profil_page', 'avatar_upload_form']);
     }
 }
 
@@ -17,7 +17,7 @@ function displayProfilPage() {
     displayAvatar();
     renderProfilPage();
     hideDivs(['div_register_form', 'div_login_form', 'game_launcher', 'friend_list']);
-    showDivs(['top_box', "profil_page"])
+    showDivs(['top_box', "profil_page", 'avatar_upload_form'])
 }
 
 function displayHomePage() {
