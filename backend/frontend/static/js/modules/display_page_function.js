@@ -2,7 +2,7 @@ import { renderProfilPage, displayAvatar } from "./profilPage.js";
 import { isUserLoggedIn } from "../main.js";
 
 function hideAllDivs() {
-    hideDivs(['top_box', 'game_launcher', 'friend_list', 'profil_page', 'div_register_form', 'div_login_form', "history", "profile_settings"]);
+    hideDivs(['top_box', 'game_launcher', 'friend_list', 'profil_page', 'div_register_form', 'div_login_form', "history", "partie_de_gauche", "partie_de_droite"]);
 }
 
 function displayLoginPage() {
@@ -21,7 +21,7 @@ function displayProfilPage(path) {
     hideAllDivs();
     displayAvatar();
     renderProfilPage();
-    showDivs(['top_box', "profil_page", "profile_settings", "history"])
+    showDivs(['top_box', "profil_page", "partie_de_gauche"])
 }
 
 function displayHomePage() {
