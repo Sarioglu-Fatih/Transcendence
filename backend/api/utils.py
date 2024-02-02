@@ -1,5 +1,6 @@
 from django.views.decorators.csrf import ensure_csrf_cookie
 import jwt
+from jwt.exceptions import InvalidTokenError
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.conf import settings

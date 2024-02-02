@@ -1,3 +1,5 @@
+import { hideDivs, showDivs } from "./utils.js";
+
 async function logout() {
     try {
       const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
@@ -10,6 +12,13 @@ async function logout() {
       });
   
       if (response.ok) {
+        document.getElementById('emailError').innerHTML = '';
+        document.getElementById('usernameError').innerHTML = '';
+        history.pushState({}, '', '/login');
+        localStorage.removeItem('jwt_token');
+        localStorage.removeItem('refresh_token');
+        hideDivs(['top_box',  'game_launcher', 'friend_list', 'profil_page', 'profile_settings', 'history']);
+        showDivs(['div_register_form', 'div_login_form']);
         console.log('Logout successful.');
       }
       else {
