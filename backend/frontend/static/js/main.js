@@ -4,6 +4,7 @@ import { updateValidationState, updateValidationClass, myInput, length, letter, 
 import { launchGame, drawPong } from './modules/pong.js';
 import { logout } from './modules/logout.js'
 import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js'
+import { handleAvatarUpload } from './modules/avatar_upload.js'
 import { makeApiRequest } from './modules/utils.js';
 
 const playBtn = document.getElementById("play_button");
@@ -203,6 +204,11 @@ function isUserLoggedIn() {
   }
   console.log("user not  connected")
   return (false)
+}
+
+
+window.uploadAvatar = async function () {
+	handleAvatarUpload()
 }
 
 export { isUserLoggedIn}

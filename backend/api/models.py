@@ -2,11 +2,12 @@ from django.db import models
 from django.conf import settings
 import os
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import User, AbstractUser
+from django import forms 
 
 class User(AbstractUser):
 	pseudo = models.CharField(max_length=16)
-	avatar = models.BinaryField()
+	avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
 	user_is_connected = models.BooleanField(default=False)
 	user_is_in_game = models.BooleanField(default=False)
 	lose = models.PositiveIntegerField(default=0)
@@ -18,13 +19,18 @@ class User(AbstractUser):
 		if self.avatar:
 			return self.avatar
 		else:
-			default_avatar_path = os.path.join(settings.MEDIA_ROOT, 'img', 'default_avatar.png')
+			default_avatar_path = os.path.join(settings.MEDIA_ROOT, 'avatars', 'default_avatar.png')
 			print("Default Avatar Path:", default_avatar_path)
 			with open(default_avatar_path, 'rb') as f:
 				return f.read()
 
 	def __str__(self):
 		return self.username
+
+class AvatarUploadForm(forms.ModelForm):
+	class Meta:
+		model = User
+		fields = ['avatar']
 
 class Match(models.Model):
 	player1_id = models.ForeignKey(User, related_name='player1_matches',on_delete=models.CASCADE)

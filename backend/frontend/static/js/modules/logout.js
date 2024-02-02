@@ -17,7 +17,7 @@ async function logout() {
         history.pushState({}, '', '/login');
         localStorage.removeItem('jwt_token');
         localStorage.removeItem('refresh_token');
-        hideDivs(['top_box',  'game_launcher', 'friend_list', 'profil_page', 'profile_settings', 'history']);
+        hideDivs(['top_box',  'game_launcher', 'friend_list', 'profil_page', 'profile_settings', 'history', 'avatar_upload_form']);
         showDivs(['div_register_form', 'div_login_form']);
         console.log('Logout successful.');
       }
