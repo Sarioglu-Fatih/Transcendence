@@ -1,7 +1,7 @@
 import { registerUser, updateUser }  from './modules/register.js';
 import { login } from './modules/login.js'
 import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
-import { launchGame  } from './modules/pong.js';
+import { launchGame, drawPong } from './modules/pong.js';
 import { logout } from './modules/logout.js'
 import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js'
 
@@ -9,6 +9,8 @@ const playBtn = document.getElementById("play_button");
 playBtn.addEventListener('click', ()=> {
   launchGame();
 })
+
+drawPong();
 
 var path = window.location.pathname;
 console.log(path);
