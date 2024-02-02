@@ -93,14 +93,15 @@
             </div>
           </div>
         </div>
-
+        
         <div class="card">                      <!-- side box home -->
           <div class="card-body" id="friend_list">
-              <p>Friend List</p>
+            <p>Friend List</p>
           </div>
-      </div>
-
-
+        </div>
+        
+        
+      <div class="div" id="profil_page"></div>
         <form id="update_form" class="update_form">
           <div class="card" id="profile_settings">   <!-- main box profile -->
             <div class="card-body"  id="profile_settings_card">
@@ -130,6 +131,11 @@
                     <button class="btn btn-primary" id="register_button">register</button>
                   </div>
                 </div>
+                <form id="avatar_upload_form" enctype="multipart/form-data"> <!-- Form upload Avatar-->
+                  <label for="id_avatar">Choose Avatar:</label>
+                  <input type="file" id="id_avatar" name="avatar" accept="image/*" required/>
+                  <button type="button" id="upload_avatar_button" onclick="uploadAvatar()">Upload Avatar</button>
+                </form>
               </div>
             </div>
           </div>
@@ -139,14 +145,7 @@
             <p>History</p>
           </div>
         </div>
-
-        <div class="div" id="profil_page"></div>
-          <form id="avatar_upload_form" enctype="multipart/form-data"> <!-- Form upload Avatar-->
-            <label for="id_avatar">Choose Avatar:</label>
-            <input type="file" id="id_avatar" name="avatar" accept="image/*" required/>
-            <button type="button" id="upload_avatar_button" onclick="uploadAvatar()">Upload Avatar</button>
-          </form>
-    </div>
+      </div>
     <script type="module" src="{% static 'js/main.js' %}"></script>
   </body>
 </html>
