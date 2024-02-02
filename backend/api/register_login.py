@@ -106,3 +106,15 @@ def updateUser(request):
         
         # print(request.PATCH.get('username'))
         return HttpResponse(status=200)
+
+# def login_42(request):
+#     url = 'https://api.intra.42.fr/oauth/authorize'
+#     params = {
+#         'client_id': os.getenv('APP_INTRA_CLIENT_ID')
+#         'redirect_uri': 'https://localhost:8000/home'
+#         'scope': 'public'
+#         # ajouter state quand on fera la protection xss
+#         'response_type': 'code'
+#     }
+#     response = requests.get(url, params=params)
+#     print(response)
