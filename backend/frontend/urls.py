@@ -7,6 +7,6 @@ urlpatterns = [
     path('', views.renderMainPage),
     path('home', views.renderMainPage),
     path('login', views.renderMainPage),
-    path('profil', views.renderMainPage),
+    path('profil/<str:user_profil>/', views.renderProfilPage),
 
 ]

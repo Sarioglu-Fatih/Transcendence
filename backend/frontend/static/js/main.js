@@ -1,54 +1,49 @@
-import { registerUser }  from './modules/register.js';
+import { registerUser, updateUser }  from './modules/register.js';
 import { login } from './modules/login.js'
 import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
-import { launchGame  } from './modules/pong.js';
+import { launchGame, drawPong } from './modules/pong.js';
 import { logout } from './modules/logout.js'
 import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js'
 import { handleAvatarUpload } from './modules/avatar_upload.js'
+import { makeApiRequest } from './modules/utils.js';
 
 const playBtn = document.getElementById("play_button");
 playBtn.addEventListener('click', ()=> {
   launchGame();
 })
 
+drawPong();
+
 var path = window.location.pathname;
 console.log(path);
 if (!isUserLoggedIn())
   history.pushState({}, '', '/login');
-else if (path === '/')
-  history.pushState({}, '', '/home');
+else if (path === '/'){
+  console.log('ici')
+  history.pushState({}, '', '/home');}
 else
   history.pushState({}, '', path);
 
 window.onload = function() {
   var path = window.location.pathname;
-  switch(path) {
-    case "/home":
+  if (path === "/home")
       displayHomePage();
-      break;
-    case "/profil":
-      displayProfilPage();
-      break;
-    case "/login":
+  else if (path === '/login')
       displayLoginPage();
-      break;
+  else if (path.startsWith('/profil/')){
+      displayProfilPage(path);
   }
 }
 
 window.onpopstate = function(event) {
   var path = window.location.pathname;
-  switch(path) {
-    case "/home":
+  if (path === "/home")
       displayHomePage();
-      break;
-    case "/profil":
+  else if (path === '/login')
+    displayLoginPage();
+  else if (path.startsWith('/profil/'))
       displayProfilPage();
-      break;
-    case "/login":
-      displayLoginPage();
-      break;
-  }
- }
+}
 
 const loginForm = document.getElementById('login_form');
 loginForm.addEventListener('submit', async function (event) {
@@ -82,8 +77,73 @@ logoutBtn.addEventListener('click', () => {
 });
 
 const profilBtn = document.getElementById('profil_button');
-profilBtn.addEventListener('click',  () => {
-  displayProfilPage();
+profilBtn.addEventListener('click', async () => {
+  const response = await makeApiRequest("username");
+  const data = await response.json()
+  displayProfilPage("/profil/" + data.username);
+});
+
+const updateForm = document.getElementById('update_form');
+updateForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  
+
+  var inputUsername = document.getElementById('updateUsername');   // update page parsing
+  var userName = inputUsername.value;
+  var username_regex = /^[a-zA-Z0-9-_]+$/;
+  
+  
+  var inputEmail = document.getElementById('updateEmail');
+  var userEmail = inputEmail.value;
+  var regex = /\S+@\S+\.\S+/;
+  var secRegexEmail = /^[a-zA-Z0-9@.]+$/;
+
+  var inputPassword = document.getElementById('updatePassword');
+  var userPassword = inputPassword.value;
+  var password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+  
+  let isValid = true;
+
+  if (username_regex.test(userName) || (userName === null || userName === undefined || userName === ''))
+  {
+    document.getElementById('updateUsernameError').innerHTML = '';
+  }
+  else
+  {
+    updateUsernameError.textContent = "Please enter letters, numbers, '-' or '_'."
+    console.log("Username not valide");
+    isValid = false;
+  }
+  if ((regex.test(userEmail) && secRegexEmail.test(userEmail)) || (userEmail === null || userEmail === undefined || userEmail === ''))
+  {
+    document.getElementById('updateEmailError').innerHTML = '';
+  }
+  else
+  {
+    updateEmailError.textContent = 'Please enter a valid e-mail address.';
+       // inputEmail.classList.add('error');
+        console.log("Email not valid");
+        isValid = false;
+  }
+  if (password_regex.test(userPassword) || (userPassword === null || userPassword === undefined || userPassword === ''))
+  {
+    document.getElementById('updatePasswordError').innerHTML = '';
+  }
+  else
+  {
+    updatePasswordError.textContent = "Password must contain the following: lowercase letter, uppercase letter, number, 8 characters and special character(!@#$%&?)"
+    console.log("Username not valide");
+    isValid = false;
+  }
+  if (isValid)
+  {
+    updateUser();
+    document.getElementById('update_form').reset();
+  }
+  else
+  {
+    console.log("Form not valid");
+  }
 });
 
 const registerForm = document.getElementById('register_form')

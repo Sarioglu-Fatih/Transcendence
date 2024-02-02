@@ -47,7 +47,6 @@ INSTALLED_APPS = [
 	'api',
 	'frontend',
 	'channels',
-	'pong',
 	'rest_framework',
 	'rest_framework_simplejwt',
 ]
@@ -205,7 +204,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-	'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+	'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
 	'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 	'SLIDING_TOKEN_LIFETIME': timedelta(days=2),
 	'ROTATE_REFRESH_TOKENS': False,

@@ -12,6 +12,7 @@ class User(AbstractUser):
 	user_is_in_game = models.BooleanField(default=False)
 	lose = models.PositiveIntegerField(default=0)
 	win = models.PositiveIntegerField(default=0)
+	channel_name = models.CharField(max_length=255, null=True, blank=True)
 	friendlist = models.ManyToManyField("User", blank=True)
 
 	def get_avatar(self):
@@ -34,8 +35,11 @@ class AvatarUploadForm(forms.ModelForm):
 class Match(models.Model):
 	player1_id = models.ForeignKey(User, related_name='player1_matches',on_delete=models.CASCADE)
 	player2_id = models.ForeignKey(User, related_name='player2_matches', on_delete=models.CASCADE)
+	active_game = models.BooleanField(default=True)
 	date = models.DateTimeField()
+	# p1_score = models.PositiveIntegerField()
+	# p2_score = models.PositiveIntegerField()
 	win_lose = models.PositiveIntegerField()
 
 	def __str__(self):
-		return "%s won" % self.player1_id.usernddame
+		return "%s won" % self.player1_id.username
