@@ -43,30 +43,61 @@ function launchGame() {
         console.error('WebSocket error:', event);
     });
 
+    let key_w_press = false;
+    let key_s_press = false;
+
     document.addEventListener('keydown', function(event) {
         // Check for the pressed key
         switch (event.key) {
           case 'w':
+            key_w_press = true
+            key_s_press = false
+            break;
           case 's':
-                const keyMsg = {
-                    type: 'keyPress',
-                    content: event.key,
-                    jwtToken: jwtToken,
-                };
-                socket.send(JSON.stringify(keyMsg));
+            key_s_press = true
+            key_w_press = false
+            break;
+        }
+    });
+    
+    document.addEventListener('keyup', function(event) {
+        switch (event.key) {
+            case 'w':
+                key_w_press = false
+                break;
+            case 's':
+                key_s_press = false
                 break;
         }
-      });
+    })
+
+    let keyPressInterval = setInterval(function() {
+        if (key_w_press || key_s_press) {
+            KeyPress(key_w_press ? 'w' : 's');
+        }
+    }, 20);
+    
+    function KeyPress(key) {
+        
+        const keyMsg = {
+            type: 'keyPress',
+            content: key,
+            jwtToken: jwtToken,
+        };
+        socket.send(JSON.stringify(keyMsg));
+    }
 }
+
+
 
 //xb and yb = ball, ylp == left paddle, yrp == right
 function drawPong(xb, yb, ylp, yrp) {
     const canvas = document.getElementById('pong');
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillRect(5, ylp, 10, 40);
-    ctx.fillRect(285,  yrp, 10, 40);
-    ctx.fillRect(xb, yb, 5, 5 )
+    ctx.fillRect(10, ylp, 15, 80);
+    ctx.fillRect(570,  yrp, 15, 80);
+    ctx.fillRect(xb, yb, 10, 10 )
 }
 
 

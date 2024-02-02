@@ -47,6 +47,8 @@ class Match(models.Model):
 	player2_id = models.ForeignKey(User, related_name='player2_matches', on_delete=models.CASCADE)
 	active_game = models.BooleanField(default=True)
 	date = models.DateTimeField()
+	# p1_score = models.PositiveIntegerField()
+	# p2_score = models.PositiveIntegerField()
 	win_lose = models.PositiveIntegerField()
 
 	def __str__(self):

@@ -16,8 +16,13 @@ from datetime import datetime
 
 class MultiplayerConsumer(AsyncWebsocketConsumer):
 	players = {}
-
 	update_lock = asyncio.Lock()
+	GAME_X = 600
+	GAME_Y = 300
+	PADDLE_X = 15
+	PADDLE_Y = 80
+	PADDLE_SPEED = 6
+	MARGIN = 10
 
 	async def connect(self):
 		await self.accept()
@@ -38,24 +43,23 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 			async with self.update_lock:
 				if player['player'] == 'p1':
 					if data.get('content') == 's':
-						if player['p1'] <= 105:
-							player['p1'] += 4
-							opponent['p1'] += 4
+						if player['p1'] <= (self.GAME_Y - self.PADDLE_Y - self.MARGIN):
+							player['p1'] += self.PADDLE_SPEED
+							opponent['p1'] += self.PADDLE_SPEED
 					else:
-						if player['p1'] >= 5:
-							player['p1'] -= 4
-							opponent['p1'] -= 4
+						if player['p1'] >= self.MARGIN:
+							player['p1'] -= self.PADDLE_SPEED
+							opponent['p1'] -= self.PADDLE_SPEED
 				else:
 					if data.get('content') == 's':
-						if player['p2'] <= 105:
-							player['p2'] += 4
-							opponent['p2'] += 4
+						if player['p2'] <= (self.GAME_Y - self.PADDLE_Y - self.MARGIN):
+							player['p2'] += self.PADDLE_SPEED
+							opponent['p2'] += self.PADDLE_SPEED
 					else:
-						if player['p2'] >= 5:
-							player['p2'] -= 4
-							opponent['p2'] -= 4
-			# A FAIRE
-			#process input, avoir 2 jouer dans la meme room pas dans la db
+						if player['p2'] >= self.MARGIN:
+							player['p2'] -= self.PADDLE_SPEED
+							opponent['p2'] -= self.PADDLE_SPEED
+
 		if data.get('type') == 'open':
 			user = await self.get_user_id(data)
 			await self.update_user_status(user)
@@ -66,23 +70,20 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 					"id": self.player_id,
 					"opponent_id": 0,
 					"player": "",
-					'p1': 55,
-					'p2': 55,
-					'bx': 75,
-					'by': 75,
+					'p1': ((self.GAME_Y - self.PADDLE_Y) / 2),
+					'p2': ((self.GAME_Y - self.PADDLE_Y) / 2),
 					'group_name': ""
-				}
+					}
 			match = await self.find_match(user)
 			if (match):
 				asyncio.create_task(self.game_loop(user))
 	
 	async def game_loop(self, user):
-		paddle_height = 40
-		b_pos_x = 150
-		b_pos_y = 75
+		b_pos_x = self.GAME_X
+		b_pos_y = self.GAME_Y
 		Vx = 0.3
 		Vy = 0
-		speed = 0.5
+		speed = 0.8
 		p1_score = 0
 		p2_score = 0 
 		player = self.players.get(user.id)
@@ -91,34 +92,34 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 			b_pos_x += Vx * 3
 			b_pos_y += Vy * 3
 
-			if b_pos_y < 3 or b_pos_y > 147:
+			if b_pos_y < self.MARGIN or b_pos_y > (self.GAME_Y - self.MARGIN):
 				Vy = -Vy
 
-			if b_pos_x > 280:
-				if (b_pos_y >= player['p2'] and b_pos_y <= player['p2'] + 40):
-					relative_intersection = player['p2'] + 20 - b_pos_y
-					normalize_relative_intersection = relative_intersection / 20
-					bounce_angle = normalize_relative_intersection * math.radians(75)
+			if b_pos_x > (self.GAME_X - self.MARGIN - self.PADDLE_X - 10):
+				if (b_pos_y >= player['p2'] and b_pos_y <= player['p2'] + self.PADDLE_Y):
+					relative_intersection = player['p2'] + (self.PADDLE_Y / 2) - b_pos_y
+					normalize_relative_intersection = relative_intersection / (self.PADDLE_Y / 2)
+					bounce_angle = normalize_relative_intersection * math.radians(45)
 					Vx = -(speed * math.cos(bounce_angle))
 					Vy = speed * -math.sin(bounce_angle)
 					
-			if b_pos_x < 15:
-				if (b_pos_y >= player['p1'] and b_pos_y <= player['p1'] + 40):
-					relative_intersection = player['p1'] + 20 - b_pos_y
-					normalize_relative_intersection = relative_intersection / 20
-					bounce_angle = normalize_relative_intersection * math.radians(75)
+			if b_pos_x < (self.MARGIN + self.PADDLE_X):
+				if (b_pos_y >= player['p1'] and b_pos_y <= player['p1'] + self.PADDLE_Y):
+					relative_intersection = player['p1'] + (self.PADDLE_Y / 2) - b_pos_y
+					normalize_relative_intersection = relative_intersection / (self.PADDLE_Y / 2)
+					bounce_angle = normalize_relative_intersection * math.radians(45)
 					Vx = (speed * math.cos(bounce_angle))
 					Vy = speed* -math.sin(bounce_angle)
 
-			if b_pos_x > 300:
+			if b_pos_x > self.GAME_X:
 				p1_score += 1
-				b_pos_x = 150
-				b_pos_y = 75
+				b_pos_x = self.GAME_X / 2
+				b_pos_y = self.GAME_Y / 2
 			
 			if b_pos_x < 0:
 				p2_score += 1
-				b_pos_x = 150
-				b_pos_y = 75
+				b_pos_x = self.GAME_X / 2
+				b_pos_y = self.GAME_Y / 2
 			
 
 			await self.channel_layer.group_send(
@@ -134,6 +135,7 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 				}
 			)
 			await asyncio.sleep(0.01)
+		
 
 	async def position_update(self, event):
 		await self.send(text_data=json.dumps({
