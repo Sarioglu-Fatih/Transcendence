@@ -18,7 +18,7 @@ function launchGame() {
 
     // Listen for messages from the server
     socket.addEventListener('message', (event) => {
-        console.log('Received message from server:', event.data);
+        //console.log('Received message from server:', event.data);
         // Parse the JSON string
         const data = JSON.parse(event.data);
  

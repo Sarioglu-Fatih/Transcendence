@@ -31,9 +31,9 @@ class Match(models.Model):
 	player2_id = models.ForeignKey(User, related_name='player2_matches', on_delete=models.CASCADE)
 	active_game = models.BooleanField(default=True)
 	date = models.DateTimeField()
-	# p1_score = models.PositiveIntegerField()
-	# p2_score = models.PositiveIntegerField()
-	win_lose = models.PositiveIntegerField()
+	p1_score = models.PositiveIntegerField(default=0)
+	p2_score = models.PositiveIntegerField(default=0)
+	win_lose = models.PositiveIntegerField(default=0)
 
 	def __str__(self):
-		return "%s won" % self.player1_id.username
+		return "%s won" % User.objects.get(id=self.win_lose)

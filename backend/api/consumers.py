@@ -13,6 +13,7 @@ from api.models import User, Match
 from channels.db import database_sync_to_async
 from django.utils import timezone
 from datetime import datetime
+from django.db.models import Q
 
 class MultiplayerConsumer(AsyncWebsocketConsumer):
 	players = {}
@@ -28,7 +29,23 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 		await self.accept()
 
 	async def disconnect(self, close_code):
-		pass
+		user = await self.get_user_by_channel_name()
+		if not user:
+			await self.close()
+		player = self.players.get(user.id)
+		if not player:
+			print('la')
+			await self.close()
+		await self.channel_layer.group_discard(
+			str(player['group_name']),
+			self.channel_name
+		)
+		async def delayed_removal():
+			await asyncio.sleep(50)
+			async with self.update_lock:
+				self.players.pop(user.id, None)
+		# deco l autre joueurs
+		await self.close()
 
 	async def receive(self, text_data):
 		print(text_data)
@@ -76,19 +93,20 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 					}
 			match = await self.find_match(user)
 			if (match):
-				asyncio.create_task(self.game_loop(user))
+				asyncio.create_task(self.game_loop(user, match))
 	
-	async def game_loop(self, user):
-		b_pos_x = self.GAME_X
-		b_pos_y = self.GAME_Y
-		Vx = 0.3
+	async def game_loop(self, user, match):
+		b_pos_x = self.GAME_X / 2
+		b_pos_y = self.GAME_Y / 2
+		Vx = 0.5
 		Vy = 0
 		speed = 0.8
 		p1_score = 0
 		p2_score = 0 
 		player = self.players.get(user.id)
+		print(user)
+		print(player)
 		while p1_score < 5 and p2_score < 5:
-			# print(f"p1 = {player['p1']} and p2 = {player['p2']} bx = {b_pos_x} and by = {b_pos_y}")
 			b_pos_x += Vx * 3
 			b_pos_y += Vy * 3
 
@@ -112,6 +130,7 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 					Vy = speed* -math.sin(bounce_angle)
 
 			if b_pos_x > self.GAME_X:
+				print(b_pos_x)
 				p1_score += 1
 				b_pos_x = self.GAME_X / 2
 				b_pos_y = self.GAME_Y / 2
@@ -135,7 +154,19 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 				}
 			)
 			await asyncio.sleep(0.01)
-		
+		await self.end_match(match, p1_score, p2_score)
+		await self.disconnect(1)
+
+	@database_sync_to_async
+	def end_match(self, match, p1_score, p2_score):
+		match.p1_score = p1_score
+		match.p2_score = p2_score
+		match.active_game = False
+		if (p1_score == 5):
+			match.win_lose = match.player1_id.id
+		else:
+			match.win_lose = match.player2_id.id
+		match.save()
 
 	async def position_update(self, event):
 		await self.send(text_data=json.dumps({
@@ -223,4 +254,12 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 	
 	async def send_message(self, event):
 		await self.send(text_data=event["text"])
+
+	@database_sync_to_async
+	def get_user_by_channel_name(self):
+		return User.objects.get(channel_name=self.channel_name)
+
+	@database_sync_to_async
+	def get_last_match(self, user):
+		return Match.objects.filter(Q(player1_id=user) | Q(player2_id=user)).latest('date')
 
