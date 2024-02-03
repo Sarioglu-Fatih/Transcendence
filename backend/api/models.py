@@ -3,7 +3,8 @@ from django.conf import settings
 import os
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
-from django import forms 
+from django import forms
+from django_otp.plugins.otp_totp.models import TOTPDevice
 
 class User(AbstractUser):
 	pseudo = models.CharField(max_length=16)
@@ -26,6 +27,13 @@ class User(AbstractUser):
 
 	def __str__(self):
 		return self.username
+	
+	def enable_2fa(self):
+			totp_device, created = TOTPDevice.objects.get_or_create(user=self, confirmed=True)
+			if created:
+				# Save the secret key securely
+				totp_device.save()
+			return totp_device
 
 class AvatarUploadForm(forms.ModelForm):
 	class Meta:

@@ -6,6 +6,7 @@
     <head>
         <meta charset="UTF-8" />
         <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     </head>
     <body>
     <div class="container-fluid">
@@ -58,6 +59,7 @@
               <div class="card-footer text-center">
                 <button class="btn btn-primary" id="login_button">login</button>
               </div>
+              <div id="qrcode"></div>
             </div>
           </form>
         </div>
@@ -147,5 +149,6 @@
         </div>
       </div>
     <script type="module" src="{% static 'js/main.js' %}"></script>
+
   </body>
 </html>
