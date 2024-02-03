@@ -3,7 +3,8 @@ import { login } from './modules/login.js'
 import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
 import { launchGame, drawPong } from './modules/pong.js';
 import { logout } from './modules/logout.js'
-import { displayHomePage , displayLoginPage , displayProfilPage,  } from './modules/display_page_function.js'
+import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js'
+import { handleAvatarUpload } from './modules/avatar_upload.js'
 import { makeApiRequest } from './modules/utils.js';
 
 
@@ -197,6 +198,11 @@ function isUserLoggedIn() {
   }
   console.log("user not  connected")
   return (false)
+}
+
+
+window.uploadAvatar = async function () {
+	handleAvatarUpload()
 }
 
 export { isUserLoggedIn}

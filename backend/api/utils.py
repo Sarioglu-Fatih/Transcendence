@@ -18,5 +18,5 @@ def decode_Payload(request):
 	jwt_token = authorization_header.split(' ')[1]
 	# Decode the JWT token to get the payload
 	decoded_payload = jwt.decode(jwt_token, key=settings.SECRET_KEY, algorithms=['HS256'])
-	print(decoded_payload)
+	print("PAYLOAD DECODED : ", decoded_payload)
 	return (decoded_payload)

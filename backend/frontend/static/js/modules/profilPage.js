@@ -47,40 +47,26 @@ async function renderProfilPage() {
 
 async function displayAvatar() {
     const jwtToken = localStorage.getItem('jwt_token');
-    let avatarData = null;
-  
-    // Try to get the avatar data from local storage
-    avatarData = JSON.parse(localStorage.getItem('avatar'));
-  
-    if (!avatarData) {
-        // If the avatar data is not in local storage, fetch it from the server
-        try {
-            const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-            const response = await fetch(`${baseURL}/api/avatar`, {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${jwtToken}`
-                }
-            })
-            avatarData = await response.json()
-            const encodedAvatar = avatarData.avatar;
-            const dataUri = 'data:image/png;base64,' + encodedAvatar;
-  
-            // Store the avatar data in local storage
-            localStorage.setItem('avatar', JSON.stringify(avatarData));
-  
-        }
-        catch (err) {
-            profilPage.innerHTML = '<p class="error-msg">There was an error loading the avatar</p>';
-        }
-    }
-  
-    console.log('avatar');
-    const encodedAvatar = avatarData.avatar;
-    const dataUri = 'data:image/png;base64,' + encodedAvatar;
-    avatar.innerHTML = `<img class="avatar-image" src="${dataUri}" alt="default-avatar">`;
-  }
-  
+    try {
+        const response = await makeApiRequest("avatar");
+        const avatarData = await response.json();
 
+        if (avatarData.avatar) {
+            const dataUri = 'data:image/jpeg;base64,' + avatarData.avatar;
+            updateAvatarImage(dataUri);
+        }
+    } catch (error) {
+        console.error('Avatar fetch failed:', error);
+        updateAvatarImage(defaultAvatarDataUri);
+    }
+}
+
+function updateAvatarImage(dataUri) {
+    const avatarImage = document.getElementById('avatar-image');
+    if (avatarImage) {
+        avatarImage.src = '';  // Clear the current source
+        avatarImage.src = dataUri;  // Set the new source
+        avatarImage.alt = 'user-avatar';
+    }
+}
 export { renderProfilPage, displayAvatar};
