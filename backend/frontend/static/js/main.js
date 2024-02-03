@@ -205,5 +205,12 @@ window.uploadAvatar = async function () {
 	handleAvatarUpload()
 }
 
+// Link avatar to homepage
+const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+const homePageURL = '/home';
+const fullHomePageURL = baseURL + homePageURL;
+const homelink = document.getElementById('homelink');
+homelink.href = fullHomePageURL;
+
 export { isUserLoggedIn}
  
