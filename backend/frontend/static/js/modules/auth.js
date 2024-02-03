@@ -1,13 +1,5 @@
 import { getCookie } from './utils.js'
-
-async function changeLocation() {
-    window.location = 'https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-b25d192aa1c27b77cd86bfce4016950bc897fa49c2b81823d2070c3fac4fbe5f&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fhome&response_type=code';
-}
-
-async function authUser() {
-    console.log("authUser");
-    await changeLocation();
-}
+import { state as state } from '../main.js'
 
 async function fetchCode(code) {
     try {
@@ -19,11 +11,12 @@ async function fetchCode(code) {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken,
             },
-            body: JSON.stringify({ code: code }),
+            body: JSON.stringify({ code: code, state: state}),
             credentials: 'include',
         })
         if (response.ok) {
             const data = await response.json();
+            console.log("response.ok !!!!")
             if (data.token && data.refresh_token) {
                 const token = data.token;
                 const refreshToken = data.refresh_token;
@@ -44,9 +37,11 @@ async function fetchCode(code) {
 async function checkAuth42() {
     var url = window.location;
     var urlSearch = window.location.search;
+    var urlSearchParams = new URLSearchParams(urlSearch);
     var urlPathname = window.location.pathname;
     console.log('url', url);
     console.log('urlPathname', urlPathname);
+    console.log('urlSearchParams', urlSearchParams);
     console.log('urlSearch', urlSearch);
     var totalPath = urlPathname + urlSearch;
     console.log('totalPath', totalPath);
@@ -57,19 +52,21 @@ async function checkAuth42() {
         return;
     }
 
-    // Vérifie si la partie parser.search commence par "error"
+    // Vérifie si la partie parser.search ne commence pas par "error"
     if (!urlSearch.startsWith("?code")) {
-        console.log("La recherche commence par 'error', donc la fonction retourne sans faire quoi.");
+        console.log("La recherche commence par 'error', donc la fonction retourne.");
         return;
     }
-    else
-        console.log("On a un code");
-    // on a un ?code=123456...
-    var queryParams = urlSearch.split('=');
-    var codeValue = queryParams[1];
 
+    var codeValue = urlSearchParams.get("code");
+    var stateValue = urlSearchParams.get("state");
+    if (urlSearchParams.size !== 2 && stateValue !== state)
+    {
+        console.log("Pas assez de param, donc la fonction retourne.");
+        return;
+    }
     await fetchCode(codeValue);
     console.log(totalPath);
 }
 
-export { authUser, checkAuth42 };
+export { checkAuth42 };

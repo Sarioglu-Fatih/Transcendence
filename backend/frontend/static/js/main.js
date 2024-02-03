@@ -1,6 +1,6 @@
 import { registerUser, updateUser }  from './modules/register.js';
 import { login } from './modules/login.js';
-import { authUser, checkAuth42 } from './modules/auth.js';
+import { checkAuth42 } from './modules/auth.js';
 import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
 import { launchGame, drawPong } from './modules/pong.js';
 import { logout } from './modules/logout.js'
@@ -15,6 +15,7 @@ playBtn.addEventListener('click', ()=> {
 
 drawPong();
 
+var state = 0;
 var path = window.location.pathname;
 await checkAuth42();
 console.log('path', path);
@@ -215,8 +216,19 @@ window.uploadAvatar = async function () {
 
 const authButton = document.getElementById('authButton');
 authButton.addEventListener('click', () => {
-  authUser();
+  function generateRandomState() {
+    var array = new Uint8Array(16);
+    window.crypto.getRandomValues(array);
+    return Array.from(array, dec => ('0' + dec.toString(16)).substr(-2)).join('');
+  }
+
+  state = generateRandomState();
+
+  var baseUrl = 'https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-b25d192aa1c27b77cd86bfce4016950bc897fa49c2b81823d2070c3fac4fbe5f&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fhome&response_type=code';
+  var fullUrl = baseUrl + "&state=" + state;
+
+  window.location = fullUrl;
 });
 
-export { isUserLoggedIn }
+export { isUserLoggedIn, state }
  

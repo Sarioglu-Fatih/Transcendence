@@ -1,5 +1,9 @@
 import re
 import json
+import requests
+import os
+import random
+import string
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from dataclasses import dataclass
 from .models import User
@@ -109,6 +113,134 @@ def updateUser(request):
 
 def auth42(request):
     if request.method == 'POST':
-        print("=========IT WORKS=========")
-        print("=========IT WORKS=========")
-    return HttpResponse(status=200)
+        data = json.loads(request.body.decode('utf-8'))
+        print(data.get('code'))
+
+        url = "https://api.intra.42.fr/oauth/token"
+        data = {
+            "grant_type": "authorization_code",
+            "client_id": os.getenv('CLIENT_ID'),
+            "client_secret": os.getenv('CLIENT_SECRET'),
+            "code": data.get('code'),
+            "redirect_uri": "https://localhost:8000/home",
+            "state": data.get('state')
+        }
+
+        response = requests.post(url, data=data)
+
+        # Vérifiez si la requête a réussi
+        if response.status_code == 200:
+            print("Requête réussie")
+        else:
+            print("Erreur lors de la requête")
+        print(response.content)
+        responseData = json.loads(response.content.decode('utf-8'))
+        print(responseData)
+        # {
+        #     'access_token': 'd5sg45g4s54g5sg', 
+        #     'token_type': 'bearer', 
+        #     'expires_in': 354, 
+        #     'refresh_token': '84d4s5g454dg545g4', 
+        #     'scope': 'public', 
+        #     'created_at': 9921, 
+        #     'secret_valid_until': 99845
+        # }
+        access_token = responseData.get('access_token')
+        print(access_token)
+        authorization = "Bearer " + access_token
+        # url = "https://api.intra.42.fr/oauth/token/info"
+        url = "https://api.intra.42.fr/v2/me"
+        headers = {
+            "Authorization": authorization
+        }
+
+        response = requests.get(url, headers=headers)
+
+        # Conversion de la réponse en json
+        json_response = response.json()
+
+        # print("Réponse en JSON :", json_response)
+        # {
+        #     'id': 12345,
+        #     'email': 'xxx@student.42lyon.fr',
+        #     'login': 'xxx',
+        #     'first_name': 'Xxx',
+        #     'last_name': 'Xxx',
+        #     'usual_full_name': 'Xxx Xxx',
+        #     'usual_first_name': None,
+        #     'url': 'https://api.intra.42.fr/v2/users/xxx',
+        #     'phone': 'hidden',
+        #     'displayname': 'Xxx Xxx',
+        #     'kind': 'student',
+        #     'image': {'link': 'https://cdn.intra.42.fr/users/f1d5f1d5f1gfhdfsh/xxx.jpg',
+        #     'versions': {
+        #     'large': 'https://cdn.intra.42.fr/users/848d4g8d4g8d48gsggrhgfhg/large_xxx.jpg',
+        #     'medium': 'https://cdn.intra.42.fr/users/8d4g84dg84dg84dg84ftyh/medium_xxx.jpg',
+        #     'small': 'https://cdn.intra.42.fr/users/8ds4g845fd46s5g4g5s4g6s/small_xxx.jpg',
+        #     'micro': 'https://cdn.intra.42.fr/users/sd56g4564dsg54ds6g54sd5/micro_xxx.jpg'}}
+        # }
+
+        user_login = json_response.get('login')
+        user_email = json_response.get('email')
+        # genere une chaine aleatoire de 12 caracteres
+        user_password = 'pwdauth42' + ''.join(random.choices(string.ascii_lowercase, k=12)) + user_login
+        user_data = {
+            "method": 'POST',
+            "username": user_login,
+            "email": user_email,
+            "password": user_password
+        }
+
+        
+        return HttpResponse(status=200)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+
+def create_user42(request):
+    if request.method == 'POST':
+        try:
+            data = registerPostParameters(**json.loads(request.body))
+        except Exception  as e:
+            return HttpResponse(status=400, reason="Bad request: " + str(e))
+        regexUsername = r'^[a-zA-Z0-9_-]+$'																# register page parsing
+        regexEmail = r'\A\S+@\S+\.\S+\Z'
+        secRegexEmail = r'^[a-zA-Z0-9@.]+$'
+        regexPwd = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
+        if not re.match(regexUsername, data.username):
+            return JsonResponse({'error': 'Username not valide'})
+        if not (re.match(regexEmail, data.email) and re.match(secRegexEmail, data.email)):
+            return JsonResponse({'error': 'Email not valide'})
+        if  not re.match(regexPwd, data.password):
+            return JsonResponse({'error': "Special characters allowed : @$!%#?&"})
+        if User.objects.filter(username=data.username).exists():
+            return HttpResponse(reason="Conflict: Username already exists.", status=409)
+        if User.objects.filter(email=data.email).exists():
+            return HttpResponse(reason="Conflict: Email already exists.", status=409)
+        new_user = User(username=data.username, email=data.email, password=make_password(data.password))
+        new_user.save()
+        return HttpResponse(status=200)
+    else:
+        return HttpResponseNotFound(status=404)
+
+def user_login42(request):
+	if request.method == 'POST':
+		data = json.loads(request.body.decode('utf-8'))
+		username = data.get('username')
+		password = data.get('password')
+		regexUsername = r'^[a-zA-Z0-9_-]+$'																# login page parsing
+		if (not re.match(regexUsername, username)):
+			return JsonResponse({'error': 'Username not valide'})
+		user = authenticate(request, username=username, password=password)
+		if user is not None:
+			login(request, user)
+			# Generate JWT token, access and refresh
+			refresh = RefreshToken.for_user(user)
+			jwt_token = str(refresh.access_token)
+			refresh_token = str(refresh)
+			return JsonResponse({'status': 'success', 'message': 'Login successful', 'token': jwt_token, 'refresh_token': refresh_token})
+		else:
+			# Authentication failed. Return an error response.
+			return JsonResponse({'status': 'error', 'message': 'Invalid login credentials'}, status=401)
+	else:
+		# Return an error for invalid request method.
+		return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+    
