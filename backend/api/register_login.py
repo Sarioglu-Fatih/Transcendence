@@ -114,7 +114,7 @@ def updateUser(request):
 def auth42(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
-        print(data.get('code'))
+        print("code : " + data.get('code'))
 
         url = "https://api.intra.42.fr/oauth/token"
         data = {
@@ -126,6 +126,7 @@ def auth42(request):
             "state": data.get('state')
         }
 
+        # Get the access token to make request to 42 API
         response = requests.post(url, data=data)
 
         # Vérifiez si la requête a réussi
@@ -133,9 +134,11 @@ def auth42(request):
             print("Requête réussie")
         else:
             print("Erreur lors de la requête")
+        print("Token response content : ")
         print(response.content)
-        responseData = json.loads(response.content.decode('utf-8'))
-        print(responseData)
+        response_data = json.loads(response.content.decode('utf-8'))
+        print("JSON response_data : ")
+        print(response_data)
         # {
         #     'access_token': 'd5sg45g4s54g5sg', 
         #     'token_type': 'bearer', 
@@ -145,8 +148,8 @@ def auth42(request):
         #     'created_at': 9921, 
         #     'secret_valid_until': 99845
         # }
-        access_token = responseData.get('access_token')
-        print(access_token)
+        access_token = response_data.get('access_token')
+        print("Access_token : " + access_token)
         authorization = "Bearer " + access_token
         # url = "https://api.intra.42.fr/oauth/token/info"
         url = "https://api.intra.42.fr/v2/me"
@@ -154,6 +157,7 @@ def auth42(request):
             "Authorization": authorization
         }
 
+        # Get info about the user
         response = requests.get(url, headers=headers)
 
         # Conversion de la réponse en json
@@ -182,65 +186,63 @@ def auth42(request):
 
         user_login = json_response.get('login')
         user_email = json_response.get('email')
-        # genere une chaine aleatoire de 12 caracteres
-        user_password = 'pwdauth42' + ''.join(random.choices(string.ascii_lowercase, k=12)) + user_login
+        user_password = 'PWDauth42!' + user_login
+        # if User.objects.filter(username=user_login).exists():
+        #     user_password = User.objects.filter(username=user_login).password
+        # else
+            # genere une chaine aleatoire de 12 caracteres
+            # user_password = 'pwdauth42' + ''.join(random.choices(string.ascii_lowercase, k=12)) + user_login
         user_data = {
-            "method": 'POST',
             "username": user_login,
             "email": user_email,
             "password": user_password
         }
-
-        
-        return HttpResponse(status=200)
+        print("YOOOOOOO")
+        user_creation = create_user42(user_data)
+        print("YAAAAAAA")
+        print(user_creation)
+        if (user_creation.get('status') == 'error'):
+            return JsonResponse({'status': 'error', 'message': user_creation.get('message')}, status=401)
+        if (user_creation.get('status') == 'exist'):
+            return user_login42(request, user_data)
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
-def create_user42(request):
-    if request.method == 'POST':
-        try:
-            data = registerPostParameters(**json.loads(request.body))
-        except Exception  as e:
-            return HttpResponse(status=400, reason="Bad request: " + str(e))
-        regexUsername = r'^[a-zA-Z0-9_-]+$'																# register page parsing
-        regexEmail = r'\A\S+@\S+\.\S+\Z'
-        secRegexEmail = r'^[a-zA-Z0-9@.]+$'
-        regexPwd = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
-        if not re.match(regexUsername, data.username):
-            return JsonResponse({'error': 'Username not valide'})
-        if not (re.match(regexEmail, data.email) and re.match(secRegexEmail, data.email)):
-            return JsonResponse({'error': 'Email not valide'})
-        if  not re.match(regexPwd, data.password):
-            return JsonResponse({'error': "Special characters allowed : @$!%#?&"})
-        if User.objects.filter(username=data.username).exists():
-            return HttpResponse(reason="Conflict: Username already exists.", status=409)
-        if User.objects.filter(email=data.email).exists():
-            return HttpResponse(reason="Conflict: Email already exists.", status=409)
-        new_user = User(username=data.username, email=data.email, password=make_password(data.password))
-        new_user.save()
-        return HttpResponse(status=200)
-    else:
-        return HttpResponseNotFound(status=404)
+def create_user42(data):
+    regexUsername = r'^[a-zA-Z0-9_-]+$'																# register page parsing
+    regexEmail = r'\A\S+@\S+\.\S+\Z'
+    secRegexEmail = r'^[a-zA-Z0-9@.]+$'
+    regexPwd = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
+    if not re.match(regexUsername, data['username']):
+        return {'status': 'error', 'message': 'Username not valid'}
+    if not (re.match(regexEmail, data['email']) and re.match(secRegexEmail, data['email'])):
+        return {'status': 'error', 'message': 'Email not valid'}
+    if  not re.match(regexPwd, data['password']):
+        return {'status': 'error', 'message': "Special characters allowed : @$!%#?&"}
+    if User.objects.filter(username=data['username']).exists():
+        return {'status': 'exist', 'message': "Username already exists."}
+    if User.objects.filter(email=data['email']).exists():
+        return {'status': 'exist', 'message': "Email already exists."}
+    new_user = User(username=data['username'], email=data['email'], password=make_password(data['password']))
+    new_user.save()
+    return {'status': 'exist', 'message': "User created"}
 
-def user_login42(request):
-	if request.method == 'POST':
-		data = json.loads(request.body.decode('utf-8'))
-		username = data.get('username')
-		password = data.get('password')
-		regexUsername = r'^[a-zA-Z0-9_-]+$'																# login page parsing
-		if (not re.match(regexUsername, username)):
-			return JsonResponse({'error': 'Username not valide'})
-		user = authenticate(request, username=username, password=password)
-		if user is not None:
-			login(request, user)
-			# Generate JWT token, access and refresh
-			refresh = RefreshToken.for_user(user)
-			jwt_token = str(refresh.access_token)
-			refresh_token = str(refresh)
-			return JsonResponse({'status': 'success', 'message': 'Login successful', 'token': jwt_token, 'refresh_token': refresh_token})
-		else:
-			# Authentication failed. Return an error response.
-			return JsonResponse({'status': 'error', 'message': 'Invalid login credentials'}, status=401)
-	else:
-		# Return an error for invalid request method.
-		return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+def user_login42(request, data):
+    username = data['username']
+    password = data['password']
+    regexUsername = r'^[a-zA-Z0-9_-]+$'																# login page parsing
+    if (not re.match(regexUsername, username)):
+        return JsonResponse({'error': 'Username not valid'})
+    user = authenticate(username=username, password=password)
+    print("user is : ")
+    print(user)
+    if user is not None:
+        login(request, user)
+        # Generate JWT token, access and refresh
+        refresh = RefreshToken.for_user(user)
+        jwt_token = str(refresh.access_token)
+        refresh_token = str(refresh)
+        return JsonResponse({'status': 'success', 'message': 'Login successful', 'token': jwt_token, 'refresh_token': refresh_token})
+    else:
+        # Authentication failed. Return an error response.
+        return JsonResponse({'status': 'error', 'message': 'Invalid login credentials'}, status=401)
     
