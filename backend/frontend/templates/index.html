@@ -38,11 +38,17 @@
               </div>
               <div class="card-footer text-center">
                 <button class="btn btn-primary" id="register_button">register</button>
-                <button class="btn btn-primary" id="auth42_button">sign in with 42</button>
               </div>
               
             </div>
           </form>
+        <form id="auth_form" class="auth_form" >
+          <div class="card">
+              <!-- <button class="btn btn-primary" id="auth42_button" type="submit">sign in with 42</button> -->
+              <!-- <button onclick="window.location.href='https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-e95dac742f419c01abf9f266b8219d8be7c13613ebcc4b3a64edc9e84beac84c&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fhome&response_type=code'">sign in with 42</button> -->
+              <input type="button" value="sign in with 42" onclick="window.location='https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-e95dac742f419c01abf9f266b8219d8be7c13613ebcc4b3a64edc9e84beac84c&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fhome&response_type=code'" />
+          </div>
+        </form>
         </div>
 
         <div class="col-md-6 p-3" id="div_login_form">    <!-- login -->

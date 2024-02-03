@@ -1,6 +1,8 @@
 import re
 import json
-from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
+import os
+import requests
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse, HttpResponseRedirect
 from dataclasses import dataclass
 from .models import User
 from django.contrib.auth.hashers import make_password, check_password
@@ -107,14 +109,15 @@ def updateUser(request):
         # print(request.PATCH.get('username'))
         return HttpResponse(status=200)
 
-# def login_42(request):
-#     url = 'https://api.intra.42.fr/oauth/authorize'
-#     params = {
-#         'client_id': os.getenv('APP_INTRA_CLIENT_ID')
-#         'redirect_uri': 'https://localhost:8000/home'
-#         'scope': 'public'
-#         # ajouter state quand on fera la protection xss
-#         'response_type': 'code'
-#     }
-#     response = requests.get(url, params=params)
-#     print(response)
+def auth_42(request):
+    url = 'https://api.intra.42.fr/oauth/authorize'
+    params = {
+        'client_id': os.getenv('APP_INTRA_CLIENT_ID'),
+        'redirect_uri': 'https://localhost:8000/home',
+        'scope': 'public',
+        # ajouter state quand on fera la protection xss
+        'response_type': 'code',
+    }
+    response = requests.get(url, params=params)
+    print(response.status_code)     
+    return HttpResponse(status=200)#('https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-e95dac742f419c01abf9f266b8219d8be7c13613ebcc4b3a64edc9e84beac84c&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fhome&response_type=code')  

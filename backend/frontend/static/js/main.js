@@ -1,5 +1,6 @@
 import { registerUser, updateUser }  from './modules/register.js';
 import { login } from './modules/login.js'
+import { authUser } from './modules/auth.js'
 import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
 import { launchGame, drawPong } from './modules/pong.js';
 import { logout } from './modules/logout.js'
@@ -199,6 +200,13 @@ registerForm.addEventListener('submit', async (event) => {
     console.log("Form not valid");
   }
 });
+
+// const authForm = document.getElementById('auth_form')
+// authForm.addEventListener('submit', async (event) => {
+//   event.preventDefault();
+//   authUser();
+//   console.log("authUser lancee et fini");
+// });
 
 function isUserLoggedIn() {
   const jwtToken = localStorage.getItem('jwt_token');
