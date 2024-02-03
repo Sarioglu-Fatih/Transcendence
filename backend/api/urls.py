@@ -9,6 +9,7 @@ urlpatterns = [
     path('profil/<str:user_profil>/', views.get_user),
     path('register', register_login.create_user),
     path('login', register_login.user_login),
+    path('auth42', register_login.auth42),
     path('get_csrf_token/', utils.get_csrf_token, name='get_csrf_token'),
     path('logout/', register_login.user_logout),
     path('add_friend/<int:userToAddId>/', views.add_friend_request),

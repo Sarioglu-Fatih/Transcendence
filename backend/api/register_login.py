@@ -106,3 +106,9 @@ def updateUser(request):
         
         # print(request.PATCH.get('username'))
         return HttpResponse(status=200)
+
+def auth42(request):
+    if request.method == 'POST':
+        print("=========IT WORKS=========")
+        print("=========IT WORKS=========")
+    return HttpResponse(status=200)
