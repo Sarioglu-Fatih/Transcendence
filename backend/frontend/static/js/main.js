@@ -1,5 +1,6 @@
 import { registerUser, updateUser }  from './modules/register.js';
-import { login } from './modules/login.js'
+import { login } from './modules/login.js';
+import { authUser, currentLocation } from './modules/auth.js';
 import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
 import { launchGame, drawPong } from './modules/pong.js';
 import { logout } from './modules/logout.js'
@@ -15,6 +16,8 @@ playBtn.addEventListener('click', ()=> {
 drawPong();
 
 var path = window.location.pathname;
+var cho = window.location;
+console.log(cho);
 console.log(path);
 if (!isUserLoggedIn())
   history.pushState({}, '', '/login');
@@ -210,6 +213,12 @@ function isUserLoggedIn() {
 window.uploadAvatar = async function () {
 	handleAvatarUpload()
 }
+
+const authButton = document.getElementById('authButton');
+authButton.addEventListener('click', () => {
+  authUser();
+  currentLocation();
+});
 
 export { isUserLoggedIn}
  
