@@ -2,7 +2,7 @@ import { renderProfilPage, displayAvatar } from "./profilPage.js";
 import { isUserLoggedIn } from "../main.js";
 
 function hideAllDivs() {
-    hideDivs(['top_box', 'game_launcher', 'friend_list', 'profil_page', 'div_register_form', 'div_login_form', "history", "partie_de_gauche", "partie_de_droite"]);
+    hideDivs(['top_box', 'game_launcher', 'friendList', 'profil_page', 'div_register_form', 'div_login_form', "history", "profilLeftSide", "profilRightSide", "addFriend_button"]);
 }
 
 function displayLoginPage() {
@@ -16,19 +16,22 @@ function displayLoginPage() {
     }
 }
 
-function displayProfilPage(path) {
+async function displayProfilPage(path) {
     history.pushState({}, '', path);
     hideAllDivs();
     displayAvatar();
-    renderProfilPage();
-    showDivs(['top_box', "profil_page", "partie_de_gauche"])
+    let isHimself = await renderProfilPage();
+    if (isHimself == true)
+        showDivs(['top_box', "profil_page", "profilLeftSide", "profilRightSide"])
+    else
+        showDivs(['top_box', "profil_page", "profilLeftSide", "addFriend_button"])
 }
 
 function displayHomePage() {
     history.pushState({}, '', '/home');
     displayAvatar();
     hideAllDivs();
-    showDivs(['top_box', 'game_launcher', 'friend_list'])
+    showDivs(['top_box', 'game_launcher', 'friendList'])
 }
 
 function hideDivs(divIds) {

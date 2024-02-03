@@ -61,7 +61,7 @@ async function updateUser() {
             credentials: 'include',
         })
         if (response.ok) {
-            console.log('UPDATED OKKKKK', response);
+            console.log('Update ok', response);
         }
         else {
             console.error('Failed to register user:', response.statusText);

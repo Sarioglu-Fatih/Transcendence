@@ -7,6 +7,8 @@ const avatar = document.getElementById('avatar');
 
 async function renderProfilPage() {
     try {
+        let isHimself = false;
+
         const currentPath = window.location.pathname.substring(1) ;
         console.log(currentPath)
         const response = await makeApiRequest(currentPath)
@@ -32,6 +34,7 @@ async function renderProfilPage() {
         if (userData.email){
             email_type.textContent = "email     : ";
             email_type.textContent += userData.email;
+            isHimself = true;
         }
         else 
             email_type.textContent = "";
@@ -41,6 +44,7 @@ async function renderProfilPage() {
         resulte_type.textContent += " : ";
         resulte_type.textContent += lose_string;
         resulte_type.textContent += "  lose";
+        return (isHimself);
     }
     catch (err) {
         profilPage.innerHTML = '<p class="error-msg">There was an error loading the user</p>';

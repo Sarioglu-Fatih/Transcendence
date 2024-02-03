@@ -4,7 +4,7 @@ import { updateValidationState, updateValidationClass, myInput, length, letter, 
 import { launchGame, drawPong } from './modules/pong.js';
 import { logout } from './modules/logout.js'
 import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js'
-import { makeApiRequest } from './modules/utils.js';
+import { makeApiRequest, getCookie } from './modules/utils.js';
 
 const playBtn = document.getElementById("play_button");
 playBtn.addEventListener('click', ()=> {
@@ -51,7 +51,7 @@ loginForm.addEventListener('submit', async function (event) {
   var inputUsername = document.getElementById('login_Username');   // username login parsing
   var userName = inputUsername.value;
   var username_regex = /^[a-zA-Z0-9-_]+$/;
-
+  
   console.log(inputUsername.value);
   if (username_regex.test(userName))
   {
@@ -66,6 +66,45 @@ loginForm.addEventListener('submit', async function (event) {
     console.log("Username not valide");
   }
 })
+
+const addFriend = document.getElementById('addFriend_button');
+addFriend.addEventListener('click', async function (event) {
+  event.preventDefault();
+
+  const csrfToken = getCookie('csrftoken');
+  const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+  const clientURL = window.location.href;
+  const segments = clientURL.split('/');
+  let lastSegment = segments[segments.length - 2];
+  lastSegment += "/";
+  const result = await fetch(`${baseURL}/api/add_friend/${lastSegment}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrfToken,
+    },
+  })
+})
+
+window.addEventListener('DOMContentLoaded', async () => {
+  const friendListElement = document.getElementById('friendList');
+
+  try {
+      // Faites une requête au serveur pour obtenir la liste d'amis
+      const response = await fetch('/api/my_friends');
+      const data = await response.json();
+
+      // Parcourez les données et ajoutez chaque ami à la liste
+      data.friend_list.forEach(friend => {
+          const listItem = document.createElement('li');
+          listItem.textContent = friend.username;
+          friendListElement.appendChild(listItem);
+      });
+  } catch (error) {
+      console.error('Erreur lors de la récupération de la liste d\'amis :', error);
+  }
+});
+
 
 const logoutBtn = document.getElementById('logout_button');
 logoutBtn.addEventListener('click', () => {
