@@ -20,10 +20,11 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 	update_lock = asyncio.Lock()
 	GAME_X = 600
 	GAME_Y = 300
-	PADDLE_X = 15
-	PADDLE_Y = 80
+	PADDLE_X = 10
+	PADDLE_Y = 60
 	PADDLE_SPEED = 6
-	MARGIN = 10
+	MARGIN = 5
+	websocket_state = False
 
 	async def connect(self):
 		await self.accept()
@@ -32,10 +33,16 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 		user = await self.get_user_by_channel_name()
 		if not user:
 			await self.close()
+			return
 		player = self.players.get(user.id)
 		if not player:
 			print('la')
 			await self.close()
+			return
+		player['actif'] = False
+		if player.get('group_name') == "":
+			await self.close()
+			return
 		await self.channel_layer.group_discard(
 			str(player['group_name']),
 			self.channel_name
@@ -44,7 +51,6 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 			await asyncio.sleep(50)
 			async with self.update_lock:
 				self.players.pop(user.id, None)
-		# deco l autre joueurs
 		await self.close()
 
 	async def receive(self, text_data):
@@ -89,11 +95,26 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 					"player": "",
 					'p1': ((self.GAME_Y - self.PADDLE_Y) / 2),
 					'p2': ((self.GAME_Y - self.PADDLE_Y) / 2),
-					'group_name': ""
+					'group_name': "",
+					'game_active': False,
+					'actif': False,
 					}
 			match = await self.find_match(user)
 			if (match):
 				asyncio.create_task(self.game_loop(user, match))
+			else:
+				asyncio.create_task(self.game_check(user))
+	
+
+	async def game_check(self, user):
+		player = self.players.get(user.id)
+		print("game_check")
+		while player['game_active'] == False:
+			await asyncio.sleep(1)
+		while player['game_active']:
+			await asyncio.sleep(1)
+		await self.disconnect(1)
+
 	
 	async def game_loop(self, user, match):
 		b_pos_x = self.GAME_X / 2
@@ -104,7 +125,9 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 		p1_score = 0
 		p2_score = 0 
 		player = self.players.get(user.id)
+		opponent = self.players.get(match.player2_id.id)
 		print(user)
+		print(opponent)
 		print(player)
 		while p1_score < 5 and p2_score < 5:
 			b_pos_x += Vx * 3
@@ -113,7 +136,7 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 			if b_pos_y < self.MARGIN or b_pos_y > (self.GAME_Y - self.MARGIN):
 				Vy = -Vy
 
-			if b_pos_x > (self.GAME_X - self.MARGIN - self.PADDLE_X - 10):
+			if b_pos_x > (self.GAME_X  - self.PADDLE_X - 10):
 				if (b_pos_y >= player['p2'] and b_pos_y <= player['p2'] + self.PADDLE_Y):
 					relative_intersection = player['p2'] + (self.PADDLE_Y / 2) - b_pos_y
 					normalize_relative_intersection = relative_intersection / (self.PADDLE_Y / 2)
@@ -121,7 +144,7 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 					Vx = -(speed * math.cos(bounce_angle))
 					Vy = speed * -math.sin(bounce_angle)
 					
-			if b_pos_x < (self.MARGIN + self.PADDLE_X):
+			if b_pos_x < (self.MARGIN * 2+ self.PADDLE_X):
 				if (b_pos_y >= player['p1'] and b_pos_y <= player['p1'] + self.PADDLE_Y):
 					relative_intersection = player['p1'] + (self.PADDLE_Y / 2) - b_pos_y
 					normalize_relative_intersection = relative_intersection / (self.PADDLE_Y / 2)
@@ -140,7 +163,6 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 				b_pos_x = self.GAME_X / 2
 				b_pos_y = self.GAME_Y / 2
 			
-
 			await self.channel_layer.group_send(
 				str(player['group_name']),
 				{
@@ -154,19 +176,42 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 				}
 			)
 			await asyncio.sleep(0.01)
-		await self.end_match(match, p1_score, p2_score)
+			if (player['actif'] == False or opponent['actif'] == False):
+				break
+		winner = await self.end_match(match, player, opponent, p1_score, p2_score)
+		await self.channel_layer.group_send(
+			str(player['group_name']),
+			{
+				'type': 'game.end',
+				'winner': winner
+			}
+		)
 		await self.disconnect(1)
 
 	@database_sync_to_async
-	def end_match(self, match, p1_score, p2_score):
+	def end_match(self, match, player, opponent, p1_score, p2_score):
+		opponent = self.players.get(match.player2_id.id)
+		opponent['game_active'] = False
 		match.p1_score = p1_score
 		match.p2_score = p2_score
 		match.active_game = False
-		if (p1_score == 5):
-			match.win_lose = match.player1_id.id
-		else:
+		if (player['actif'] == False):
+			match.p2_score = 5
 			match.win_lose = match.player2_id.id
+			winner = match.player2_id.username
+		elif (opponent['actif'] == False):
+			match.p1_score = 5
+			match.win_lose = match.player1_id.id
+			winner = match.player1_id.username
+		elif (p1_score == 5):
+			match.win_lose = match.player1_id.id
+			winner = match.player1_id.username
+		else :
+			match.win_lose = match.player2_id.id
+			winner = match.player2_id.username
 		match.save()
+		return winner
+
 
 	async def position_update(self, event):
 		await self.send(text_data=json.dumps({
@@ -236,24 +281,34 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 				self.players[opponent.id]['player'] = 'p2'
 				self.players[user.id]['opponent_id'] = opponent.id
 				self.players[opponent.id]['opponent_id'] = user.id
+				self.players[user.id]['game_active'] = True
+				self.players[opponent.id]['game_active'] = True
+				self.players[user.id]['actif'] = True
+				self.players[opponent.id]['actif'] = True
 			# Send the match details to the users
 			print(game_room)
-			await self.send_match_details(game_room, game_room)
+			await self.channel_layer.group_send(
+				str(game_room),
+				{
+					'type': 'match.info',
+					'player1': match.player1_id.username,
+					'player2': match.player2_id.username,
+				}
+			)
 			return (match)
 
+	async def match_info(self, event):
+		await self.send(text_data=json.dumps({
+		'type': 'match_info',
+		'player1': event['player1'],
+		'player2': event['player2'],
+	}))
 
-	async def send_match_details(self, game_room, data):
-		# Send match details to both players through the common channel group
-		await self.channel_layer.group_send(
-			str(game_room),
-			{
-				'type': 'send.message',
-				'text': str(data),
-			}
-		)
-	
-	async def send_message(self, event):
-		await self.send(text_data=event["text"])
+	async def game_end(self, event):
+		await self.send(text_data=json.dumps({
+		'type': 'game_end',
+		'winner': event['winner'],
+	}))
 
 	@database_sync_to_async
 	def get_user_by_channel_name(self):

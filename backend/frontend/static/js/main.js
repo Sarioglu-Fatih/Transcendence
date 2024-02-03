@@ -3,15 +3,9 @@ import { login } from './modules/login.js'
 import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
 import { launchGame, drawPong } from './modules/pong.js';
 import { logout } from './modules/logout.js'
-import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js'
+import { displayHomePage , displayLoginPage , displayProfilPage,  } from './modules/display_page_function.js'
 import { makeApiRequest } from './modules/utils.js';
 
-const playBtn = document.getElementById("play_button");
-playBtn.addEventListener('click', ()=> {
-  launchGame();
-})
-
-drawPong();
 
 var path = window.location.pathname;
 console.log(path);

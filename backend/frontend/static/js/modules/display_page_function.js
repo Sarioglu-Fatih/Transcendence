@@ -28,7 +28,7 @@ function displayHomePage() {
     history.pushState({}, '', '/home');
     displayAvatar();
     hideAllDivs();
-    showDivs(['top_box', 'game_launcher', 'friend_list'])
+    showDivs(['top_box', 'game_launcher', 'friend_list', 'pong_button'])
 }
 
 function hideDivs(divIds) {
@@ -49,4 +49,4 @@ function hideDivs(divIds) {
       });
     }
 
-export { displayHomePage , displayLoginPage , displayProfilPage }
+export { displayHomePage , displayLoginPage , displayProfilPage, hideDivs, showDivs }
