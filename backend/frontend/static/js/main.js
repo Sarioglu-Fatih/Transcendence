@@ -40,7 +40,9 @@ window.onload = function() {
 
 window.onpopstate = function(event) {
   var path = window.location.pathname;
-  if (path === "/home")
+  if (!isUserLoggedIn())
+  	displayLoginPage();
+  else if (path === "/home" && isUserLoggedIn())
       displayHomePage();
   else if (path === '/login')
     displayLoginPage();

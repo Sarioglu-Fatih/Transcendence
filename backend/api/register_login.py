@@ -208,7 +208,7 @@ def auth42(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
 def create_user42(data):
-    regexUsername = r'^[a-zA-Z0-9_-]+$'																# register page parsing
+    regexUsername = r'^[a-zA-Z0-9_-]+$'
     regexEmail = r'\A\S+@\S+\.\S+\Z'
     secRegexEmail = r'^[a-zA-Z0-9@.]+$'
     regexPwd = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
@@ -229,7 +229,7 @@ def create_user42(data):
 def user_login42(request, data):
     username = data['username']
     password = data['password']
-    regexUsername = r'^[a-zA-Z0-9_-]+$'																# login page parsing
+    regexUsername = r'^[a-zA-Z0-9_-]+$'
     if (not re.match(regexUsername, username)):
         return JsonResponse({'error': 'Username not valid'})
     user = authenticate(username=username, password=password)

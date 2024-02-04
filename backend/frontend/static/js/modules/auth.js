@@ -16,7 +16,6 @@ async function fetchCode(code) {
         })
         if (response.ok) {
             const data = await response.json();
-            console.log("response.ok !!!!")
             if (data.token && data.refresh_token) {
                 const token = data.token;
                 const refreshToken = data.refresh_token;
@@ -66,7 +65,6 @@ async function checkAuth42() {
         return;
     }
     await fetchCode(codeValue);
-    console.log(totalPath);
 }
 
 export { checkAuth42 };
