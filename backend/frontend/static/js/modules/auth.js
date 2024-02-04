@@ -1,5 +1,6 @@
 import { getCookie } from './utils.js'
 import { state as state } from '../main.js'
+import { displayLoginPage } from './display_page_function.js'
 
 async function fetchCode(code) {
     try {
@@ -65,6 +66,7 @@ async function checkAuth42() {
         return;
     }
     await fetchCode(codeValue);
+	displayLoginPage();
 }
 
 export { checkAuth42 };

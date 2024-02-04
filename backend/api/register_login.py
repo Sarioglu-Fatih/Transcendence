@@ -134,6 +134,7 @@ def auth42(request):
             print("Requête réussie")
         else:
             print("Erreur lors de la requête")
+            return JsonResponse({'status': 'error', 'message': 'error'}, status=response.status_code)
         print("Token response content : ")
         print(response.content)
         response_data = json.loads(response.content.decode('utf-8'))
@@ -149,7 +150,8 @@ def auth42(request):
         #     'secret_valid_until': 99845
         # }
         access_token = response_data.get('access_token')
-        print("Access_token : " + access_token)
+        print("Access_token : ")
+        print(access_token)
         authorization = "Bearer " + access_token
         # url = "https://api.intra.42.fr/oauth/token/info"
         url = "https://api.intra.42.fr/v2/me"
@@ -222,6 +224,7 @@ def create_user42(data):
         return {'status': 'exist', 'message': "Username already exists."}
     if User.objects.filter(email=data['email']).exists():
         return {'status': 'exist', 'message': "Email already exists."}
+    print("YELLOOOO")
     new_user = User(username=data['username'], email=data['email'], password=make_password(data['password']))
     new_user.save()
     return {'status': 'exist', 'message': "User created"}
