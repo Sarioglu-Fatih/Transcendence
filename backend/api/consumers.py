@@ -9,7 +9,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from .utils import decode_Payload
-from api.models import User, Match
+from api.models import User, Match, Tournament
 from channels.db import database_sync_to_async
 from django.utils import timezone
 from datetime import datetime
@@ -84,39 +84,103 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 							opponent['p2'] -= self.PADDLE_SPEED
 
 		if data.get('type') == 'open':
-			user = await self.get_user_id(data)
-			await self.update_user_status(user)
-			self.player_id = user.id
-
-			async with self.update_lock:
-				self.players[self.player_id] = {
-					"id": self.player_id,
-					"opponent_id": 0,
-					"player": "",
-					'p1': ((self.GAME_Y - self.PADDLE_Y) / 2),
-					'p2': ((self.GAME_Y - self.PADDLE_Y) / 2),
-					'group_name': "",
-					'game_active': False,
-					'actif': False,
-					}
-			match = await self.find_match(user)
-			if (match):
-				asyncio.create_task(self.game_loop(user, match))
-			else:
-				asyncio.create_task(self.game_check(user))
+			if data.get('mode') == 'normal':
+				user = await self.get_user_id(data)
+				await self.update_user_status(user, 'match')
+				await self.setup_player(user)
+				match = await self.find_match(user)
+				if (match):
+					asyncio.create_task(self.game_loop(match, 'match'))
+				else:
+					asyncio.create_task(self.game_check(user))
+			elif data.get('mode') == 'tournament':
+				user = await self.get_user_id(data)
+				await self.update_user_status(user, 'tournament')
+				await self.setup_player(user)
+				tournament = await self.find_tournament(user)
+				if (tournament):
+					asyncio.create_task(self.tournament_loop(user, tournament))
+				asyncio.create_task(self.tournament_check(user))
 	
+	async def tournament_loop(self, user, tournament):
+		p1 = self.players.get(tournament.match_1.player1_id.id)
+		p2 = self.players.get(tournament.match_1.player2_id.id)
+		p3 = self.players.get(tournament.match_2.player1_id.id)
+		p4 = self.players.get(tournament.match_2.player2_id.id)
+		asyncio.create_task(self.game_loop(tournament.match_1, 'tournament'))
+		asyncio.create_task(self.game_loop(tournament.match_2, 'tournament'))
+		while (p1['win'] + p2['win'] + p3['win'] + p4['win']) != 2:
+			print("tourni loop")
+			await asyncio.sleep(1)
+		if (p1['win'] == 0):
+			p1['game_active'] = False
+		if (p2['win'] == 0):
+			p2['game_active'] = False
+		if (p3['win'] == 0):
+			p3['game_active'] = False
+		if (p4['win'] == 0):
+			p4['game_active'] = False
+		if (p1['win'] == 1):
+			f1 = tournament.match_1.player1_id
+			if p3['win'] == 1:
+				f2 = tournament.match_2.player1_id
+			else :
+				f2 = tournament.match_2.player2_id
+		if (p2['win'] == 1):
+			f1 = tournament.match_1.player1_id
+			if p3['win'] == 1:
+				f2 = tournament.match_2.player1_id
+			else :
+				f2 = tournament.match_2.player2_id
+		match = await self.create_match(f1, f2)
+		await self.setup_match(match, f1, f2)
+		asyncio.create_task(self.game_loop(match, 'tournament'))
+		while (p1['win'] + p2['win'] + p3['win'] + p4['win']) != 3:
+			print("tourni loop 2")
+			await asyncio.sleep(1)
+		p4['game_active'] = False
+		p3['game_active'] = False
+		p2['game_active'] = False
+		p1['game_active'] = False
+
+	async def setup_player(self, user):
+		self.player_id = user.id
+		async with self.update_lock:
+			self.players[self.player_id] = {
+				"id": self.player_id,
+				"opponent_id": 0,
+				"player": "",
+				'p1': ((self.GAME_Y - self.PADDLE_Y) / 2),
+				'p2': ((self.GAME_Y - self.PADDLE_Y) / 2),
+				'group_name': "",
+				'game_active': False,
+				'actif': False,
+				'win': 0,
+			}
+
 
 	async def game_check(self, user):
 		player = self.players.get(user.id)
 		print("game_check")
 		while player['game_active'] == False:
+			print(f"ici {user.id}")
+			await asyncio.sleep(3)
+		while player['game_active']:
 			await asyncio.sleep(1)
+		await self.disconnect(1)
+
+	async def tournament_check(self, user):
+		player = self.players.get(user.id)
+		print("game_check")
+		while player['game_active'] == False:
+			print(user.id)
+			await asyncio.sleep(3)
 		while player['game_active']:
 			await asyncio.sleep(1)
 		await self.disconnect(1)
 
 	
-	async def game_loop(self, user, match):
+	async def game_loop(self, match, mode):
 		b_pos_x = self.GAME_X / 2
 		b_pos_y = self.GAME_Y / 2
 		Vx = 0.5
@@ -124,9 +188,8 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 		speed = 0.8
 		p1_score = 0
 		p2_score = 0 
-		player = self.players.get(user.id)
+		player = self.players.get(match.player1_id.id)
 		opponent = self.players.get(match.player2_id.id)
-		print(user)
 		print(opponent)
 		print(player)
 		while p1_score < 5 and p2_score < 5:
@@ -178,7 +241,7 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 			await asyncio.sleep(0.01)
 			if (player['actif'] == False or opponent['actif'] == False):
 				break
-		winner = await self.end_match(match, player, opponent, p1_score, p2_score)
+		winner = await self.end_match(match, player, opponent, p1_score, p2_score, mode)
 		await self.channel_layer.group_send(
 			str(player['group_name']),
 			{
@@ -186,27 +249,32 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 				'winner': winner
 			}
 		)
-		await self.disconnect(1)
+		if (mode == 'match'):
+			await self.disconnect(1)
 
 	@database_sync_to_async
-	def end_match(self, match, player, opponent, p1_score, p2_score):
-		opponent = self.players.get(match.player2_id.id)
-		opponent['game_active'] = False
+	def end_match(self, match, player, opponent, p1_score, p2_score, mode):
+		if (mode == 'match'):
+			opponent['game_active'] = False
 		match.p1_score = p1_score
 		match.p2_score = p2_score
 		match.active_game = False
 		if (player['actif'] == False):
+			opponent['win'] += 1
 			match.p2_score = 5
 			match.win_lose = match.player2_id.id
 			winner = match.player2_id.username
 		elif (opponent['actif'] == False):
+			player['win'] += 1
 			match.p1_score = 5
 			match.win_lose = match.player1_id.id
 			winner = match.player1_id.username
 		elif (p1_score == 5):
+			player['win'] += 1
 			match.win_lose = match.player1_id.id
 			winner = match.player1_id.username
 		else :
+			opponent['win'] += 1
 			match.win_lose = match.player2_id.id
 			winner = match.player2_id.username
 		match.save()
@@ -239,10 +307,11 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 
 	@database_sync_to_async	
 	def find_opponent(self, user):
-		return (User.objects.filter(user_is_connected=True, user_is_in_game=False).exclude(id=user.id).first())
+		return (User.objects.filter(user_is_looking_game=True, user_is_in_game=False).exclude(id=user.id).first())
 	
 	@database_sync_to_async
 	def create_match(self, user, opponent):
+		print("ici")
 		return Match.objects.create(player1_id=user, player2_id=opponent, active_game=True, date=timezone.now(), win_lose=0)
 
 	@database_sync_to_async
@@ -256,46 +325,78 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 			opponent.save()
 
 	@database_sync_to_async	
-	def update_user_status(self, user):
-		user.user_is_connected = True
-		user.user_is_in_game = False
-		user.channel_name = self.channel_name
-		user.save()
+	def update_user_status(self, user, mode):
+		if mode == 'match':
+			user.user_is_looking_game = True
+			user.user_is_in_game = False
+			user.channel_name = self.channel_name
+			user.save()
+		elif mode == 'tournament':
+			user.user_is_looking_tournament= True
+			user.user_is_in_game = False
+			user.channel_name = self.channel_name
+			user.save()
 
 	async def find_match(self, user):
 		opponent = await self.find_opponent(user)
 		if opponent:
 			# Create a new match instance in the database
 			match = await self.create_match(user, opponent)
-			# Set up a game room name for the match and the player
-			game_room = match.id
-			# Mark both users as in-game
-			await self.put_player_in_game(user, opponent, game_room)
-			# Add both users to the same channel group
-			await self.channel_layer.group_add(str(game_room), str(user.channel_name))
-			await self.channel_layer.group_add(str(game_room), str(opponent.channel_name))
-			async with self.update_lock:
-				self.players[user.id]['group_name'] = str(game_room)
-				self.players[opponent.id]['group_name'] = str(game_room)
-				self.players[user.id]['player'] = 'p1'
-				self.players[opponent.id]['player'] = 'p2'
-				self.players[user.id]['opponent_id'] = opponent.id
-				self.players[opponent.id]['opponent_id'] = user.id
-				self.players[user.id]['game_active'] = True
-				self.players[opponent.id]['game_active'] = True
-				self.players[user.id]['actif'] = True
-				self.players[opponent.id]['actif'] = True
-			# Send the match details to the users
-			print(game_room)
-			await self.channel_layer.group_send(
-				str(game_room),
-				{
-					'type': 'match.info',
-					'player1': match.player1_id.username,
-					'player2': match.player2_id.username,
-				}
-			)
+			await self.setup_match(match, user, opponent)
 			return (match)
+
+	async def find_tournament(self, user):
+		opponents = await self.find_opponents(user)
+		if opponents:
+			print('ici')
+			match_1 = await self.create_match(user, opponents[0])
+			match_2 = await self.create_match(opponents[1], opponents[2])
+			tournament = await self.create_tournament(match_1, match_2)
+			await self.setup_match(match_1, user, opponents[0])
+			await self.setup_match(match_2, opponents[1], opponents[2])
+			return (tournament)
+	
+	async def setup_match(self, match, player_1, player_2):
+		print("la")
+		game_room = match.id
+		# Mark both users as in-game
+		await self.put_player_in_game(player_1, player_2, game_room)
+		# Add both users to the same channel group
+		await self.channel_layer.group_add(str(game_room), str(player_1.channel_name))
+		await self.channel_layer.group_add(str(game_room), str(player_2.channel_name))
+		async with self.update_lock:
+			self.players[player_1.id]['group_name'] = str(game_room)
+			self.players[player_2.id]['group_name'] = str(game_room)
+			self.players[player_1.id]['player'] = 'p1'
+			self.players[player_2.id]['player'] = 'p2'
+			self.players[player_1.id]['opponent_id'] = player_2.id
+			self.players[player_2.id]['opponent_id'] = player_1.id
+			self.players[player_1.id]['game_active'] = True
+			self.players[player_2.id]['game_active'] = True
+			self.players[player_1.id]['actif'] = True
+			self.players[player_2.id]['actif'] = True
+		# Send the match details to the users
+		print(game_room)
+		await self.channel_layer.group_send(
+			str(game_room),
+			{
+				'type': 'match.info',
+				'player1': match.player1_id.username,
+				'player2': match.player2_id.username,
+			}
+		)
+		
+	@database_sync_to_async
+	def create_tournament(self, match_1, match_2):
+		return Tournament.objects.create(match_1=match_1, match_2=match_2, date=timezone.now())
+	
+	@database_sync_to_async	
+	def find_opponents(self, user):
+		opponents = User.objects.filter(user_is_looking_tournament=True, user_is_in_game=False).exclude(id=user.id).all()[:3]
+		print(len(opponents))
+		if len(opponents) < 3:
+			return User.objects.none()
+		return opponents
 
 	async def match_info(self, event):
 		await self.send(text_data=json.dumps({

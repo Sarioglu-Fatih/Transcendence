@@ -4,11 +4,18 @@ const playBtn = document.getElementById("play_button");
 playBtn.addEventListener('click', ()=> {
     showDivs(['pong']);
     hideDivs(['pong_button'])
-    launchGame();
+    launchGame('normal');
+})
+
+const tournamentBtn = document.getElementById("tournament");
+tournamentBtn.addEventListener('click', ()=> {
+    showDivs(['pong']);
+    hideDivs(['pong_button'])
+    launchGame('tournament');
 })
 
 
-function launchGame() {
+function launchGame(mode) {
     
     const socketURL = 'wss://localhost:8000/ws/game/';
     const socket = new WebSocket(socketURL)
@@ -21,6 +28,7 @@ function launchGame() {
         const message = {
             type: 'open',
             content: 'Hello, server!',
+            mode: mode,
             jwtToken: jwtToken,
         };
         socket.send(JSON.stringify(message));
@@ -44,6 +52,7 @@ function launchGame() {
             var by = parseInt(data.by);
             var score1 = parseInt(data.p1_score);
             var score2 = parseInt(data.p2_score);
+            winner = '';
         }
         else if (data.type === 'match_info'){
             player1 = data.player1;
@@ -93,6 +102,11 @@ function launchGame() {
                 break;
         }
     })
+
+    window.addEventListener('blur', function() {
+        key_w_press = false;
+        key_s_press = false;
+    });
 
     let keyPressInterval = setInterval(function() {
         if (key_w_press || key_s_press) {
