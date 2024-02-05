@@ -34,6 +34,7 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 		if not user:
 			await self.close()
 			return
+		await self.update_user_status_after_quit(user)
 		player = self.players.get(user.id)
 		if not player:
 			print('la')
@@ -54,7 +55,7 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 		await self.close()
 
 	async def receive(self, text_data):
-		print(text_data)
+		# print(text_data)
 		data = json.loads(text_data)      
 		if data.get('type') == 'keyPress':
 			payload = jwt.decode(data.get('jwtToken'), key=settings.SECRET_KEY, algorithms=['HS256'])
@@ -104,22 +105,26 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 	
 	async def tournament_loop(self, user, tournament):
 		p1 = self.players.get(tournament.match_1.player1_id.id)
+		print(p1)
 		p2 = self.players.get(tournament.match_1.player2_id.id)
+		print(p2)
 		p3 = self.players.get(tournament.match_2.player1_id.id)
+		print(p3)
 		p4 = self.players.get(tournament.match_2.player2_id.id)
+		print(p4)
 		asyncio.create_task(self.game_loop(tournament.match_1, 'tournament'))
 		asyncio.create_task(self.game_loop(tournament.match_2, 'tournament'))
 		while (p1['win'] + p2['win'] + p3['win'] + p4['win']) != 2:
 			print("tourni loop")
 			await asyncio.sleep(1)
 		if (p1['win'] == 0):
-			p1['game_active'] = False
+			p1['actif'] = False
 		if (p2['win'] == 0):
-			p2['game_active'] = False
+			p2['actif'] = False
 		if (p3['win'] == 0):
-			p3['game_active'] = False
+			p3['actif'] = False
 		if (p4['win'] == 0):
-			p4['game_active'] = False
+			p4['actif'] = False
 		if (p1['win'] == 1):
 			f1 = tournament.match_1.player1_id
 			if p3['win'] == 1:
@@ -127,7 +132,7 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 			else :
 				f2 = tournament.match_2.player2_id
 		if (p2['win'] == 1):
-			f1 = tournament.match_1.player1_id
+			f1 = tournament.match_1.player2_id
 			if p3['win'] == 1:
 				f2 = tournament.match_2.player1_id
 			else :
@@ -138,10 +143,10 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 		while (p1['win'] + p2['win'] + p3['win'] + p4['win']) != 3:
 			print("tourni loop 2")
 			await asyncio.sleep(1)
-		p4['game_active'] = False
-		p3['game_active'] = False
-		p2['game_active'] = False
-		p1['game_active'] = False
+		p4['actif'] = False
+		p3['actif'] = False
+		p2['actif'] = False
+		p1['actif'] = False
 
 	async def setup_player(self, user):
 		self.player_id = user.id
@@ -153,8 +158,7 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 				'p1': ((self.GAME_Y - self.PADDLE_Y) / 2),
 				'p2': ((self.GAME_Y - self.PADDLE_Y) / 2),
 				'group_name': "",
-				'game_active': False,
-				'actif': False,
+				'actif': True,
 				'win': 0,
 			}
 
@@ -162,20 +166,14 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 	async def game_check(self, user):
 		player = self.players.get(user.id)
 		print("game_check")
-		while player['game_active'] == False:
-			print(f"ici {user.id}")
-			await asyncio.sleep(3)
-		while player['game_active']:
+		while player['actif']:
 			await asyncio.sleep(1)
 		await self.disconnect(1)
 
 	async def tournament_check(self, user):
 		player = self.players.get(user.id)
 		print("game_check")
-		while player['game_active'] == False:
-			print(user.id)
-			await asyncio.sleep(3)
-		while player['game_active']:
+		while player['actif']:
 			await asyncio.sleep(1)
 		await self.disconnect(1)
 
@@ -255,25 +253,29 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 	@database_sync_to_async
 	def end_match(self, match, player, opponent, p1_score, p2_score, mode):
 		if (mode == 'match'):
-			opponent['game_active'] = False
+			opponent['actif'] = False
 		match.p1_score = p1_score
 		match.p2_score = p2_score
 		match.active_game = False
 		if (player['actif'] == False):
+			print('player[actif] == False')
 			opponent['win'] += 1
 			match.p2_score = 5
 			match.win_lose = match.player2_id.id
 			winner = match.player2_id.username
 		elif (opponent['actif'] == False):
+			print('opponent[actif] == False')
 			player['win'] += 1
 			match.p1_score = 5
 			match.win_lose = match.player1_id.id
 			winner = match.player1_id.username
 		elif (p1_score == 5):
+			print('p1_score == 5')
 			player['win'] += 1
 			match.win_lose = match.player1_id.id
 			winner = match.player1_id.username
 		else :
+			print('p2_score == 5')
 			opponent['win'] += 1
 			match.win_lose = match.player2_id.id
 			winner = match.player2_id.username
@@ -311,7 +313,6 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 	
 	@database_sync_to_async
 	def create_match(self, user, opponent):
-		print("ici")
 		return Match.objects.create(player1_id=user, player2_id=opponent, active_game=True, date=timezone.now(), win_lose=0)
 
 	@database_sync_to_async
@@ -348,7 +349,6 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 	async def find_tournament(self, user):
 		opponents = await self.find_opponents(user)
 		if opponents:
-			print('ici')
 			match_1 = await self.create_match(user, opponents[0])
 			match_2 = await self.create_match(opponents[1], opponents[2])
 			tournament = await self.create_tournament(match_1, match_2)
@@ -357,7 +357,6 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 			return (tournament)
 	
 	async def setup_match(self, match, player_1, player_2):
-		print("la")
 		game_room = match.id
 		# Mark both users as in-game
 		await self.put_player_in_game(player_1, player_2, game_room)
@@ -371,10 +370,10 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 			self.players[player_2.id]['player'] = 'p2'
 			self.players[player_1.id]['opponent_id'] = player_2.id
 			self.players[player_2.id]['opponent_id'] = player_1.id
-			self.players[player_1.id]['game_active'] = True
-			self.players[player_2.id]['game_active'] = True
-			self.players[player_1.id]['actif'] = True
-			self.players[player_2.id]['actif'] = True
+			self.players[player_1.id]['p1'] = ((self.GAME_Y - self.PADDLE_Y) / 2)
+			self.players[player_1.id]['p2'] = ((self.GAME_Y - self.PADDLE_Y) / 2)
+			self.players[player_2.id]['p1'] = ((self.GAME_Y - self.PADDLE_Y) / 2)
+			self.players[player_2.id]['p2'] = ((self.GAME_Y - self.PADDLE_Y) / 2)
 		# Send the match details to the users
 		print(game_room)
 		await self.channel_layer.group_send(
@@ -418,4 +417,11 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 	@database_sync_to_async
 	def get_last_match(self, user):
 		return Match.objects.filter(Q(player1_id=user) | Q(player2_id=user)).latest('date')
+	
+	@database_sync_to_async
+	def update_user_status_after_quit(self, user):
+		user.user_is_looking_game = False
+		user.user_is_looking_tournament = False
+		user.user_is_in_game = False
+		user.save()
 
