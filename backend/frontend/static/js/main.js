@@ -201,6 +201,13 @@ registerForm.addEventListener('submit', async (event) => {
   }
 });
 
+// const authForm = document.getElementById('auth_form')
+// authForm.addEventListener('submit', async (event) => {
+//   event.preventDefault();
+//   authUser();
+//   console.log("authUser lancee et fini");
+// });
+
 function isUserLoggedIn() {
   const jwtToken = localStorage.getItem('jwt_token');
   if (jwtToken !== null) {
