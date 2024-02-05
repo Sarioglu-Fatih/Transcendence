@@ -12,7 +12,7 @@ async function login() {
 
 	try {
 		const csrfToken = getCookie('csrftoken');
-		const baseURL = window.locatio.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+		const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
 
 		// Perform login
 		const response = await fetch(`${baseURL}/api/login`, {
@@ -24,18 +24,18 @@ async function login() {
 			body: JSON.stringify(body),
 			credentials: 'include',
 		})
-
+		
+		console.log("UEHFWEF");
 		if (response.ok) {
 			const data = await response.json();
-			
 			// Check if the user has 2FA enabled
 			if (data.status === 'success' && data.requires_2fa) {
 				// If 2FA is required, initiate the 2FA setup
 				await enable2FA();
+				console.log("LA 2FA login.js", data.requires_2fa);
 				console.log('2FA setup initiated.');
 			}
 
-			// Continue with your login logic
 			if (data.token && data.refresh_token) {
 				const token = data.token;
 				const refreshToken = data.refresh_token;
@@ -43,10 +43,12 @@ async function login() {
 				localStorage.setItem('refresh_token', refreshToken);
 				console.log('Login successful. Token:', token);
 			}
-		} else {
+		}
+		else {
 			console.error('Error login user:', response.status);
 		}
-	} catch (error) {
+	}
+	catch (error) {
 		console.error('Error login user:', error);
 	}
 }
@@ -54,44 +56,55 @@ async function login() {
 
 async function enable2FA() {
 	try {
-		const csrfToken = getCookie('csrftoken');
-		const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-		
-		// Request a new 2FA setup for the current user
-		const response = await fetch(`${baseURL}/api/enable_2fa`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'X-CSRFToken': csrfToken,
-			},
-			credentials: 'include',
-		});
-
-		if (response.ok) {
-			const data = await response.json();
-			
-			// Check if the response contains the secret key for TOTP
-			if (data.secret_key) {
-				const secretKey = data.secret_key;
-				
-				// Generate a URL for the QR code
-				const otpauthUrl = notp.totp.genOTPAuthURL({
-					secret: secretKey,
-					label: 'YourApp', // Set your application name
-					issuer: 'YourApp', // Set your issuer name
-				});
-
-				// Display the QR code on the frontend
-				const qrCodeContainer = document.getElementById('qrcode'); // Replace with your container ID
-        displayQRCode(otpauthUrl, qrCodeContainer);
-			}
-		} else {
-			console.error('Error enabling 2FA:', response.status);
+	  const csrfToken = getCookie('csrftoken');
+	  const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+  
+	  // Prompt the user to enter the TOTP token
+	  const totpToken = prompt('Enter the TOTP token:');
+	  if (!totpToken) {
+		// Handle the case where the user cancels the prompt
+		console.error('TOTP token not provided.');
+		return;
+	  }
+  
+	  // Request a new 2FA setup for the current user
+	  const response = await fetch(`${baseURL}/api/enable_2fa`, {
+		method: 'POST',
+		headers: {
+		  'Content-Type': 'application/json',
+		  'X-CSRFToken': csrfToken,
+		},
+		credentials: 'include',
+		body: JSON.stringify({
+		  totp_token: totpToken, // Include the TOTP token in the request
+		}),
+	  });
+  
+	  if (response.ok) {
+		const data = await response.json();
+  
+		// Check if the response contains the secret key for TOTP
+		if (data.secret_key) {
+		  const secretKey = data.secret_key;
+  
+		  // Generate a URL for the QR code
+		  const otpauthUrl = notp.totp.genOTPAuthURL({
+			secret: secretKey,
+			label: 'YourApp', // Set your application name
+			issuer: 'YourApp', // Set your issuer name
+		  });
+  
+		  // Display the QR code on the frontend
+		  const qrCodeContainer = document.getElementById('qrcode'); // Replace with your container ID
+		  displayQRCode(otpauthUrl, qrCodeContainer);
 		}
+	  } else {
+		console.error('Error enabling 2FA:', response.status);
+	  }
 	} catch (error) {
-		console.error('Error enabling 2FA:', error);
+	  console.error('Error enabling 2FA:', error);
 	}
-}
+  }
 
 function displayQRCode(otpauthUrl) {
 	const qrCodeContainer = document.getElementById('qrcode'); // Replace with your container ID

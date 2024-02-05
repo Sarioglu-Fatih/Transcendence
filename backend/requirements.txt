@@ -10,3 +10,4 @@ djangorestframework-simplejwt==4.7.2
 Pillow
 django-otp
 pyotp
+qrcode
