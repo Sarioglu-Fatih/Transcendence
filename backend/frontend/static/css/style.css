@@ -3,7 +3,7 @@
     height: auto;
 }
 
-#top_box, #div_register_form, #div_login_form, #game_launcher, #friendList, #history, #profilLeftSide, #profilRightSide, #addFriend_button{
+#top_box, #div_register_form, #div_login_form, #game_launcher, #friendListBody, #history, #profilLeftSide, #profilRightSide, #addFriend_button{
     display: none;
 }
 
@@ -16,7 +16,7 @@
 
 
 
-#friendList, #history {
+#friendListBody, #history {
     width: 22vw;
     height: 90vh;
     padding: 50px;

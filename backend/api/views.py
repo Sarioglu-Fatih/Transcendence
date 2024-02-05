@@ -25,7 +25,6 @@ def avatar(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user(request, user_profil):
-	print(user_profil)
 	if request.method == 'GET':
 		payload = decode_Payload(request)
 		user_id = payload.get('user_id')
@@ -44,7 +43,6 @@ def get_user(request, user_profil):
 					'lose': user.lose,
 				}
 			else:
-				print("ici")
 				user = user_we_want_to_see
 				data = {
 					'username': user.username,
