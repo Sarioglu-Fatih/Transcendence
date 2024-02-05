@@ -57,22 +57,26 @@ def get_user(request, user_profil):
 				return HttpResponseNotFound(status=404)
 			if (user_we_want_to_see.id == user_id):
 				user = User.objects.get(id=user_id)
+				user_win = user.get_total_wins()
+				user_loss = user.get_total_losses()
 				data = {
 					'User_ID': user_id,
 					'username': user.username,
 					'pseudo': user.pseudo,
 					'email': user.email,
-					'win': user.win,
-					'lose': user.lose,
+					'win': user_win,
+					'lose': user_loss,
 				}
 			else:
 				print("ici")
 				user = user_we_want_to_see
+				user_win = user.get_total_wins()
+				user_loss = user.get_total_losses()
 				data = {
 					'username': user.username,
 					'pseudo': user.pseudo,
-					'win': user.win,
-					'lose': user.lose,
+					'win': user_win,
+					'lose': user_loss,
 				}
 			return JsonResponse(data, safe=False)
 		return HttpResponseNotFound(status=404)

@@ -9,10 +9,9 @@ from django_otp.plugins.otp_totp.models import TOTPDevice
 class User(AbstractUser):
 	pseudo = models.CharField(max_length=16)
 	avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
-	user_is_connected = models.BooleanField(default=False)
+	user_is_looking_game = models.BooleanField(default=False)
+	user_is_looking_tournament = models.BooleanField(default=False)
 	user_is_in_game = models.BooleanField(default=False)
-	lose = models.PositiveIntegerField(default=0)
-	win = models.PositiveIntegerField(default=0)
 	channel_name = models.CharField(max_length=255, null=True, blank=True)
 	friendlist = models.ManyToManyField("User", blank=True)
 
@@ -24,6 +23,28 @@ class User(AbstractUser):
 			print("Default Avatar Path:", default_avatar_path)
 			with open(default_avatar_path, 'rb') as f:
 				return f.read()
+				
+	def get_total_wins(self):
+		return (
+			self.player1_matches.filter(win_lose=self.id)
+			.exclude(win_lose=0)
+			.count() 
+			+ 
+			self.player2_matches.filter(win_lose=self.id)
+			.exclude(win_lose=0)
+			.count()
+		)
+
+	def get_total_losses(self):
+		return (
+			self.player1_matches.exclude(win_lose=self.id)
+			.exclude(win_lose=0)
+			.count()
+			+
+			self.player2_matches.exclude(win_lose=self.id)
+			.exclude(win_lose=0)
+			.count()
+    	)
 
 	def __str__(self):
 		return self.username
@@ -45,9 +66,18 @@ class Match(models.Model):
 	player2_id = models.ForeignKey(User, related_name='player2_matches', on_delete=models.CASCADE)
 	active_game = models.BooleanField(default=True)
 	date = models.DateTimeField()
-	# p1_score = models.PositiveIntegerField()
-	# p2_score = models.PositiveIntegerField()
-	win_lose = models.PositiveIntegerField()
+	p1_score = models.PositiveIntegerField(default=0)
+	p2_score = models.PositiveIntegerField(default=0)
+	win_lose = models.PositiveIntegerField(default=0)
 
 	def __str__(self):
-		return "%s won" % self.player1_id.username
+		return "game %s" % self.id
+	
+class Tournament(models.Model):
+	match_1 = models.ForeignKey(Match, related_name='match_1',on_delete=models.CASCADE)
+	match_2 = models.ForeignKey(Match, related_name='match_2', on_delete=models.CASCADE)
+	final = models.ForeignKey(Match, related_name='final', on_delete=models.CASCADE, null=True)
+	date = models.DateTimeField()
+
+	def __str__(self):
+		return "tournament %s" % self.id

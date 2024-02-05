@@ -15,8 +15,6 @@ async function renderProfilPage() {
         var username_type = document.getElementById('username_key');
         var pseudo_type = document.getElementById('pseudo_key');
         var email_type = document.getElementById('email_key');
-        var win_type = document.getElementById('win_key');
-        var lose_type = document.getElementById('lose_key');
         var resulte_type = document.getElementById('win_lose_key');
 
         let win_string = userData.win.toString();

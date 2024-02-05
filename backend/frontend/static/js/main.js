@@ -7,12 +7,6 @@ import { displayHomePage , displayLoginPage , displayProfilPage } from './module
 import { handleAvatarUpload } from './modules/avatar_upload.js'
 import { makeApiRequest } from './modules/utils.js';
 
-const playBtn = document.getElementById("play_button");
-playBtn.addEventListener('click', ()=> {
-  launchGame();
-})
-
-drawPong();
 
 var path = window.location.pathname;
 console.log(path);
@@ -210,6 +204,13 @@ function isUserLoggedIn() {
 window.uploadAvatar = async function () {
 	handleAvatarUpload()
 }
+
+// Link avatar to homepage
+const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+const homePageURL = '/home';
+const fullHomePageURL = baseURL + homePageURL;
+const homelink = document.getElementById('homelink');
+homelink.href = fullHomePageURL;
 
 export { isUserLoggedIn}
  
