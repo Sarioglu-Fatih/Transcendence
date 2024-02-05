@@ -46,6 +46,23 @@ def upload_avatar(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+def get_history(request, user_profil):
+	if request.method != 'GET':
+		return HttpResponseNotFound(status=404)
+	payload = decode_Payload(request)
+	user_id = payload.get('user_id')
+	if (not user_id):
+		return HttpResponseNotFound(status=404)
+	user_we_want_to_see = User.objects.get(username=user_profil)
+	if not user_we_want_to_see:
+		return HttpResponseNotFound(status=404)
+	last_5_games = user_we_want_to_see.get_last_5_games()
+	return JsonResponse({'last_5_games': last_5_games}, safe=False)
+	
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_user(request, user_profil):
 	print(user_profil)
 	if request.method == 'GET':

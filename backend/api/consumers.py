@@ -252,8 +252,6 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 
 	@database_sync_to_async
 	def end_match(self, match, player, opponent, p1_score, p2_score, mode):
-		if (mode == 'match'):
-			opponent['actif'] = False
 		match.p1_score = p1_score
 		match.p2_score = p2_score
 		match.active_game = False
@@ -279,6 +277,8 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 			opponent['win'] += 1
 			match.win_lose = match.player2_id.id
 			winner = match.player2_id.username
+		if (mode == 'match'):
+			opponent['actif'] = False
 		match.save()
 		return winner
 
@@ -313,7 +313,7 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 	
 	@database_sync_to_async
 	def create_match(self, user, opponent):
-		return Match.objects.create(player1_id=user, player2_id=opponent, active_game=True, date=timezone.now(), win_lose=0)
+		return Match.objects.create(player1_id=user, player2_id=opponent, player1_username=user.username, player2_username=opponent.username, active_game=True, date=timezone.now(), win_lose=0)
 
 	@database_sync_to_async
 	def put_player_in_game(self, user, opponent, game_room):

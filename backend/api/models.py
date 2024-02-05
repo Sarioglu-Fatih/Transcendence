@@ -1,9 +1,11 @@
 from django.db import models
 from django.conf import settings
 import os
+from django.db.models import Q
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
-from django import forms 
+from django import forms
+from django.core.serializers import serialize
 
 class User(AbstractUser):
 	pseudo = models.CharField(max_length=16)
@@ -44,7 +46,13 @@ class User(AbstractUser):
 			.exclude(win_lose=0)
 			.count()
     	)
-
+	
+	def get_last_5_games(self):
+        # Retrieve the last 5 games for the user
+		last_5_games = Match.objects.filter(Q(player1_id=self) | Q(player2_id=self)).order_by('-date')[:5]
+		serialized_games = serialize('json', last_5_games)
+		return serialized_games
+	
 	def __str__(self):
 		return self.username
 
@@ -55,7 +63,9 @@ class AvatarUploadForm(forms.ModelForm):
 
 class Match(models.Model):
 	player1_id = models.ForeignKey(User, related_name='player1_matches',on_delete=models.CASCADE)
+	player1_username = models.CharField(max_length=150)
 	player2_id = models.ForeignKey(User, related_name='player2_matches', on_delete=models.CASCADE)
+	player2_username = models.CharField(max_length=150)
 	active_game = models.BooleanField(default=True)
 	date = models.DateTimeField()
 	p1_score = models.PositiveIntegerField(default=0)
