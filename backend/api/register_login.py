@@ -8,7 +8,6 @@ from django.contrib.auth import logout, authenticate, login
 from django.contrib.sessions.models import Session
 from rest_framework_simplejwt.tokens import RefreshToken
 from django_otp.plugins.otp_totp.models import TOTPDevice
-import pyotp
 
 @dataclass
 class registerPostParameters():
@@ -39,7 +38,6 @@ def create_user(request):
 			return HttpResponse(reason="Conflict: Email already exists.", status=409)
 		new_user = User(username=data.username, email=data.email, password=make_password(data.password))
 		new_user.save()
-		totp_device = new_user.enable_2fa()
 		return HttpResponse(status=200)
 	else:
 		return HttpResponseNotFound(status=404)
@@ -68,7 +66,6 @@ def user_login(request):
 					return JsonResponse({'status': 'success', 'message': 'Login successful', 'token': jwt_token, 'refresh_token': refresh_token})
 				else:
 					# TOTP is invalid, show an error message
-					print("fwiefoiwejfoiwe")
 					return JsonResponse({'status': 'error', 'message': 'Invalid TOTP token'}, status=401)
 			else:
 				# If 2FA is not enabled, proceed with login and generate JWT token
@@ -83,22 +80,6 @@ def user_login(request):
 	else:
 		# Return an error for an invalid request method.
 		return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
-
-def verify_totp(user, token):
-	try:
-		totp_device = TOTPDevice.objects.get(user=user, confirmed=True)
-	except TOTPDevice.DoesNotExist:
-		# Handle the case where the TOTP device doesn't exist
-		print("111111111")
-		return False
-
-	if token is None:
-		# Handle the case where the token is None (possibly not provided in the request)
-		print("222222222")
-		return False
-
-	totp = pyotp.TOTP(totp_device.bin_key)
-	return totp.verify(token.encode('utf-8'))
 	
 def user_logout(request):
 

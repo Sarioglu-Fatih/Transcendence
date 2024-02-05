@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from . import register_login
+from . import two_fa
 from . import utils
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -17,4 +18,6 @@ urlpatterns = [
     path('add_friend/<int:userToAddId>/', views.add_friend_request),
     path('upload_avatar/', views.upload_avatar, name='upload_avatar'),
     path('username', views.username),
+    path('enable_2fa', two_fa.enable2fa),
+    path('disable_2fa', two_fa.disable2fa)
 ]
