@@ -252,7 +252,7 @@ def user_login42(request, data):
 # def auth_42(request):
 #     url = 'https://api.intra.42.fr/oauth/authorize'
 #     params = {
-#         'client_id': os.getenv('APP_INTRA_CLIENT_ID'),
+#         'client_id': os.getenv('CLIENT_ID'),
 #         'redirect_uri': 'https://localhost:8000/home',
 #         'scope': 'public',
 #         # ajouter state quand on fera la protection xss

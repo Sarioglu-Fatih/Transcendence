@@ -233,8 +233,14 @@ authButton.addEventListener('click', () => {
 
   state = generateRandomState();
 
-  var baseUrl = 'https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-b25d192aa1c27b77cd86bfce4016950bc897fa49c2b81823d2070c3fac4fbe5f&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fhome&response_type=code';
-  var fullUrl = baseUrl + "&state=" + state;
+  var baseUrl = 'https://api.intra.42.fr/oauth/authorize?';
+  var client_id = '&client_id=' + 'u-s4t2ud-e95dac742f419c01abf9f266b8219d8be7c13613ebcc4b3a64edc9e84beac84c';
+  var redirect_uri = '&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fhome';
+  var response_type = '&response_type=code';
+  var random_state = '&state=' + state;
+  var scope = '&scope=public';
+  var fullUrl = baseUrl + client_id + redirect_uri + response_type + scope + random_state;
+  console.log(fullUrl);
 
   window.location = fullUrl;
 });
