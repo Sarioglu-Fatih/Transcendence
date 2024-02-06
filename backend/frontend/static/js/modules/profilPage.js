@@ -17,8 +17,8 @@ async function match_history() {
         if (!last5GamesArray)
             throw new Error('Invalid or missing data for last_5_games')
         console.log(last5GamesArray)
-            history.innerHTML = '';
-            console.log('ici');
+        history.innerHTML = '';
+        console.log('ici');
 
         last5GamesArray.forEach(game => {
             // Create a Bootstrap card element
@@ -81,7 +81,7 @@ async function renderProfilPage() {
         console.log(currentPath)
         const response = await makeApiRequest(currentPath)
         const userData = await response.json()
-
+        profilPage.innerHTML = '';
         var username_type = document.getElementById('username_key');
         var pseudo_type = document.getElementById('pseudo_key');
         var email_type = document.getElementById('email_key');
@@ -90,9 +90,12 @@ async function renderProfilPage() {
         let win_string = userData.win.toString();
         let lose_string = userData.lose.toString();
 
-        
-        username_type.textContent = "username : ";
-        username_type.textContent += userData.username;
+        if (userData.username){
+            username_type.textContent = "username : ";
+            username_type.textContent += userData.username;
+        }
+        else
+            username_type.textContent = '';
 
         pseudo_type.textContent = "pseudo   : ";
         pseudo_type.textContent += userData.pseudo;

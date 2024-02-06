@@ -1,24 +1,90 @@
-import {hideDivs, showDivs} from './utils.js'
+import {hideDivs, makeApiRequest, showDivs, makeApiRequestPost} from './utils.js'
+import { createWebSocket } from './logout.js'
+
+const pong_launcher = document.getElementById("pong_launcher");
+
+async function addPseudo() {
+    const pseudo = document.getElementById('pseudo').value;
+    console.log(pseudo);
+    const body = {
+        'pseudo': pseudo,
+    };
+
+    const response = await makeApiRequestPost("registerpseudo", body);
+    if (response.ok) {
+        console.log('Pseudo registered successfully', response);
+    } else {
+        console.error('Failed to register user:', response.statusText);
+        throw new Error('Failed to register pseudo');
+    }
+}
+
+async function pseudoCheck() {
+    try {
+        const response = await makeApiRequest('pseudo');
+        if (!response.ok)
+            throw new Error('error with the request');
+        const data = await response.json();
+        if (!data)
+            throw new Error('No Data');
+        console.log(data);
+        if (data.pseudo === '') {
+            await new Promise((resolve) => {
+                const pong_launcher = document.getElementById("pong_launcher");
+                pong_launcher.innerHTML = `
+                    <form id="pseudo_form">
+                        <label for="pseudo" class="form-label">pseudo</label>
+                        <input type="pseudo" class="form-control" id="pseudo">
+                        <button id="submit_pseudo_button" class="btn btn-primary">Submit</button>
+                    </form>`;
+                const pseudoForm = document.getElementById('pseudo_form');
+                pseudoForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    try {
+                        await addPseudo();
+                        resolve(); // Resolve the promise after pseudo is set
+                    } catch (err) {
+                        console.error(err.message);
+                    }
+                });
+            });
+        } else {
+            return;
+        }
+    } catch (err) {
+        console.error(err.message);
+    }
+}
 
 const playBtn = document.getElementById("play_button");
-playBtn.addEventListener('click', ()=> {
-    showDivs(['pong']);
-    hideDivs(['pong_button'])
-    launchGame('normal');
-})
+playBtn.addEventListener('click', async () => {
+    try {
+        hideDivs(['pong_button']);
+        await pseudoCheck();
+        showDivs(['pong_launcher']);
+        launchGame('normal');
+    } catch (err) {
+        pong_launcher.innerHTML = `<p class="error-msg">${err.message}</p>`;
+    }
+});
 
 const tournamentBtn = document.getElementById("tournament");
-tournamentBtn.addEventListener('click', ()=> {
-    showDivs(['pong']);
-    hideDivs(['pong_button'])
-    launchGame('tournament');
+tournamentBtn.addEventListener('click', async ()=> {
+    try {
+        hideDivs(['pong_button']);
+        await pseudoCheck();
+        showDivs(['pong_launcher']);
+        launchGame('tournament');
+    } catch (err) {
+        pong_launcher.innerHTML = `<p class="error-msg">${err.message}</p>`;
+    }
 })
 
-
 function launchGame(mode) {
-    
+    pong_launcher.innerHTML = `<canvas id="pong" width="600" height="300"></canvas>`
     const socketURL = 'wss://localhost:8000/ws/game/';
-    const socket = new WebSocket(socketURL)
+    
+    const socket = createWebSocket(socketURL);
     const jwtToken = localStorage.getItem('jwt_token');
     // Connection opened
 
