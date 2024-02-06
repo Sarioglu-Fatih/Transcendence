@@ -5,7 +5,7 @@ import { launchGame, drawPong } from './modules/pong.js';
 import { logout } from './modules/logout.js'
 import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js';
 import { handleAvatarUpload } from './modules/avatar_upload.js'
-import { makeApiRequest } from './modules/utils.js';
+import { hideDivs, makeApiRequest } from './modules/utils.js';
 import { enable2fa, disable2fa } from './modules/two_fa.js';
 
 var path = window.location.pathname;

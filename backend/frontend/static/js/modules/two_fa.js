@@ -74,6 +74,8 @@ async function disable2fa() {
  
 		if (response.ok) {
 			const data = await response.json();
+			const qrCodeContainer = document.getElementById('qrcode');
+			qrCodeContainer.innerHTML = '';
 			console.log('2FA disabled successfully:', data.message);	
 		}
 		else {
