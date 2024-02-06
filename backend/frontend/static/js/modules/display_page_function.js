@@ -1,4 +1,4 @@
-import { renderProfilPage, displayAvatar } from "./profilPage.js";
+import { renderProfilPage, displayAvatar, isFriend } from "./profilPage.js";
 import { isUserLoggedIn, friend_list } from "../main.js";
 
 function hideAllDivs() {
@@ -24,7 +24,13 @@ async function displayProfilPage(path) {
     if (isHimself == true)
         showDivs(['top_box', "profil_page", "profilLeftSide", "profilRightSide", "history"])
     else
-        showDivs(['top_box', "profil_page", "profilLeftSide", "addFriend_button", "history"])
+    {
+        console.log("1111111111", isFriend())
+        if (isFriend())
+            showDivs(['top_box', "profil_page", "profilLeftSide", "history"])
+        else
+            showDivs(['top_box', "profil_page", "profilLeftSide", "addFriend_button", "history"])
+    }
 }
 
 function displayHomePage() {

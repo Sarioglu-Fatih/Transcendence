@@ -3,14 +3,17 @@ import { makeApiRequest } from "./utils.js";
 const profilPage = document.getElementById('profil_page');
 const avatar = document.getElementById('avatar');
 
-
+async function isFriend() {
+    let isFriend = false;
+    const currentPath = "isFriend/" + window.location.pathname.substring(2);
+    console.log("----------------------", window.location.pathname.substring(8));
+}
 
 async function renderProfilPage() {
     try {
         let isHimself = false;
 
         const currentPath = window.location.pathname.substring(1) ;
-        console.log(currentPath)
         const response = await makeApiRequest(currentPath)
         const userData = await response.json()
 
@@ -36,7 +39,7 @@ async function renderProfilPage() {
             email_type.textContent += userData.email;
             isHimself = true;
         }
-        else 
+        else
             email_type.textContent = "";
 
         resulte_type.textContent = "win  ";
@@ -89,4 +92,4 @@ async function displayAvatar() {
   }
   
 
-export { renderProfilPage, displayAvatar};
+export { renderProfilPage, displayAvatar, isFriend };

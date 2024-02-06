@@ -16,4 +16,5 @@ urlpatterns = [
     path('add_friend/<str:userToAddName>/', views.add_friend_request),
     path('username', views.username),
     path('my_friends/', views.my_friends, name='my_friends'),
+    path('isFriend/<str:userToAddName>', views.isFriend, name='user'),
 ]
