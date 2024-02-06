@@ -118,6 +118,20 @@ def updateUser(request):
 				return JsonResponse({'error': "Special characters allowed : @$!%#?&"})
 			user.password = make_password(data.password)
 		user.save()
-		
-		# print(request.PATCH.get('username'))
 		return HttpResponse(status=200)
+	
+def verify_totp(user, token):
+	try:
+		totp_device = TOTPDevice.objects.get(user=user, confirmed=True)
+	except TOTPDevice.DoesNotExist:
+		# Handle the case where the TOTP device doesn't exist
+		print("111111111")
+		return False
+
+	if token is None:
+		# Handle the case where the token is None (possibly not provided in the request)
+		print("222222222")
+		return False
+
+	totp = pyotp.TOTP(totp_device.bin_key)
+	return totp.verify(token.encode('utf-8'))

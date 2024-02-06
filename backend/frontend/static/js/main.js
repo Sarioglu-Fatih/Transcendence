@@ -3,10 +3,10 @@ import { login } from './modules/login.js'
 import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
 import { launchGame, drawPong } from './modules/pong.js';
 import { logout } from './modules/logout.js'
-import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js'
-import { handleAvatarUpload } from './modules/avatar_otp_token: totpToken, // Include thpload.js'
+import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js';
+import { handleAvatarUpload } from './modules/avatar_upload.js'
 import { makeApiRequest } from './modules/utils.js';
-import { enable2fa } from './modules/two_fa.js'
+import { enable2fa, disable2fa } from './modules/two_fa.js';
 
 var path = window.location.pathname;
 console.log(path);
@@ -217,10 +217,11 @@ var switchbox2FA = document.getElementById('switchbox2FA');
 switchbox2FA.addEventListener('change', async (event) => {
 	event.preventDefault();
 	if (switchbox2FA.checked) {
-		//enable2fa();
+		enable2fa();
 		console.log('2FA is enabled');
 	}
 	else {
+		disable2fa();
 		console.log('2FA is disabled');
 	}
 });
