@@ -15,6 +15,7 @@ class User(AbstractUser):
 	user_is_in_game = models.BooleanField(default=False)
 	channel_name = models.CharField(max_length=255, null=True, blank=True)
 	friendlist = models.ManyToManyField("User", blank=True)
+	logged_with_42 = models.BooleanField(default=False)
 
 	def get_avatar(self):
 		if self.avatar:

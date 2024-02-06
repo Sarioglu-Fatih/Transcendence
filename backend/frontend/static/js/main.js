@@ -95,7 +95,7 @@ updateForm.addEventListener('submit', async (event) => {
   var inputEmail = document.getElementById('updateEmail');
   var userEmail = inputEmail.value;
   var regex = /\S+@\S+\.\S+/;
-  var secRegexEmail = /^[a-zA-Z0-9@.]+$/;
+  var secRegexEmail = /^[a-zA-Z0-9@.-]+$/;
 
   var inputPassword = document.getElementById('updatePassword');
   var userPassword = inputPassword.value;
@@ -157,7 +157,7 @@ registerForm.addEventListener('submit', async (event) => {
   var inputEmail = document.getElementById('inputEmail');
   var userEmail = inputEmail.value;
   var regex = /\S+@\S+\.\S+/;
-  var secRegexEmail = /^[a-zA-Z0-9@.]+$/;
+  var secRegexEmail = /^[a-zA-Z0-9@.-]+$/;
  
   var count = 0;
 

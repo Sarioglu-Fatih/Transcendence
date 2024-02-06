@@ -28,7 +28,7 @@ def create_user(request):
             return HttpResponse(status=400, reason="Bad request: " + str(e))
         regexUsername = r'^[a-zA-Z0-9_-]+$'																# register page parsing
         regexEmail = r'\A\S+@\S+\.\S+\Z'
-        secRegexEmail = r'^[a-zA-Z0-9@.]+$'
+        secRegexEmail = r'^[a-zA-Z0-9@.-]+$'
         regexPwd = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
         if not re.match(regexUsername, data.username):
             return JsonResponse({'error': 'Username not valide'})
@@ -83,10 +83,10 @@ def updateUser(request):
              data = registerPostParameters(**json.loads(request.body))
         except Exception  as e:
             return HttpResponse(status=400, reason="Bad request: " + str(e))
-        
+
         regexUsername = r'^[a-zA-Z0-9_-]+$'																# register page parsing
         regexEmail = r'\A\S+@\S+\.\S+\Z'
-        secRegexEmail = r'^[a-zA-Z0-9@.]+$'
+        secRegexEmail = r'^[a-zA-Z0-9@.-]+$'
         regexPwd = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
 
         user = request.user
@@ -195,7 +195,7 @@ def auth42(request):
             # genere une chaine aleatoire de 12 caracteres
             # user_password = 'pwdauth42' + ''.join(random.choices(string.ascii_lowercase, k=12)) + user_login
         user_data = {
-            "username": user_login,
+            "username": user_login + '@42',
             "email": user_email,
             "password": user_password
         }
@@ -208,30 +208,18 @@ def auth42(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
 def create_user42(data):
-    regexUsername = r'^[a-zA-Z0-9_-]+$'
-    regexEmail = r'\A\S+@\S+\.\S+\Z'
-    secRegexEmail = r'^[a-zA-Z0-9@.]+$'
-    regexPwd = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
-    if not re.match(regexUsername, data['username']):
-        return {'status': 'error', 'message': 'Username not valid'}
-    if not (re.match(regexEmail, data['email']) and re.match(secRegexEmail, data['email'])):
-        return {'status': 'error', 'message': 'Email not valid'}
-    if  not re.match(regexPwd, data['password']):
-        return {'status': 'error', 'message': "Special characters allowed : @$!%#?&"}
     if User.objects.filter(username=data['username']).exists():
         return {'status': 'exist', 'message': "Username already exists."}
     if User.objects.filter(email=data['email']).exists():
         return {'status': 'exist', 'message': "Email already exists."}
     new_user = User(username=data['username'], email=data['email'], password=make_password(data['password']))
+    new_user.logged_with_42 = True
     new_user.save()
     return {'status': 'exist', 'message': "User created"}
 
 def user_login42(request, data):
     username = data['username']
     password = data['password']
-    regexUsername = r'^[a-zA-Z0-9_-]+$'
-    if (not re.match(regexUsername, username)):
-        return JsonResponse({'error': 'Username not valid'})
     user = authenticate(username=username, password=password)
     print("user is : ")
     print(user)
