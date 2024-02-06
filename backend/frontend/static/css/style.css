@@ -3,7 +3,7 @@
     height: auto;
 }
 
-#top_box, #div_register_form, #div_login_form, #game_launcher, #friend_list, #history, #profile_settings {
+#top_box, #div_register_form, #div_login_form, #game_launcher, #friend_list, #history, #profile_settings, #pong {
     display: none;
 }
 

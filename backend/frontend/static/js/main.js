@@ -8,12 +8,6 @@ import { displayHomePage , displayLoginPage , displayProfilPage } from './module
 import { handleAvatarUpload } from './modules/avatar_upload.js'
 import { makeApiRequest } from './modules/utils.js';
 
-const playBtn = document.getElementById("play_button");
-playBtn.addEventListener('click', ()=> {
-  launchGame();
-})
-
-drawPong();
 
 var state = 0;
 var path = window.location.pathname;
@@ -240,10 +234,17 @@ authButton.addEventListener('click', () => {
   var random_state = '&state=' + state;
   var scope = '&scope=public';
   var fullUrl = baseUrl + client_id + redirect_uri + response_type + scope + random_state;
-  console.log(fullUrl);
 
   window.location = fullUrl;
 });
 
 export { isUserLoggedIn, state }
+// Link avatar to homepage
+const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+const homePageURL = '/home';
+const fullHomePageURL = baseURL + homePageURL;
+const homelink = document.getElementById('homelink');
+homelink.href = fullHomePageURL;
+
+export { isUserLoggedIn}
  

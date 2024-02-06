@@ -1,4 +1,4 @@
-import { renderProfilPage, displayAvatar } from "./profilPage.js";
+import { renderProfilPage, displayAvatar, match_history} from "./profilPage.js";
 import { isUserLoggedIn } from "../main.js";
 
 function hideAllDivs() {
@@ -22,6 +22,7 @@ function displayProfilPage(path) {
     hideAllDivs();
     displayAvatar();
     renderProfilPage();
+    match_history();
     hideDivs(['div_register_form', 'div_login_form', 'game_launcher', 'friend_list']);
     showDivs(['top_box', "profil_page", "profile_settings", "history", 'avatar_upload_form'])
 }
@@ -30,7 +31,7 @@ function displayHomePage() {
     history.pushState({}, '', '/home');
     displayAvatar();
     hideAllDivs();
-    showDivs(['top_box', 'game_launcher', 'friend_list'])
+    showDivs(['top_box', 'game_launcher', 'friend_list', 'pong_button'])
 }
 
 function hideDivs(divIds) {
@@ -51,4 +52,4 @@ function hideDivs(divIds) {
       });
     }
 
-export { displayHomePage , displayLoginPage , displayProfilPage }
+export { displayHomePage , displayLoginPage , displayProfilPage, hideDivs, showDivs }

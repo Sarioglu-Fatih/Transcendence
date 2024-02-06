@@ -199,9 +199,7 @@ def auth42(request):
             "email": user_email,
             "password": user_password
         }
-        print("YOOOOOOO")
         user_creation = create_user42(user_data)
-        print("YAAAAAAA")
         print(user_creation)
         if (user_creation.get('status') == 'error'):
             return JsonResponse({'status': 'error', 'message': user_creation.get('message')}, status=401)
@@ -224,7 +222,6 @@ def create_user42(data):
         return {'status': 'exist', 'message': "Username already exists."}
     if User.objects.filter(email=data['email']).exists():
         return {'status': 'exist', 'message': "Email already exists."}
-    print("YELLOOOO")
     new_user = User(username=data['username'], email=data['email'], password=make_password(data['password']))
     new_user.save()
     return {'status': 'exist', 'message': "User created"}

@@ -1,4 +1,21 @@
-function launchGame() {
+import {hideDivs, showDivs} from './utils.js'
+
+const playBtn = document.getElementById("play_button");
+playBtn.addEventListener('click', ()=> {
+    showDivs(['pong']);
+    hideDivs(['pong_button'])
+    launchGame('normal');
+})
+
+const tournamentBtn = document.getElementById("tournament");
+tournamentBtn.addEventListener('click', ()=> {
+    showDivs(['pong']);
+    hideDivs(['pong_button'])
+    launchGame('tournament');
+})
+
+
+function launchGame(mode) {
     
     const socketURL = 'wss://localhost:8000/ws/game/';
     const socket = new WebSocket(socketURL)
@@ -11,26 +28,41 @@ function launchGame() {
         const message = {
             type: 'open',
             content: 'Hello, server!',
+            mode: mode,
             jwtToken: jwtToken,
         };
         socket.send(JSON.stringify(message));
     });
 
     // Listen for messages from the server
+    var player1;
+    var player2;
+    var winner = '';
+
     socket.addEventListener('message', (event) => {
-        console.log('Received message from server:', event.data);
+        //console.log('Received message from server:', event.data);
         // Parse the JSON string
         const data = JSON.parse(event.data);
- 
         // Extract values as integers
-        let p1 = parseInt(data.p1);
-        let p2 = parseInt(data.p2);
-        let bx = parseInt(data.bx);
-        let by = parseInt(data.by);
-        let score1 = parseInt(data.p1_score);
-        let score2 = parseInt(data.p2_score);
+        console.log(data);
+        if (data.type === 'position_update'){
+            var p1 = parseInt(data.p1);
+            var p2 = parseInt(data.p2);
+            var bx = parseInt(data.bx);
+            var by = parseInt(data.by);
+            var score1 = parseInt(data.p1_score);
+            var score2 = parseInt(data.p2_score);
+            winner = '';
+        }
+        else if (data.type === 'match_info'){
+            player1 = data.player1;
+            player2 = data.player2;
+        }
+        else if (data.type === 'game_end') {
+            winner = data.winner;
+        }
 
-        drawPong(bx, by, p1, p2);
+        drawPong(player1, player2, bx, by, p1, p2, score1, score2, winner);
     });
 
     // Connection closed
@@ -71,6 +103,11 @@ function launchGame() {
         }
     })
 
+    window.addEventListener('blur', function() {
+        key_w_press = false;
+        key_s_press = false;
+    });
+
     let keyPressInterval = setInterval(function() {
         if (key_w_press || key_s_press) {
             KeyPress(key_w_press ? 'w' : 's');
@@ -90,14 +127,43 @@ function launchGame() {
 
 
 
-//xb and yb = ball, ylp == left paddle, yrp == right
-function drawPong(xb, yb, ylp, yrp) {
+function drawPong(player1, player2, bx, by, p1, p2, score1, score2, winner) {
     const canvas = document.getElementById('pong');
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillRect(10, ylp, 15, 80);
-    ctx.fillRect(570,  yrp, 15, 80);
-    ctx.fillRect(xb, yb, 10, 10 )
+
+    // Draw center dotted line
+    if (winner) {
+        ctx.font = '50px Arial';
+        ctx.fillStyle = '#000';
+        ctx.fillText(winner + ' WON!', 200, 150);
+        return;
+    }
+    ctx.beginPath();
+    ctx.setLineDash([5, 15]);
+    ctx.moveTo(canvas.width / 2, 0);
+    ctx.lineTo(canvas.width / 2, canvas.height);
+    ctx.strokeStyle = '#000';
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Draw paddles
+    ctx.fillStyle = '#000';
+    ctx.fillRect(5, p1, 10, 60);
+    ctx.fillRect(canvas.width - 15, p2, 10, 60);
+
+    // Draw ball
+    ctx.beginPath();
+    ctx.arc(bx, by, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#000';
+    ctx.fill();
+    ctx.closePath();
+
+    // Draw player scores
+    ctx.font = '20px Arial';
+    ctx.fillStyle = '#000';
+    ctx.fillText(player1 + ':' + score1, 10, 30);
+    ctx.fillText(player2 + ':' + score2, canvas.width - 100, 30);
 }
 
 

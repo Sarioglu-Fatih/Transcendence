@@ -17,4 +17,5 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('upload_avatar/', views.upload_avatar, name='upload_avatar'),
     path('username', views.username),
+    path('history/<str:user_profil>/', views.get_history)
 ]
