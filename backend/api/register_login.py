@@ -11,6 +11,8 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.sessions.models import Session
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
 
 
 @dataclass
@@ -188,12 +190,8 @@ def auth42(request):
 
         user_login = json_response.get('login')
         user_email = json_response.get('email')
+        # user_avatar = json_response.get('image', {}).get('link')
         user_password = 'PWDauth42!' + user_login
-        # if User.objects.filter(username=user_login).exists():
-        #     user_password = User.objects.filter(username=user_login).password
-        # else
-            # genere une chaine aleatoire de 12 caracteres
-            # user_password = 'pwdauth42' + ''.join(random.choices(string.ascii_lowercase, k=12)) + user_login
         user_data = {
             "username": user_login + '@42',
             "email": user_email,
@@ -233,7 +231,17 @@ def user_login42(request, data):
     else:
         # Authentication failed. Return an error response.
         return JsonResponse({'status': 'error', 'message': 'Invalid login credentials'}, status=401)
-    
+
+# def avatar42(user, url)
+#     response = requests.get(url)
+
+#     if response.response_status == 200:
+#         img_tmp = NamedTemporaryFile(delete=True)
+#         img_tmp.write(response.content)
+#         img_tmp.flush()
+
+#         user.avatar.save(f"avatar.jpg", File(img_tmp), save=True)
+
 # def auth_42(request):
 #     url = 'https://api.intra.42.fr/oauth/authorize'
 #     params = {
