@@ -52,6 +52,7 @@ loginForm.addEventListener('submit', async function (event) {
 	{
 		document.getElementById('loginUsernameError').innerHTML = '';
 		await login();
+		
 		displayLoginPage();
 		document.getElementById('login_form').reset();
 	}

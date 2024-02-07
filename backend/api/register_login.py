@@ -80,7 +80,45 @@ def user_login(request):
 	else:
 		# Return an error for an invalid request method.
 		return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
-	
+
+
+def user_login2fa(request):
+	if request.method == 'POST':
+		data = json.loads(request.body.decode('utf-8'))
+		username = data.get('username')
+		password = data.get('password')
+		regexUsername = r'^[a-zA-Z0-9_-]+$'																# login page parsing
+		if (not re.match(regexUsername, username)):
+			return JsonResponse({'error': 'Username not valide'})
+		user = authenticate(request, username=username, password=password)
+		if user is not None:
+			if TOTPDevice.objects.filter(user=user, confirmed=True).exists():
+				# Extract the TOTP token from the request
+				token = data.get('token')
+				if verify_totp(user, token):
+					# TOTP is valid, proceed with login
+					login(request, user)
+					# Generate JWT token, access, and refresh
+					refresh = RefreshToken.for_user(user)
+					jwt_token = str(refresh.access_token)
+					refresh_token = str(refresh)
+					return JsonResponse({'status': 'success', 'message': 'Login successful', 'token': jwt_token, 'refresh_token': refresh_token})
+				else:
+					# TOTP is invalid, show an error message
+					return JsonResponse({'status': 'error', 'message': 'Invalid TOTP token'}, status=401)
+			else:
+				# If 2FA is not enabled, proceed with login and generate JWT token
+				login(request, user)
+				refresh = RefreshToken.for_user(user)
+				jwt_token = str(refresh.access_token)
+				refresh_token = str(refresh)
+				return JsonResponse({'status': 'success', 'message': 'Login successful', 'token': jwt_token, 'refresh_token': refresh_token})
+		else:
+			# Authentication failed. Return an error response.
+			return JsonResponse({'status': 'error', 'message': 'Invalid login credentials'}, status=401)
+	else:
+		# Return an error for an invalid request method.
+		return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 def user_logout(request):
 
 	logout(request)
