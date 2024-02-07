@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from . import register_login
+from . import two_fa
 from . import utils
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -20,5 +21,9 @@ urlpatterns = [
     path('history/<str:user_profil>/', views.get_history),
     path('pseudo', views.pseudo),
     path('registerpseudo', views.registerpseudo),
-    path('isUserLoggedIn', views.isUserLoggedIn)
+    path('isUserLoggedIn', views.isUserLoggedIn),
+    path('enable_2fa', two_fa.enable2fa),
+    path('disable_2fa', two_fa.disable2fa),
+    path('get_2fa_status', two_fa.get_2fa_status),
+    path('check_totp', two_fa.check_totp),
 ]

@@ -21,6 +21,8 @@ def avatar(request):
 	if request.method != 'GET':
 		return JsonResponse({'error': 'Invalid request method'}, status=405)
 	payload = decode_Payload(request)
+	if not payload:
+		return JsonResponse({'error': 'User ID not provided'}, status=400)
 	user_id = payload.get('user_id')
 	if not user_id:
 		return JsonResponse({'error': 'User ID not provided'}, status=400)

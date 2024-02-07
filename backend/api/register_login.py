@@ -11,7 +11,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.sessions.models import Session
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from django_otp.plugins.otp_totp.models import TOTPDevice
 
 @dataclass
 class registerPostParameters():
@@ -57,6 +57,8 @@ def user_login(request):
 			return JsonResponse({'error': 'Username not valide'})
 		user = authenticate(request, username=username, password=password)
 		if user is not None:
+			if TOTPDevice.objects.filter(user=user, confirmed=True).exists():
+				return HttpResponse(reason='Need totp token', status='222')
 			login(request, user)
 			# Generate JWT token, access and refresh
 			refresh = RefreshToken.for_user(user)
@@ -76,9 +78,48 @@ def user_login(request):
 			# Authentication failed. Return an error response.
 			return JsonResponse({'status': 'error', 'message': 'Invalid login credentials'}, status=401)
 	else:
-		# Return an error for invalid request method.
+		# Return an error for an invalid request method.
 		return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
-	
+
+
+def user_login2fa(request):
+	if request.method == 'POST':
+		data = json.loads(request.body.decode('utf-8'))
+		username = data.get('username')
+		password = data.get('password')
+		regexUsername = r'^[a-zA-Z0-9_-]+$'																# login page parsing
+		if (not re.match(regexUsername, username)):
+			return JsonResponse({'error': 'Username not valide'})
+		user = authenticate(request, username=username, password=password)
+		if user is not None:
+			if TOTPDevice.objects.filter(user=user, confirmed=True).exists():
+				return HttpResponse(reason='Need totp token', status='222')
+				# Extract the TOTP token from the request
+				token = data.get('token')
+				if verify_totp(user, token):
+					# TOTP is valid, proceed with login
+					login(request, user)
+					# Generate JWT token, access, and refresh
+					refresh = RefreshToken.for_user(user)
+					jwt_token = str(refresh.access_token)
+					refresh_token = str(refresh)
+					return JsonResponse({'status': 'success', 'message': 'Login successful', 'token': jwt_token, 'refresh_token': refresh_token})
+				else:
+					# TOTP is invalid, show an error message
+					return JsonResponse({'status': 'error', 'message': 'Invalid TOTP token'}, status=401)
+			else:
+				# If 2FA is not enabled, proceed with login and generate JWT token
+				login(request, user)
+				refresh = RefreshToken.for_user(user)
+				jwt_token = str(refresh.access_token)
+				refresh_token = str(refresh)
+				return JsonResponse({'status': 'success', 'message': 'Login successful', 'token': jwt_token, 'refresh_token': refresh_token})
+		else:
+			# Authentication failed. Return an error response.
+			return JsonResponse({'status': 'error', 'message': 'Invalid login credentials'}, status=401)
+	else:
+		# Return an error for an invalid request method.
+		return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
 def user_logout(request):
 
@@ -92,12 +133,11 @@ def user_logout(request):
 	response.set_cookie('jwt_token', '', expires=0)
 	return response
 
-
 def updateUser(request):
 	if request.method == 'PATCH':
 		try:
-			 data = registerPostParameters(**json.loads(request.body))
-		except	Exception  as e:
+		  data = registerPostParameters(**json.loads(request.body))
+		except Exception  as e:
 			return HttpResponse(status=400, reason="Bad request: " + str(e))
 		
 		regexUsername = r'^[a-zA-Z0-9_-]+$'																# register page parsing
@@ -123,8 +163,6 @@ def updateUser(request):
 				return JsonResponse({'error': "Special characters allowed : @$!%#?&"})
 			user.password = make_password(data.password)
 		user.save()
-		
-		# print(request.PATCH.get('username'))
 		return HttpResponse(status=200)
 
 def auth42(request):
@@ -274,3 +312,6 @@ def user_login42(request, data):
 #     response = requests.get(url, params=params)
 #     print(response.status_code)     
 #     return HttpResponse(status=200)#('https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-e95dac742f419c01abf9f266b8219d8be7c13613ebcc4b3a64edc9e84beac84c&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fhome&response_type=code')  
+
+
+

@@ -1,4 +1,18 @@
-import {getCookie} from './utils.js'
+import {getCookie, makeApiRequest,  makeApiRequestPost} from './utils.js'
+import { check2faStatus } from './two_fa.js';
+
+async function send_TOTP(token, username) {
+  try {
+    const body = {
+      'token': token,
+      'username': username
+    };
+    const response = await makeApiRequestPost("check_totp", body);
+  }
+  catch (error) {
+    console.error('Error login user:', error);
+  }
+}
 
 async function login() {
 
@@ -24,8 +38,12 @@ async function login() {
         credentials: 'include',
       })
       if (response.ok) {
-        const data = await response.json();
-        console.log(data.headers)
+        if (response.status === 222){
+          const token = prompt("enter code biatch")
+          console.log(token);
+          await send_TOTP(token, username);
+          displayLoginPage();
+        }
       }
       else {
         console.error('Error login user:', response.status);

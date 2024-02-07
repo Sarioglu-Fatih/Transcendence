@@ -1,5 +1,6 @@
 import { renderProfilPage, displayAvatar, match_history} from "./profilPage.js";
 import { isUserLoggedIn } from "../main.js";
+import { check2faStatus } from "./two_fa.js";
 
 function hideAllDivs() {
     hideDivs(['top_box', 'game_launcher', 'friend_list', 'profil_page', 'div_register_form', 'div_login_form', "history", "profile_settings"]);
@@ -7,6 +8,7 @@ function hideAllDivs() {
 
 function displayLoginPage() {
     if (isUserLoggedIn()) {
+        console.log('la')
         displayHomePage();
     }
     else {
@@ -21,6 +23,7 @@ function displayProfilPage(path) {
     history.pushState({}, '', path);
     hideAllDivs();
     displayAvatar();
+    check2faStatus();
     renderProfilPage();
     match_history();
     hideDivs(['div_register_form', 'div_login_form', 'game_launcher', 'friend_list']);
