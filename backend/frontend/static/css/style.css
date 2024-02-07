@@ -22,8 +22,6 @@
     padding: 50px;
 }
 
-
-
 /* The message box is shown when the user clicks on the password field */
 #pwd_checkbox {
     display:none;
@@ -78,4 +76,8 @@
 
   canvas {
     border: 1px solid black;
+  }
+
+  #2FA_button {
+    right: 100px;
   }

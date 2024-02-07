@@ -1,4 +1,5 @@
 import {getCookie} from './utils.js'
+import { check2faStatus } from './two_fa.js';
 
 async function login() {
 
