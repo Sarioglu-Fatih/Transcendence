@@ -21,8 +21,9 @@ urlpatterns = [
     path('history/<str:user_profil>/', views.get_history),
     path('pseudo', views.pseudo),
     path('registerpseudo', views.registerpseudo),
-    path('isUserLoggedIn', views.isUserLoggedIn)
+    path('isUserLoggedIn', views.isUserLoggedIn),
     path('enable_2fa', two_fa.enable2fa),
     path('disable_2fa', two_fa.disable2fa),
     path('get_2fa_status', two_fa.get_2fa_status),
+    path('check_totp', two_fa.check_totp),
 ]

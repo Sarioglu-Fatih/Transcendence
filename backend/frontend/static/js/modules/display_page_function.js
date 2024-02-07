@@ -8,6 +8,7 @@ function hideAllDivs() {
 
 function displayLoginPage() {
     if (isUserLoggedIn()) {
+        console.log('la')
         displayHomePage();
     }
     else {

@@ -6,7 +6,6 @@ import { logout } from './modules/logout.js'
 import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js';
 import { handleAvatarUpload } from './modules/avatar_upload.js'
 import { makeApiRequest, getCookie } from './modules/utils.js';
-import { hideDivs, makeApiRequest } from './modules/utils.js';
 import { enable2fa, disable2fa, check2faStatus } from './modules/two_fa.js';
 
 var state = 0;
@@ -15,28 +14,31 @@ await checkAuth42();
 console.log('path', path);
 if (!isUserLoggedIn())
 	history.pushState({}, '', '/login');
-else if (path === '/'){
-	console.log('ici')
-	history.pushState({}, '', '/home');}
+else if (path === '/')
+	history.pushState({}, '', '/home');
 else
 	history.pushState({}, '', path);
 
 window.onload = function() {
+	console.log('NNNNNNNN')
 	var path = window.location.pathname;
-	if (path === "/home")
-			displayHomePage();
-	else if (path === '/login')
-			displayLoginPage();
-	else if (path.startsWith('/profil/')){
-			displayProfilPage(path);
-	}
-}
+	if (!isUserLoggedIn()){
+		console.log('aaaaaaaaaa')
+		displayLoginPage();}
+	else if (path === "/home")
+		displayHomePage();
+	else if (path === '/login'){
+		console.log('aaaaaaaaaa')
+		displayLoginPage();}
+	else if (path.startsWith('/profil/'))
+		displayProfilPage();
+  }
 
-window.onpopstate = function(event) {
+window.onpopstate = async function() {
   var path = window.location.pathname;
-  if (!isUserLoggedIn())
+  if (!await isUserLoggedIn())
   	displayLoginPage();
-  else if (path === "/home" && isUserLoggedIn())
+  else if (path === "/home")
       displayHomePage();
   else if (path === '/login')
     displayLoginPage();
@@ -203,14 +205,15 @@ registerForm.addEventListener('submit', async (event) => {
 //   console.log("authUser lancee et fini");
 // });
 
-async function isUserLoggedIn() {
-  const response = await makeApiRequest("isUserLoggedIn");
-  console.log(response);
-  const jwtToken = getCookie('jwt_token');
-  if (jwtToken !== null && response.ok) {
+function isUserLoggedIn() {
+//   const response = await makeApiRequest("isUserLoggedIn");
+//   console.log(response);
+const jwtToken = getCookie('jwt_token');
+console.log(jwtToken);
+if (jwtToken !== null) {
     console.log("user connected")
     return (true)
-  }
+}
   console.log("user not  connected")
   return (false)
 }

@@ -17,6 +17,7 @@ class User(AbstractUser):
 	channel_name = models.CharField(max_length=255, null=True, blank=True)
 	friendlist = models.ManyToManyField("User", blank=True)
 	status_2fa = models.BooleanField(default=False)
+	qrcode = models.TextField(default=None, null=True)
 
 	def get_avatar(self):
 		if self.avatar:
@@ -80,6 +81,7 @@ class Match(models.Model):
 	p1_score = models.PositiveIntegerField(default=0)
 	p2_score = models.PositiveIntegerField(default=0)
 	win_lose = models.PositiveIntegerField(default=0)
+	
 
 	def __str__(self):
 		return "game %s" % self.id

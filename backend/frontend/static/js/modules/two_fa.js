@@ -3,7 +3,6 @@ import { getCookie } from "./utils.js";
 async function enable2fa() {
 	try {
 		const csrfToken = getCookie('csrftoken');
-		const accessToken = localStorage.getItem('jwt_token');
 		const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
 
 		// Request a new 2FA setup for the current user
@@ -12,7 +11,6 @@ async function enable2fa() {
 		headers: {
 			'Content-Type': 'application/json',
 			'X-CSRFToken': csrfToken,
-			'Authorization': `Bearer ${accessToken}`,
 		},
 		credentials: 'include',
 		});
@@ -22,8 +20,9 @@ async function enable2fa() {
 
 			if (data.success) {
 				// Generate the OTP URL
-				const otpauthUrl = data.otpauth_url;
-				displayQRCode(otpauthUrl);
+				const qrcode = data.qrcode;
+				console.log("enable 2fa: ", data.qrcode)
+				displayQRCode(qrcode);
 			}
 			else {
 				console.error('Error enabling 2FA:', data.error);
@@ -40,7 +39,7 @@ async function enable2fa() {
 
 function displayQRCode(otpauthUrl) {
 	const qrCodeContainer = document.getElementById('qrcode'); // Replace with your container ID
-
+	console.log(otpauthUrl)
 	// Construct the data URI for the QR code image
 	const dataUri = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(otpauthUrl)}`;
 
@@ -56,7 +55,6 @@ function displayQRCode(otpauthUrl) {
 async function disable2fa() {
 	try {
 		const csrfToken = getCookie('csrftoken');
-		const accessToken = localStorage.getItem('jwt_token');
 		const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
 
 		const response = await fetch(`${baseURL}/api/disable_2fa`, {
@@ -64,7 +62,6 @@ async function disable2fa() {
 		headers: {
 			'Content-Type': 'application/json',
 			'X-CSRFToken': csrfToken,
-			'Authorization': `Bearer ${accessToken}`,
 		},
 		credentials: 'include',
 		});
@@ -87,7 +84,6 @@ async function disable2fa() {
 async function check2faStatus() {
     try {
         const csrfToken = getCookie('csrftoken');
-        const accessToken = localStorage.getItem('jwt_token');
         const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
 		const switchbox2FA = document.getElementById('switchbox2FA');
         const response = await fetch(`${baseURL}/api/get_2fa_status`, {
@@ -95,7 +91,6 @@ async function check2faStatus() {
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken,
-                'Authorization': `Bearer ${accessToken}`,
             },
             credentials: 'include',
         });
@@ -103,11 +98,12 @@ async function check2faStatus() {
         if (response.ok) {
             const data = await response.json();
             if (data.two_factor_enabled) {
-                console.log('IF CHECK2FASTATUS');
                 switchbox2FA.checked = true
+				const qrcode = data.qrcode;
+				console.log("check 2fa: ", qrcode)
+				displayQRCode(qrcode);
             }
 			else {
-                console.log('ELSE CHECK2FASTATUS');
                 switchbox2FA.checked = false
             }
         }

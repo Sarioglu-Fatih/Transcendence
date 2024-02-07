@@ -57,6 +57,8 @@ def user_login(request):
 			return JsonResponse({'error': 'Username not valide'})
 		user = authenticate(request, username=username, password=password)
 		if user is not None:
+			if TOTPDevice.objects.filter(user=user, confirmed=True).exists():
+				return HttpResponse(reason='Need totp token', status='222')
 			login(request, user)
 			# Generate JWT token, access and refresh
 			refresh = RefreshToken.for_user(user)
@@ -69,8 +71,8 @@ def user_login(request):
 				'token': jwt_token,
 				'refresh_token': refresh_token
 			})
-			
-      
+			response.set_cookie('refresh_token',refresh_token)
+			response.set_cookie('jwt_token', jwt_token)
 			return response
 		else:
 			# Authentication failed. Return an error response.
@@ -91,6 +93,7 @@ def user_login2fa(request):
 		user = authenticate(request, username=username, password=password)
 		if user is not None:
 			if TOTPDevice.objects.filter(user=user, confirmed=True).exists():
+				return HttpResponse(reason='Need totp token', status='222')
 				# Extract the TOTP token from the request
 				token = data.get('token')
 				if verify_totp(user, token):
@@ -135,7 +138,7 @@ def updateUser(request):
 		try:
 		  data = registerPostParameters(**json.loads(request.body))
 		except Exception  as e:
-	    return HttpResponse(status=400, reason="Bad request: " + str(e))
+			return HttpResponse(status=400, reason="Bad request: " + str(e))
 		
 		regexUsername = r'^[a-zA-Z0-9_-]+$'																# register page parsing
 		regexEmail = r'\A\S+@\S+\.\S+\Z'
@@ -310,20 +313,5 @@ def user_login42(request, data):
 #     print(response.status_code)     
 #     return HttpResponse(status=200)#('https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-e95dac742f419c01abf9f266b8219d8be7c13613ebcc4b3a64edc9e84beac84c&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fhome&response_type=code')  
 
-	
-def verify_totp(user, token):
-	try:
-		totp_device = TOTPDevice.objects.get(user=user, confirmed=True)
-	except TOTPDevice.DoesNotExist:
-		# Handle the case where the TOTP device doesn't exist
-		print("111111111")
-		return False
 
-	if token is None:
-		# Handle the case where the token is None (possibly not provided in the request)
-		print("222222222")
-		return False
-
-	totp = pyotp.TOTP(totp_device.bin_key)
-	return totp.verify(token.encode('utf-8'))
 
