@@ -18,5 +18,6 @@ urlpatterns = [
     path('upload_avatar/', views.upload_avatar, name='upload_avatar'),
     path('username', views.username),
     path('enable_2fa', two_fa.enable2fa),
-    path('disable_2fa', two_fa.disable2fa)
+    path('disable_2fa', two_fa.disable2fa),
+    path('get_2fa_status', two_fa.get_2fa_status),
 ]

@@ -6,7 +6,7 @@ import { logout } from './modules/logout.js'
 import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js';
 import { handleAvatarUpload } from './modules/avatar_upload.js'
 import { hideDivs, makeApiRequest } from './modules/utils.js';
-import { enable2fa, disable2fa } from './modules/two_fa.js';
+import { enable2fa, disable2fa, check2faStatus } from './modules/two_fa.js';
 
 var path = window.location.pathname;
 console.log(path);

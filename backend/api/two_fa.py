@@ -10,6 +10,7 @@ import pyotp
 
 @login_required
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def enable2fa(request):
 	try:
 		user = request.user
@@ -20,7 +21,8 @@ def enable2fa(request):
 			totp_device.save()
 			# Get the TOTPDevice instance associated with the user
 			otpauth_url = totp_device.config_url
-			
+			user.status_2fa = True
+			user.save()
 			return JsonResponse({'success': True, 'otpauth_url': otpauth_url}, status=200)
 		else:
 			return JsonResponse({'success': False, 'error': 'TOTP device already enabled'}, status=400)
@@ -35,8 +37,24 @@ def disable2fa(request):
 	try:
 		totp_device = TOTPDevice.objects.get(user=user, confirmed=True)
 		totp_device.delete()
+		user.status_2fa = False
+		user.save()
 		return JsonResponse({'success': True, 'message': '2FA disabled successfully'}, status=200)
 	except TOTPDevice.DoesNotExist:
 		return JsonResponse({'success': False, 'error': 'TOTP device not found'}, status=404)
 	except Exception as e:
 		return JsonResponse({'success': False, 'error': str(e)}, status=500)
+	
+@login_required
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_2fa_status(request):
+	try:
+		user = request.user
+		print("2FA :", user.status_2fa)
+		if (user.status_2fa == True):
+			return JsonResponse({'two_factor_enabled': True}, status=200)
+		else:
+			return JsonResponse({'two_factor_enabled': False}, status=470)
+	except Exception as e:
+		return JsonResponse({'error': str(e)}, status=500)

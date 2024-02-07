@@ -54,8 +54,8 @@ def user_login(request):
 		user = authenticate(request, username=username, password=password)
 		if user is not None:
 			if TOTPDevice.objects.filter(user=user, confirmed=True).exists():
-				# If 2FA is enabled, verify the TOTP
-				token = data.get('token')  # Extract the TOTP token from the request
+				# Extract the TOTP token from the request
+				token = data.get('token')
 				if verify_totp(user, token):
 					# TOTP is valid, proceed with login
 					login(request, user)
