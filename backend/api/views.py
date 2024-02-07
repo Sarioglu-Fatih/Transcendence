@@ -74,19 +74,19 @@ def my_friends(request):
     friend_list = list(user.friendlist.values('username'))
     return JsonResponse({'friend_list': friend_list})
 
-@login_required
-def isFriend(request, user_profil):
-    try:
-        user = request.user
-        user_to_check = User.objects.get(username=user_profil)
-        is_friend = user.friendlist.filter(id=user_to_check.id).exists()
-        return JsonResponse({'is_friend': is_friend})
-
-    except User.DoesNotExist:
-        return JsonResponse({'error': 'Utilisateur non trouvé'}, status=404)
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
-
+def isFriend(request, userToAddName):
+    if not request.method == 'GET':
+        return HttpResponseNotFound(status=404)
+    payload = decode_Payload(request)
+    user_id = payload.get('user_id')
+    if (not user_id):
+        return HttpResponseNotFound(status=404)    
+    currentUser = request.user
+    userToAdd = get_object_or_404(User, username=userToAddName)
+    is_friend = userToAdd in currentUser.friendlist.all()
+    if (is_friend):
+        return HttpResponseNotFound(status=200)
+    return HttpResponseNotFound(status=400)
 
 @login_required
 @permission_classes([IsAuthenticated])

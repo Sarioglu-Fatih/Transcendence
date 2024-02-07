@@ -3,10 +3,24 @@ import { makeApiRequest } from "./utils.js";
 const profilPage = document.getElementById('profil_page');
 const avatar = document.getElementById('avatar');
 
-async function isFriend() {
-    let isFriend = false;
-    const currentPath = "isFriend/" + window.location.pathname.substring(2);
-    console.log("----------------------", window.location.pathname.substring(8));
+export async function isFriend(user) {
+    console.log(user);
+    try {
+        const response = await makeApiRequest(user)
+        if (response.status == 400) {
+            return false;
+        }
+        else if (response.status == 404) {
+            throw new Error('Erreur lors de la récupération des données');
+        }
+        if (!response.ok) {
+            throw new Error('Erreur lors de la récupération des données');
+        }
+        // const data = await response.json();
+        return true
+    } catch (error) {
+        throw new Error("404 Not found");
+    }
 }
 
 async function renderProfilPage() {
@@ -92,4 +106,4 @@ async function displayAvatar() {
   }
   
 
-export { renderProfilPage, displayAvatar, isFriend };
+export { renderProfilPage, displayAvatar };

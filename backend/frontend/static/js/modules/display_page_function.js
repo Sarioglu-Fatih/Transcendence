@@ -2,7 +2,7 @@ import { renderProfilPage, displayAvatar, isFriend } from "./profilPage.js";
 import { isUserLoggedIn, friend_list } from "../main.js";
 
 function hideAllDivs() {
-    hideDivs(['top_box', 'game_launcher', 'friendListBody', 'profil_page', 'div_register_form', 'div_login_form', "history", "profilLeftSide", "profilRightSide", "addFriend_button"]);
+    hideDivs(['top_box', 'game_launcher', 'friendListBody', 'profil_page', 'div_register_form', 'div_login_form', "history", "profilLeftSide", "profilRightSide", "addFriend_button", "error404"]);
 }
 
 function displayLoginPage() {
@@ -16,20 +16,38 @@ function displayLoginPage() {
     }
 }
 
+function error404() {
+    hideAllDivs();
+    showDivs(['error404'])
+}
+
 async function displayProfilPage(path) {
     history.pushState({}, '', path);
     hideAllDivs();
     displayAvatar();
-    let isHimself = await renderProfilPage();
-    if (isHimself == true)
-        showDivs(['top_box', "profil_page", "profilLeftSide", "profilRightSide", "history"])
-    else
-    {
-        console.log("1111111111", isFriend())
-        if (isFriend())
-            showDivs(['top_box', "profil_page", "profilLeftSide", "history"])
-        else
-            showDivs(['top_box', "profil_page", "profilLeftSide", "addFriend_button", "history"])
+    try {
+        let isHimself = await renderProfilPage();
+        if (isHimself == true) {
+            showDivs(['top_box', "profil_page", "profilLeftSide", "profilRightSide", "history"]);
+        }
+        else {
+            const currentPath = window.location.pathname.substring(1);
+            const userToAddName = currentPath.replace(/^profil/, 'isFriend');
+            const isFriends = await isFriend(userToAddName);
+            console.log(isFriends);
+            if (isFriends)
+                showDivs(['top_box', "profil_page", "profilLeftSide", "history"])
+            else
+                showDivs(['top_box', "profil_page", "profilLeftSide", "addFriend_button", "history"])
+        }
+    }
+    catch (error) {
+        if (error.status === 400) {
+            showDivs(['top_box', "profil_page", "profilLeftSide", "addFriend_button", "history"]) 
+        }
+        else {
+            error404();
+        }
     }
 }
 
@@ -59,4 +77,4 @@ function hideDivs(divIds) {
       });
     }
 
-export { displayHomePage , displayLoginPage , displayProfilPage }
+export { displayHomePage , displayLoginPage , displayProfilPage, error404 }

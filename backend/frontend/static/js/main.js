@@ -83,6 +83,7 @@ addFriend.addEventListener('click', async function (event) {
       'X-CSRFToken': csrfToken,
     },
   })
+  displayProfilPage(window.location.pathname);
 })
 
 async function friend_list() {
@@ -156,6 +157,15 @@ async function getFriendProfil(username) {
   }
 }
 
+function removeCharactersAfterLastSlash(str) {
+  const lastSlashIndex = str.lastIndexOf('/');
+  if (lastSlashIndex !== -1) {
+      return str.substring(0, lastSlashIndex + 1);
+  } else {
+      return str;
+  }
+}
+
 const updateForm = document.getElementById('update_form');
 updateForm.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -203,8 +213,18 @@ updateForm.addEventListener('submit', async (event) => {
     isValid = false;
   }
   if (isValid) {
-    updateUser();
+    await updateUser();
     document.getElementById('update_form').reset();
+    if (userName)
+    {
+      var path = removeCharactersAfterLastSlash(window.location.pathname);
+      var newPath = path + userName;
+      displayProfilPage(newPath);
+    }
+    else if (userEmail)
+    {
+      displayProfilPage(window.location.pathname);
+    }
   }
   else {
     console.log("Form not valid");
