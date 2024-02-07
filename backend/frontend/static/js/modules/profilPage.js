@@ -119,11 +119,9 @@ async function renderProfilPage() {
 }
 
 async function displayAvatar() {
-    const jwtToken = localStorage.getItem('jwt_token');
     try {
         const response = await makeApiRequest("avatar");
         const avatarData = await response.json();
-
         if (avatarData.avatar) {
             const dataUri = 'data:image/jpeg;base64,' + avatarData.avatar;
             updateAvatarImage(dataUri);

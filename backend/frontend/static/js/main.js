@@ -2,11 +2,10 @@ import { registerUser, updateUser }  from './modules/register.js';
 import { login } from './modules/login.js';
 import { checkAuth42 } from './modules/auth.js';
 import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
-import { launchGame, drawPong } from './modules/pong.js';
 import { logout } from './modules/logout.js'
 import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js'
 import { handleAvatarUpload } from './modules/avatar_upload.js'
-import { makeApiRequest } from './modules/utils.js';
+import { makeApiRequest, getCookie } from './modules/utils.js';
 
 
 var state = 0;
@@ -202,9 +201,11 @@ registerForm.addEventListener('submit', async (event) => {
 //   console.log("authUser lancee et fini");
 // });
 
-function isUserLoggedIn() {
-  const jwtToken = localStorage.getItem('jwt_token');
-  if (jwtToken !== null) {
+async function isUserLoggedIn() {
+  const response = await makeApiRequest("isUserLoggedIn");
+  console.log(response);
+  const jwtToken = getCookie('jwt_token');
+  if (jwtToken !== null && response.ok) {
     console.log("user connected")
     return (true)
   }

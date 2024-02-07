@@ -1,4 +1,4 @@
-import {hideDivs, makeApiRequest, showDivs, makeApiRequestPost} from './utils.js'
+import {hideDivs, makeApiRequest, showDivs, makeApiRequestPost, getCookie} from './utils.js'
 import { createWebSocket } from './logout.js'
 
 const pong_launcher = document.getElementById("pong_launcher");
@@ -85,7 +85,7 @@ function launchGame(mode) {
     const socketURL = 'wss://localhost:8000/ws/game/';
     
     const socket = createWebSocket(socketURL);
-    const jwtToken = localStorage.getItem('jwt_token');
+    const jwtToken = getCookie('jwt_token');
     // Connection opened
 
     socket.addEventListener('open', (event) => {

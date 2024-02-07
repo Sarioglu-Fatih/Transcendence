@@ -20,4 +20,5 @@ urlpatterns = [
     path('history/<str:user_profil>/', views.get_history),
     path('pseudo', views.pseudo),
     path('registerpseudo', views.registerpseudo),
+    path('isUserLoggedIn', views.isUserLoggedIn)
 ]

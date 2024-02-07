@@ -32,14 +32,12 @@ async function updateUser() {
 
     try {
         const csrfToken = getCookie('csrftoken');
-        const jwtToken = localStorage.getItem('jwt_token');
         const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
         const response = await fetch(`${baseURL}/api/update`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken,
-                'Authorization': `Bearer ${jwtToken}`
             },
             body: JSON.stringify(body), // the data we send
             credentials: 'include',
