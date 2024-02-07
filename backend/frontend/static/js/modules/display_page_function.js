@@ -1,4 +1,4 @@
-import { renderProfilPage, displayAvatar } from "./profilPage.js";
+import { renderProfilPage, displayAvatar, match_history} from "./profilPage.js";
 import { isUserLoggedIn } from "../main.js";
 import { check2faStatus } from "./two_fa.js";
 
@@ -24,6 +24,7 @@ function displayProfilPage(path) {
     displayAvatar();
     check2faStatus();
     renderProfilPage();
+    match_history();
     hideDivs(['div_register_form', 'div_login_form', 'game_launcher', 'friend_list']);
     showDivs(['top_box', "profil_page", "profile_settings", "history", 'avatar_upload_form'])
 }

@@ -1,15 +1,18 @@
 import { registerUser, updateUser }  from './modules/register.js';
-import { login } from './modules/login.js'
+import { login } from './modules/login.js';
+import { checkAuth42 } from './modules/auth.js';
 import { updateValidationState, updateValidationClass, myInput, length, letter, capital, number, ForbiddenCharElement } from './modules/parsingPwd.js'
-import { launchGame, drawPong } from './modules/pong.js';
 import { logout } from './modules/logout.js'
 import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js';
 import { handleAvatarUpload } from './modules/avatar_upload.js'
+import { makeApiRequest, getCookie } from './modules/utils.js';
 import { hideDivs, makeApiRequest } from './modules/utils.js';
 import { enable2fa, disable2fa, check2faStatus } from './modules/two_fa.js';
 
+var state = 0;
 var path = window.location.pathname;
-console.log(path);
+await checkAuth42();
+console.log('path', path);
 if (!isUserLoggedIn())
 	history.pushState({}, '', '/login');
 else if (path === '/'){
@@ -30,13 +33,15 @@ window.onload = function() {
 }
 
 window.onpopstate = function(event) {
-	var path = window.location.pathname;
-	if (path === "/home")
-			displayHomePage();
-	else if (path === '/login')
-		displayLoginPage();
-	else if (path.startsWith('/profil/'))
-			displayProfilPage();
+  var path = window.location.pathname;
+  if (!isUserLoggedIn())
+  	displayLoginPage();
+  else if (path === "/home" && isUserLoggedIn())
+      displayHomePage();
+  else if (path === '/login')
+    displayLoginPage();
+  else if (path.startsWith('/profil/'))
+      displayProfilPage();
 }
 
 const loginForm = document.getElementById('login_form');
@@ -191,14 +196,23 @@ registerForm.addEventListener('submit', async (event) => {
 	}
 });
 
-function isUserLoggedIn() {
-	const jwtToken = localStorage.getItem('jwt_token');
-	if (jwtToken !== null) {
-		console.log("user connected")
-		return (true)
-	}
-	console.log("user not  connected")
-	return (false)
+// const authForm = document.getElementById('auth_form')
+// authForm.addEventListener('submit', async (event) => {
+//   event.preventDefault();
+//   authUser();
+//   console.log("authUser lancee et fini");
+// });
+
+async function isUserLoggedIn() {
+  const response = await makeApiRequest("isUserLoggedIn");
+  console.log(response);
+  const jwtToken = getCookie('jwt_token');
+  if (jwtToken !== null && response.ok) {
+    console.log("user connected")
+    return (true)
+  }
+  console.log("user not  connected")
+  return (false)
 }
 
 
@@ -213,6 +227,27 @@ const fullHomePageURL = baseURL + homePageURL;
 const homelink = document.getElementById('homelink');
 homelink.href = fullHomePageURL;
 
+const authButton = document.getElementById('authButton');
+authButton.addEventListener('click', () => {
+  function generateRandomState() {
+    var array = new Uint8Array(16);
+    window.crypto.getRandomValues(array);
+    return Array.from(array, dec => ('0' + dec.toString(16)).substr(-2)).join('');
+  }
+
+  state = generateRandomState();
+
+  var baseUrl = 'https://api.intra.42.fr/oauth/authorize?';
+  var client_id = '&client_id=' + 'u-s4t2ud-e95dac742f419c01abf9f266b8219d8be7c13613ebcc4b3a64edc9e84beac84c';
+  var redirect_uri = '&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fhome';
+  var response_type = '&response_type=code';
+  var random_state = '&state=' + state;
+  var scope = '&scope=public';
+  var fullUrl = baseUrl + client_id + redirect_uri + response_type + scope + random_state;
+
+  window.location = fullUrl;
+});
+
 // Switchbox for enable 2FA
 var switchbox2FA = document.getElementById('switchbox2FA');
 switchbox2FA.addEventListener('change', async (event) => {
@@ -226,5 +261,5 @@ switchbox2FA.addEventListener('change', async (event) => {
 		console.log('2FA is disabled');
 	}
 });
-export { isUserLoggedIn}
+export { isUserLoggedIn, state }
  
