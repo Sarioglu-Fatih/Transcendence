@@ -3,6 +3,24 @@ import { makeApiRequest } from "./utils.js";
 const profilPage = document.getElementById('profil_page');
 const avatar = document.getElementById('avatar');
 
+export async function isFriend(user) {
+    console.log(user);
+    try {
+        const response = await makeApiRequest(user)
+        if (response.status == 400) {
+            return false;
+        }
+        else if (response.status == 404) {
+            throw new Error('Erreur lors de la récupération des données');
+        }
+        if (!response.ok) {
+            throw new Error('Erreur lors de la récupération des données');
+        }
+        // const data = await response.json();
+        return true
+    } catch (error) {
+        throw new Error("404 Not found");
+      
 async function match_history() {
     const history = document.getElementById('history');
     try {
@@ -77,8 +95,9 @@ async function match_history() {
 
 async function renderProfilPage() {
     try {
+        let isHimself = false;
+
         const currentPath = window.location.pathname.substring(1) ;
-        console.log(currentPath)
         const response = await makeApiRequest(currentPath)
         const userData = await response.json()
         profilPage.innerHTML = '';
@@ -103,8 +122,9 @@ async function renderProfilPage() {
         if (userData.email){
             email_type.textContent = "email     : ";
             email_type.textContent += userData.email;
+            isHimself = true;
         }
-        else 
+        else
             email_type.textContent = "";
 
         resulte_type.textContent = "win  ";
@@ -112,6 +132,7 @@ async function renderProfilPage() {
         resulte_type.textContent += " : ";
         resulte_type.textContent += lose_string;
         resulte_type.textContent += "  lose";
+        return (isHimself);
     }
     catch (err) {
         profilPage.innerHTML = '<p class="error-msg">There was an error loading the user</p>';
