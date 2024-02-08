@@ -106,9 +106,9 @@
         
         
       <div class="div" id="profil_page"></div>
-        <form id="update_form" class="update_form">
-          <div class="card" id="profile_settings">   <!-- main box profile -->
-            <div class="card-body"  id="profile_settings_card">
+        <div class="card" id="profile_settings">   <!-- main box profile -->
+          <div class="card-body"  id="profile_settings_card">
+            <form id="update_form" class="update_form">
               <div class="row">
                 <div class="col-md-6 text-center">
                   <div class="element" id="username_key"></div>
@@ -132,7 +132,7 @@
                   <span id="updatePasswordError" class="error-message"></span>
                   
                   <div class="card-footer text-center element">
-                    <button class="btn btn-primary" id="register_button">register</button>
+                    <button class="btn btn-primary" id="update_profil_button">register</button>
                   </div>
                   <div id="2FA_button">
                     <p>
@@ -153,15 +153,15 @@
                     </div>
                   </div>
                 </div>
-                <form id="avatar_upload_form" enctype="multipart/form-data"> <!-- Form upload Avatar-->
-                  <label for="id_avatar">Choose Avatar:</label>
-                  <input type="file" id="id_avatar" name="avatar" accept="image/*" required/>
-                  <button type="button" id="upload_avatar_button" onclick="uploadAvatar()">Upload Avatar</button>
-                </form>
               </div>
+            </form>
+            <form id="avatar_upload_form" enctype="multipart/form-data"> <!-- Form upload Avatar-->
+              <label for="id_avatar">Choose Avatar:</label>
+              <input type="file" id="id_avatar" name="avatar" accept="image/*" required/>
+              <button type="button" id="upload_avatar_button" onclick="uploadAvatar()">Upload Avatar</button>
+            </form>
             </div>
           </div>
-        </form>
         <div class="card">                      <!-- side box profile -->
           <div class="card-body" id="history">
             <p>History</p>
