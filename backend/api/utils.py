@@ -13,10 +13,10 @@ def get_csrf_token(request):
 	return response
 
 def decode_Payload(request):
-	# Extract the JWT token from the Authorization header
-	authorization_header = request.headers.get('Authorization')
-	jwt_token = authorization_header.split(' ')[1]
 	# Decode the JWT token to get the payload
+	jwt_token = request.COOKIES.get('jwt_token')
+	if (not jwt_token):
+		return
 	decoded_payload = jwt.decode(jwt_token, key=settings.SECRET_KEY, algorithms=['HS256'])
 	print("PAYLOAD DECODED : ", decoded_payload)
 	return (decoded_payload)

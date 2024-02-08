@@ -6,6 +6,7 @@ from django.db import models
 from django.contrib.auth.models import User, AbstractUser
 from django import forms
 from django.core.serializers import serialize
+from django_otp.plugins.otp_totp.models import TOTPDevice
 
 class User(AbstractUser):
 	pseudo = models.CharField(max_length=16)
@@ -16,6 +17,8 @@ class User(AbstractUser):
 	channel_name = models.CharField(max_length=255, null=True, blank=True)
 	friendlist = models.ManyToManyField("User", blank=True)
 	logged_with_42 = models.BooleanField(default=False)
+	status_2fa = models.BooleanField(default=False)
+	qrcode = models.TextField(default=None, null=True)
 
 	def get_avatar(self):
 		if self.avatar:
@@ -56,6 +59,13 @@ class User(AbstractUser):
 	
 	def __str__(self):
 		return self.username
+	
+	def enable_2fa(self):
+			totp_device, created = TOTPDevice.objects.get_or_create(user=self, confirmed=True)
+			if created:
+				# Save the secret key securely
+				totp_device.save()
+			return totp_device
 
 class AvatarUploadForm(forms.ModelForm):
 	class Meta:
@@ -72,6 +82,7 @@ class Match(models.Model):
 	p1_score = models.PositiveIntegerField(default=0)
 	p2_score = models.PositiveIntegerField(default=0)
 	win_lose = models.PositiveIntegerField(default=0)
+	
 
 	def __str__(self):
 		return "game %s" % self.id

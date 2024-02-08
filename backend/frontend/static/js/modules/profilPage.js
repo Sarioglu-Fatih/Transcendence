@@ -3,6 +3,24 @@ import { makeApiRequest } from "./utils.js";
 const profilPage = document.getElementById('profil_page');
 const avatar = document.getElementById('avatar');
 
+export async function isFriend(user) {
+    console.log(user);
+    try {
+        const response = await makeApiRequest(user)
+        if (response.status == 400) {
+            return false;
+        }
+        else if (response.status == 404) {
+            throw new Error('Erreur lors de la récupération des données');
+        }
+        if (!response.ok) {
+            throw new Error('Erreur lors de la récupération des données');
+        }
+        // const data = await response.json();
+        return true
+    } catch (error) {
+        throw new Error("404 Not found");
+      
 async function match_history() {
     const history = document.getElementById('history');
     try {
@@ -17,8 +35,8 @@ async function match_history() {
         if (!last5GamesArray)
             throw new Error('Invalid or missing data for last_5_games')
         console.log(last5GamesArray)
-            history.innerHTML = '';
-            console.log('ici');
+        history.innerHTML = '';
+        console.log('ici');
 
         last5GamesArray.forEach(game => {
             // Create a Bootstrap card element
@@ -77,11 +95,12 @@ async function match_history() {
 
 async function renderProfilPage() {
     try {
+        let isHimself = false;
+
         const currentPath = window.location.pathname.substring(1) ;
-        console.log(currentPath)
         const response = await makeApiRequest(currentPath)
         const userData = await response.json()
-
+        profilPage.innerHTML = '';
         var username_type = document.getElementById('username_key');
         var pseudo_type = document.getElementById('pseudo_key');
         var email_type = document.getElementById('email_key');
@@ -90,9 +109,12 @@ async function renderProfilPage() {
         let win_string = userData.win.toString();
         let lose_string = userData.lose.toString();
 
-        
-        username_type.textContent = "username : ";
-        username_type.textContent += userData.username;
+        if (userData.username){
+            username_type.textContent = "username : ";
+            username_type.textContent += userData.username;
+        }
+        else
+            username_type.textContent = '';
 
         pseudo_type.textContent = "pseudo   : ";
         pseudo_type.textContent += userData.pseudo;
@@ -100,8 +122,9 @@ async function renderProfilPage() {
         if (userData.email){
             email_type.textContent = "email     : ";
             email_type.textContent += userData.email;
+            isHimself = true;
         }
-        else 
+        else
             email_type.textContent = "";
 
         resulte_type.textContent = "win  ";
@@ -109,6 +132,7 @@ async function renderProfilPage() {
         resulte_type.textContent += " : ";
         resulte_type.textContent += lose_string;
         resulte_type.textContent += "  lose";
+        return (isHimself);
     }
     catch (err) {
         profilPage.innerHTML = '<p class="error-msg">There was an error loading the user</p>';
@@ -116,11 +140,9 @@ async function renderProfilPage() {
 }
 
 async function displayAvatar() {
-    const jwtToken = localStorage.getItem('jwt_token');
     try {
         const response = await makeApiRequest("avatar");
         const avatarData = await response.json();
-
         if (avatarData.avatar) {
             const dataUri = 'data:image/jpeg;base64,' + avatarData.avatar;
             updateAvatarImage(dataUri);
