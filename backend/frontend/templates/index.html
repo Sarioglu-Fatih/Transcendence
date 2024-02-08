@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 {% load static %}
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}"/>
 <html>
     <head>
         <meta charset="UTF-8" />
         <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     </head>
     <body>
     <div class="container-fluid">
-      <div class="row" id="form_page">
+      <div class="row" id="form_page">     <!-- register page -->
         <div class="col-md-6 p-3" id="div_register_form">
           <form id="register_form" class="register_form" >
             {% csrf_token %}
@@ -42,6 +43,9 @@
               
             </div>
           </form>
+          <div class="card">
+            <input class="authButton" id="authButton" type="button" value="42" />
+          </div>
         </div>
 
         <div class="col-md-6 p-3" id="div_login_form">    <!-- login -->
@@ -62,31 +66,35 @@
           </form>
         </div>
 
-        <div class="card" id="top_box">         <!-- top box home -->
-          <div class="card-body d-flex justify-content-between" style="width:100vw;">
-            <div class="col-md-4">
-              <div class="img img-fluid" id="avatar"></div>
-            </div>
-            <div class="col-md-4">
-              <button class="btn btn-primary btn-lg" id="profil_button">profil</button>
-            </div>
-            <div class="col-md-4">
-              <button class="btn btn-primary btn-lg" id="logout_button">logout</button>
+        <div class="card" id="top_box">
+          <div class="card-body d-flex flex-column justify-content-between" style="width:100vw;">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="img img-fluid" id="avatar">
+                  <a id="homelink" href="#"  ><img id="avatar-image" class="avatar-image" src="" alt="user-avatar"></a>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <button class="btn btn-primary " id="profil_button">profil</button>
+              </div>
+              <div class="col-md-4">
+                <button class="btn btn-primary" id="logout_button">logout</button>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="card" id="game_launcher">                       <!-- main box home -->
+        <div class="card" id="game_launcher">   <!-- Game box -->
           <div class="card-body"  id="game_card">
-            <div class="row">
+            <div class="row" id="pong_button">
               <div class="col-md-6 text-center">
                 <button class="btn btn-primary btn-block" id="play_button">play</button>
               </div>
               <div class="col-md-6 text-center">
                 <button class="btn btn-primary btn-block" id="tournament">Tournament</button>
               </div>
-              <canvas id="pong" width="600" height="300"></canvas>
             </div>
+            <div id ="pong_launcher"></div>
           </div>
         </div>
 
@@ -95,35 +103,54 @@
           <div class="card-body" id="friendListCard">
           </div>
         </div>
-
-      
-        <div class="div" id="profil_page">
-          <form id="update_form" class="update_form">
-            <div class="card" >                     <!-- main box profile -->
-              <div class="card-body"  id="profile_settings_card">
-                <div class="row">
-                  <div class="col-md-6 text-center" id="profilLeftSide">
-                    <div class="element" id="username_key"></div>
-                    <div class="element" id="pseudo_key"></div>
-                    <div class="element" id="email_key"></div>
-                    <div class="element" id="win_lose_key"></div>
+   
+        
+        
+      <div class="div" id="profil_page"></div>
+        <div class="card" id="profile_settings">   <!-- main box profile -->
+          <div class="card-body"  id="profile_settings_card">
+            <form id="update_form" class="update_form">
+              <div class="row">
+                <div class="col-md-6 text-center">
+                  <div class="element" id="username_key"></div>
+                  <div class="element" id="pseudo_key"></div>
+                  <div class="element" id="email_key"></div>
+                  <div class="element" id="win_lose_key"></div>
+                  <!-- <script src="profilePage.js"></script> -->
+                </div>
+                <div class="col-md-4 element text-center" id="profilRightSide">
+                  <label for="inputUsername" class="form-label"></label>
+                  <input type="text" class="form-control" id="updateUsername" placeholder="Username" maxlength="16">
+                  <span id="updateUsernameError" class="error-message"></span>
+                  
+                  
+                  <label for="inputEmail" class="form-label element"></label>
+                  <input type="email" class="form-control" id="updateEmail" placeholder="yourmail@random.com" maxlength="50">
+                  <span id="updateEmailError" class="error-message"></span>
+                  
+                  <label for="inputPassword" class="form-label element"></label>
+                  <input type="password" class="form-control" id="updatePassword" placeholder="Password" maxlength="16">
+                  <span id="updatePasswordError" class="error-message"></span>
+                  
+                  <div class="card-footer text-center element">
+                    <button class="btn btn-primary" id="update_profil_button">register</button>
                   </div>
-                  <div class="col-md-4 element text-center" id="profilRightSide">
-                    <label for="inputUsername" class="form-label"></label>
-                    <input type="text" class="form-control" id="updateUsername" placeholder="Username" maxlength="16">
-                    <span id="updateUsernameError" class="error-message"></span>
-
-                  
-                    <label for="inputEmail" class="form-label element"></label>
-                    <input type="email" class="form-control" id="updateEmail" placeholder="yourmail@random.com" maxlength="50">
-                    <span id="updateEmailError" class="error-message"></span>
-                  
-                    <label for="inputPassword" class="form-label element"></label>
-                    <input type="password" class="form-control" id="updatePassword" placeholder="Password" maxlength="16">
-                    <span id="updatePasswordError" class="error-message"></span>
-
-                    <div class="card-footer text-center element">
-                      <button class="btn btn-primary" id="register_button">register</button>
+                  <div id="2FA_button">
+                    <p>
+                      <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample">
+                        2FA
+                      </button>
+                    </p>
+                    <div style="min-height: 120px;">
+                      <div class="collapse collapse-horizontal" id="collapseWidthExample">
+                        <div class="card card-body" style="width: 300px;">
+                          <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="switchbox2FA">
+                            <label class="form-check-label" for="switchbox2FA">Enable 2FA</label>
+                          </div>
+                          <div id="qrcode"></div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="cardtext-center col-md-6 text-center">
@@ -134,10 +161,15 @@
                
                 </div>
               </div>
+            </form>
+            <form id="avatar_upload_form" enctype="multipart/form-data"> <!-- Form upload Avatar-->
+              <label for="id_avatar">Choose Avatar:</label>
+              <input type="file" id="id_avatar" name="avatar" accept="image/*" required/>
+              <button type="button" id="upload_avatar_button" onclick="uploadAvatar()">Upload Avatar</button>
+            </form>
             </div>
-          </form>
-
-        </div>
+          </div>
+      
         <div class="card">                      <!-- side box profile -->
           <div class="card-body" id="history">
             <p>History</p>
@@ -149,8 +181,10 @@
         </div>
 
         <script type="module" src="{% static 'js/main.js' %}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
       </div>
     </body>
 </html>
 
 <!-- QWEqwe123! -->
+
