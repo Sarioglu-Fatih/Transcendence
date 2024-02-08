@@ -65,7 +65,7 @@ def get_2fa_status(request):
 				'qrcode': user.qrcode
 				}, status=200)
 		else:
-			return JsonResponse({'two_factor_enabled': False}, status=470)
+			return JsonResponse({'two_factor_enabled': False}, status=270)
 	except Exception as e:
 		return JsonResponse({'error': str(e)}, status=500)
 
