@@ -155,12 +155,20 @@
                 </div>
               </div>
             </form>
-            <form id="avatar_upload_form" enctype="multipart/form-data"> <!-- Form upload Avatar-->
-              <label for="id_avatar">Choose Avatar:</label>
-              <input type="file" id="id_avatar" name="avatar" accept="image/*" required/>
-              <button type="button" id="upload_avatar_button" onclick="uploadAvatar()">Upload Avatar</button>
+            <form id="avatar_upload_form" enctype="multipart/form-data" > <!-- Form upload Avatar-->
+              <label for="id_avatar">Choose an avatar:</label>
+              <input type="file" id="id_avatar" name="avatar" accept="image/*" class="form-control" aria-label="file example" required/>
+              <button type="button" class="btn btn-primary" id="upload_avatar_button" onclick="uploadAvatar()">Upload Avatar</button>
             </form>
-            </div>
+          </div>
+          <figure>
+            <blockquote class="blockquote">
+              <p>This website is the most ergonomic that I have seen in my entire life, period.</p>
+            </blockquote>
+            <figcaption class="blockquote-footer">
+              Bill Gates in <cite title="Source evian mon reuf">The Washington Post</cite>
+            </figcaption>
+          </figure>
           </div>
         <div class="card">                      <!-- side box profile -->
           <div class="card-body" id="history">
