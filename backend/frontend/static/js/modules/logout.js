@@ -1,5 +1,22 @@
 import { hideDivs, showDivs } from "./utils.js";
 
+const webSocketConnections = [];
+
+function createWebSocket(url) {
+  const socket = new WebSocket(url);
+  webSocketConnections.push(socket);
+  return socket;
+}
+
+function closeAllWebSockets() {
+  webSocketConnections.forEach(socket => {
+      if (socket.readyState === WebSocket.OPEN) {
+          socket.close();
+      }
+  });
+  webSocketConnections.length = 0;
+}
+
 async function logout() {
     try {
       const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
@@ -17,7 +34,8 @@ async function logout() {
         history.pushState({}, '', '/login');
         localStorage.removeItem('jwt_token');
         localStorage.removeItem('refresh_token');
-        hideDivs(['top_box',  'game_launcher', 'friend_list', 'profil_page', 'profile_settings', 'history']);
+        closeAllWebSockets();
+        hideDivs(['top_box',  'game_launcher', 'friend_list', 'profil_page', 'profile_settings', 'history', 'avatar_upload_form']);
         showDivs(['div_register_form', 'div_login_form']);
         console.log('Logout successful.');
       }
@@ -29,4 +47,4 @@ async function logout() {
     }
   }
 
-export { logout }
+export { logout, createWebSocket }

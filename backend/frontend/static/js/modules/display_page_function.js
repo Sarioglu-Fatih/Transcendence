@@ -1,5 +1,8 @@
-import { renderProfilPage, displayAvatar, isFriend } from "./profilPage.js";
+
+import { renderProfilPage, displayAvatar, isFriend, match_history } from "./profilPage.js";
 import { isUserLoggedIn, friend_list } from "../main.js";
+import { check2faStatus } from "./two_fa.js";
+
 
 function hideAllDivs() {
     hideDivs(['top_box', 'game_launcher', 'friendListBody', 'profil_page', 'div_register_form', 'div_login_form', "history", "profilLeftSide", "profilRightSide", "addFriend_button", "error404"]);
@@ -7,12 +10,14 @@ function hideAllDivs() {
 
 function displayLoginPage() {
     if (isUserLoggedIn()) {
+        console.log('la')
         displayHomePage();
     }
     else {
         history.pushState({}, '', '/login');
         hideAllDivs();
         showDivs(['div_register_form', 'div_login_form']);
+        hideDivs(['top_box', 'game_launcher', 'friend_list', 'profil_page', 'avatar_upload_form']);
     }
 }
 
@@ -25,7 +30,9 @@ async function displayProfilPage(path) {
     history.pushState({}, '', path);
     hideAllDivs();
     displayAvatar();
-    try {
+    check2faStatus();
+    match_history();
+try {
         let isHimself = await renderProfilPage();
         if (isHimself == true) {
             showDivs(['top_box', "profil_page", "profilLeftSide", "profilRightSide", "history"]);
@@ -56,7 +63,7 @@ function displayHomePage() {
     friend_list();
     displayAvatar();
     hideAllDivs();
-    showDivs(['top_box', 'game_launcher', 'friendListBody', 'friendListCard'])
+    showDivs(['top_box', 'game_launcher', 'friendListBody', 'friendListCard', 'pong_button'])
 }
 
 function hideDivs(divIds) {
@@ -77,4 +84,5 @@ function hideDivs(divIds) {
       });
     }
 
-export { displayHomePage , displayLoginPage , displayProfilPage, error404 }
+export { displayHomePage , displayLoginPage , displayProfilPage, error404, hideDivs, showDivs }
+

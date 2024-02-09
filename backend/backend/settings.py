@@ -49,6 +49,8 @@ INSTALLED_APPS = [
 	'channels',
 	'rest_framework',
 	'rest_framework_simplejwt',
+	'django_otp',
+	'django_otp.plugins.otp_totp',
 ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
@@ -174,7 +176,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 CORS_TRUSTED_ORIGINS = [
-    'https://localhost:8000',
+	'https://localhost:8000',
 	'https://10.12.4.8:8000'
 ]
 
