@@ -3,11 +3,11 @@
     height: auto;
 }
 
-#top_box, #div_register_form, #div_login_form, #game_launcher, #friendListBody, #history, #profilLeftSide, #profilRightSide, #addFriend_button, #error404, #friendListCard{
+/* #top_box{
     display: none;
-}
+} */
 
-#game_card, #profile_settings_card {
+/* #game_card, #profile_settings_card {
     width: 75vw;
     height: 90vh;
     padding: 60px;
@@ -20,7 +20,7 @@
     width: 22vw;
     height: 90vh;
     padding: 50px;
-}
+} */
 
 /* The message box is shown when the user clicks on the password field */
 #pwd_checkbox {

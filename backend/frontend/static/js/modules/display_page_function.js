@@ -1,24 +1,21 @@
-
-import { renderProfilPage, displayAvatar, isFriend, match_history } from "./profilPage.js";
-import { isUserLoggedIn, friend_list } from "../main.js";
 import { check2faStatus } from "./two_fa.js";
+import { put_register_form_html } from "./renderDiv/register_form.js"
+import {put_login_form_html} from "./renderDiv/login_form.js"
+import {put_top_box_form_html} from "./renderDiv/top_box.js"
+import {put_game_launcher_form_html} from "./renderDiv/game_laucher.js"
+import { put_friend_list_form_html } from "./renderDiv/friend_list.js"
+import { put_profil_card_html } from "./renderDiv/profil_card.js"
+import { put_match_history_html } from "./renderDiv/match_history.js"
 
 
 function hideAllDivs() {
-    hideDivs(['top_box', 'game_launcher', 'friendListBody', 'profil_page', 'div_register_form', 'div_login_form', "history", "profilLeftSide", "profilRightSide", "addFriend_button", "error404"]);
+    hideDivs(["login_page", "home_page", "profil_page"]);
 }
 
 function displayLoginPage() {
-    if (isUserLoggedIn()) {
-        console.log('la')
-        displayHomePage();
-    }
-    else {
-        history.pushState({}, '', '/login');
-        hideAllDivs();
-        showDivs(['div_register_form', 'div_login_form']);
-        hideDivs(['top_box', 'game_launcher', 'friend_list', 'profil_page', 'avatar_upload_form']);
-    }
+    hideAllDivs();
+    put_register_form_html();
+    put_login_form_html();     
 }
 
 function error404() {
@@ -29,41 +26,45 @@ function error404() {
 async function displayProfilPage(path) {
     history.pushState({}, '', path);
     hideAllDivs();
-    displayAvatar();
-    check2faStatus();
-    match_history();
-try {
-        let isHimself = await renderProfilPage();
-        if (isHimself == true) {
-            showDivs(['top_box', "profil_page", "profilLeftSide", "profilRightSide", "history"]);
-        }
-        else {
-            const currentPath = window.location.pathname.substring(1);
-            const userToAddName = currentPath.replace(/^profil/, 'isFriend');
-            const isFriends = await isFriend(userToAddName);
-            console.log(isFriends);
-            if (isFriends)
-                showDivs(['top_box', "profil_page", "profilLeftSide", "history"])
-            else
-                showDivs(['top_box', "profil_page", "profilLeftSide", "addFriend_button", "history"])
-        }
-    }
-    catch (error) {
-        if (error.status === 400) {
-            showDivs(['top_box', "profil_page", "profilLeftSide", "addFriend_button", "history"]) 
-        }
-        else {
-            error404();
-        }
-    }
+    put_match_history_html();
+    put_top_box_form_html();
+    await put_profil_card_html();
+    showDivs(["top_box_div", "profil_page"]);
+
+
+    // try {
+    //     let isHimself = await renderProfilPage();
+    //     if (isHimself == true) {
+    //         showDivs(['top_box', "profil_page", "profilLeftSide", "profilRightSide", "history"]);
+    //     }
+    //     else {
+    //         const currentPath = window.location.pathname.substring(1);
+    //         const userToAddName = currentPath.replace(/^profil/, 'isFriend');
+    //         const isFriends = await isFriend(userToAddName);
+    //         console.log(isFriends);
+    //         if (isFriends)
+    //             showDivs(['top_box', "profil_page", "profilLeftSide", "history"])
+    //         else
+    //             showDivs(['top_box', "profil_page", "profilLeftSide", "addFriend_button", "history"])
+    //     }
+    // }
+    // catch (error) {
+    //     if (error.status === 400) {
+    //         showDivs(['top_box', "profil_page", "profilLeftSide", "addFriend_button", "history"]) 
+    //     }
+    //     else {
+    //         error404();
+    //     }
+    // }
 }
 
 function displayHomePage() {
     history.pushState({}, '', '/home');
-    friend_list();
-    displayAvatar();
     hideAllDivs();
-    showDivs(['top_box', 'game_launcher', 'friendListBody', 'friendListCard', 'pong_button'])
+    put_top_box_form_html();
+    put_game_launcher_form_html();
+    put_friend_list_form_html();
+    showDivs(["top_box_div", "home_page"])
 }
 
 function hideDivs(divIds) {
