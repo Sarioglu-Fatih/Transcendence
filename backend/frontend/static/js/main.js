@@ -245,5 +245,5 @@ authButton.addEventListener('click', () => {
   window.location = fullUrl;
 });
 
-export { isUserLoggedIn, state }
+export { isUserLoggedIn }
  

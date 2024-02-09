@@ -83,7 +83,7 @@ def updateUser(request):
     if request.method == 'PATCH':
         try:
              data = registerPostParameters(**json.loads(request.body))
-        except Exception  as e:
+        except Exception  as e:   
             return HttpResponse(status=400, reason="Bad request: " + str(e))
 
         regexUsername = r'^[a-zA-Z0-9_-]+$'																# register page parsing
@@ -116,10 +116,9 @@ def updateUser(request):
 def auth42(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
-        print("code : " + data.get('code'))
 
         url = "https://api.intra.42.fr/oauth/token"
-        data = {
+        rdata = {
             "grant_type": "authorization_code",
             "client_id": os.getenv('CLIENT_ID'),
             "client_secret": os.getenv('CLIENT_SECRET'),
@@ -129,7 +128,7 @@ def auth42(request):
         }
 
         # Get the access token to make request to 42 API
-        response = requests.post(url, data=data)
+        response = requests.post(url, data=rdata)
 
         # Vérifiez si la requête a réussi
         if response.status_code == 200:
@@ -141,7 +140,6 @@ def auth42(request):
         print(response.content)
         response_data = json.loads(response.content.decode('utf-8'))
         print("JSON response_data : ")
-        print(response_data)
         # {
         #     'access_token': 'd5sg45g4s54g5sg', 
         #     'token_type': 'bearer', 
@@ -152,8 +150,6 @@ def auth42(request):
         #     'secret_valid_until': 99845
         # }
         access_token = response_data.get('access_token')
-        print("Access_token : ")
-        print(access_token)
         authorization = "Bearer " + access_token
         # url = "https://api.intra.42.fr/oauth/token/info"
         url = "https://api.intra.42.fr/v2/me"
@@ -198,7 +194,7 @@ def auth42(request):
             "password": user_password
         }
         user_creation = create_user42(user_data)
-        print(user_creation)
+        print(user_creation) 
         if (user_creation.get('status') == 'error'):
             return JsonResponse({'status': 'error', 'message': user_creation.get('message')}, status=401)
         if (user_creation.get('status') == 'exist'):

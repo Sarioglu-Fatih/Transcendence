@@ -1,8 +1,7 @@
 import { getCookie } from './utils.js'
-import { state as state } from '../main.js'
 import { displayLoginPage } from './display_page_function.js'
 
-async function fetchCode(code) {
+async function fetchCode(code, state) {
     try {
         const csrfToken = getCookie('csrftoken');
         const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
@@ -63,9 +62,10 @@ async function checkAuth42() {
     if (urlSearchParams.size !== 2 && stateValue !== state)
     {
         console.log("Pas assez de param, donc la fonction retourne.");
+        displayLoginPage();
         return;
     }
-    await fetchCode(codeValue);
+    await fetchCode(codeValue, stateValue);
 	displayLoginPage();
 }
 
