@@ -13,6 +13,7 @@ from django.contrib.sessions.models import Session
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
+from django_otp.plugins.otp_totp.models import TOTPDevice
 
 
 @dataclass

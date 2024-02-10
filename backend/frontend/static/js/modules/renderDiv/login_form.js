@@ -17,15 +17,13 @@ async function put_login_form_html() {
 
             <label for="inputPassword" class="form-label">Password</label>
             <input type="password" class="form-control"  id="login_Password" placeholder="Password" maxlength="16" required/>
+            <input class="authButton" id="authButton" type="button" value="42" />
         </div>
         <div class="card-footer text-center">
             <button class="btn btn-primary" id="login_button">login</button>
         </div>
         </div>
     </form>
-    <div class="card">
-        <input class="authButton" id="authButton" type="button" value="42" />
-    </div>
     `;
 
     const loginForm = document.getElementById('login_form');

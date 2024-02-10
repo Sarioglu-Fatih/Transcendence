@@ -15,7 +15,8 @@ function put_register_form_html() {
 
                         <label for="inputEmail" class="form-label">Email address</label>
                         <input type="email" class="form-control" id="inputEmail" placeholder="yourmail@random.com" maxlength="50" required/>
-
+                        <span id="emailError" class="error-message"></span>
+                        
                         <label for="inputPassword" class="form-label">Password</label>
                         <input type="password" class="form-control" id="inputPassword" placeholder="Password" maxlength="16" />
 
