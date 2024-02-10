@@ -1,5 +1,6 @@
 import {getCookie, makeApiRequest,  makeApiRequestPost} from './utils.js'
 import { check2faStatus } from './two_fa.js';
+import { displayHomePage } from './display_page_function.js';
 
 async function send_TOTP(token, username) {
   try {
@@ -25,6 +26,7 @@ async function login() {
     console.log("Les infos du form:", body);
     
     try {
+      makeApiRequest("get_csrf_token");
       const csrfToken = getCookie('csrftoken');
       const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
       // Perform login
@@ -42,8 +44,8 @@ async function login() {
           const token = prompt("enter code biatch")
           console.log(token);
           await send_TOTP(token, username);
-          displayLoginPage();
         }
+        displayHomePage();
       }
       else {
         console.error('Error login user:', response.status);

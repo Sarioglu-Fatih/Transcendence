@@ -34,8 +34,6 @@ function put_login_form_html() {
     	{
     		document.getElementById('loginUsernameError').innerHTML = '';
     		await login();
-            
-    		displayHomePage();
     		document.getElementById('login_form').reset();
     	}
     	else
