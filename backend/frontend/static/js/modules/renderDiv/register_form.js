@@ -3,35 +3,42 @@ import {registerUser} from "../register.js"
 function put_register_form_html() {
     var register_form = document.getElementById("register");
     register_form.innerHTML = `  
-    <form id="register_form"> 
-        <div class="card">
-            <div class="card-body">        
-                <label for="inputUsername" class="form-label">Username</label>
-                <input type="text" class="form-control" id="inputUsername" placeholder="Username" maxlength="16" required/>
-                <span id="usernameError" class="error-message"></span>
+    <div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form id="register_form" class="form-label">
+                <div class="card" id="card_register">
+                    <div class="card-body" >        
+                        <label for="inputUsername" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="inputUsername" placeholder="Username" maxlength="16" required/>
+                        <span id="usernameError" class="error-message"></span>
 
-                <label for="inputEmail" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="inputEmail" placeholder="yourmail@random.com" maxlength="50" required/>
-                <span id="emailError" class="error-message"></span>
+                        <label for="inputEmail" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="inputEmail" placeholder="yourmail@random.com" maxlength="50" required/>
 
+                        <label for="inputPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="inputPassword" placeholder="Password" maxlength="16" />
 
-                <label for="inputPassword" class="form-label">Password</label>
-                <input type="password" class="form-control" id="inputPassword" placeholder="Password" maxlength="16" />
-            <div id="pwd_checkbox">
-                <h3>Password must contain the following:</h3>
-                <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
-                <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
-                <p id="number" class="invalid">A <b>number</b></p>
-                <p id="length" class="invalid">Minimum <b>8 characters</b></p>
-                <p id="forbiddenChar" class="invalid">A <b>special characters (@$!%#?&)</b></p>
-            </div>
-            
-            </div>
-            <div class="card-footer text-center">
-            <button class="btn btn-primary" id="register_button">register</button>
-            </div>
+                        <div id="pwd_checkbox">
+                            <h3>Password must contain the following:</h3>
+                            <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
+                            <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
+                            <p id="number" class="invalid">A <b>number</b></p>
+                            <p id="length" class="invalid">Minimum <b>8 characters</b></p>
+                            <p id="forbiddenChar" class="invalid">A <b>special characters (@$!%#?&)</b></p>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <button class="btn btn-primary" id="register_button">register</button>
+                    </div>
+                </div>
+            </form>
         </div>
-    </form>
+        <div class="col-md-6" id="login">
+            <!-- Login form -->
+        </div>
+    </div>
+</div>
     `;
 
     var myInput = document.getElementById("inputPassword");
