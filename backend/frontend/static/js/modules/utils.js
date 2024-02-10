@@ -58,6 +58,28 @@ async function makeApiRequest(endpoint) {
 	}
 }
 
+async function makeApiRequestPost(endpoint, body) {
+	try {
+		const accessToken = localStorage.getItem('jwt_token');
+        const csrfToken = getCookie('csrftoken');
+        console.log('CSRF Token in cookie REGISTER:', csrfToken);
+        const response = await fetch(`https://localhost:8000/api/${endpoint}`, { // where we send data
+            method: 'POST', // post = sending data
+            headers: {
+                'Content-Type': 'application/json', //data type we send
+                'X-CSRFToken': csrfToken, // cookie for django
+				'Authorization': `Bearer ${accessToken}`
+            },
+            body: JSON.stringify(body), // the data we send
+            credentials: 'include',
+        })
+        return response;
+    }
+    catch (error) {
+        console.error('Error registering user:', error);
+    }
+}
+
 async function handleTokenExpiration() {
 	const refreshToken = localStorage.getItem('refresh_token');
 	const response = await fetch('https://localhost:8000/api/token/refresh/', {
@@ -88,4 +110,4 @@ async function handleTokenExpiration() {
 	}
 }
 
-export { getCookie, makeApiRequest, showDivs, hideDivs }
+export { getCookie, makeApiRequest, showDivs, hideDivs, makeApiRequestPost}
