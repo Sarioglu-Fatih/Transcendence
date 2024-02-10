@@ -1,4 +1,5 @@
 import { hideDivs, showDivs } from "./utils.js";
+import { makeApiRequest, getCookie } from "./utils.js";
 
 const webSocketConnections = [];
 
@@ -19,11 +20,14 @@ function closeAllWebSockets() {
 
 async function logout() {
     try {
+      makeApiRequest("get_csrf_token")
+      const csrfToken = getCookie('csrftoken');
       const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-      const response = await fetch(`${baseURL}/api/logout`, {
-        method: 'GET',
+      const response = await fetch(`${baseURL}/api/logout/`, {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
         },
         credentials: 'same-origin',
       });
@@ -32,8 +36,6 @@ async function logout() {
         document.getElementById('emailError').innerHTML = '';
         document.getElementById('usernameError').innerHTML = '';
         history.pushState({}, '', '/login');
-        localStorage.removeItem('jwt_token');
-        localStorage.removeItem('refresh_token');
         closeAllWebSockets();
         hideDivs(['top_box',  'game_launcher', 'friend_list', 'profil_page', 'profile_settings', 'history', 'avatar_upload_form']);
         showDivs(['div_register_form', 'div_login_form']);
