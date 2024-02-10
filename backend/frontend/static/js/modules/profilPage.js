@@ -10,6 +10,7 @@ export async function isFriend(user) {
     try {
         const response = await makeApiRequest(user)
         if (response.status == 400) {
+            console.log("ici")
             return false;
         }
         else if (response.status == 404) {

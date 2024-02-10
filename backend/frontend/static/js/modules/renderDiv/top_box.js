@@ -1,6 +1,7 @@
 import { displayAvatar } from "../profilPage.js";
 import { makeApiRequest } from "../utils.js";
-import { displayProfilPage } from "../display_page_function.js";
+import { displayProfilPage, displayLoginPage } from "../display_page_function.js";
+import { logout } from "../logout.js";
 
 function put_top_box_form_html() {
     var top_box_div = document.getElementById("top_box_div");
@@ -26,9 +27,6 @@ function put_top_box_form_html() {
 
     const logoutBtn = document.getElementById('logout_button');
     logoutBtn.addEventListener('click', () => {
-        document.getElementById('emailError').innerHTML = '';
-        document.getElementById('usernameError').innerHTML = '';
-        localStorage.removeItem('jwt_token');
         displayLoginPage();
         logout();
     });

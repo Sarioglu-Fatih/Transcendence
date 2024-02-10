@@ -1,7 +1,10 @@
-import { error404 } from "../display_page_function.js"
-import { makeApiRequest } from "../utils.js";
+import { error404, showDivs } from "../display_page_function.js"
+import { hideDivs, makeApiRequest } from "../utils.js";
 import { updateUser } from "../register.js";
 import { enable2fa, disable2fa } from "../two_fa.js";
+import { isFriend } from "../profilPage.js";
+import { displayProfilPage } from "../display_page_function.js";
+import { handleAvatarUpload } from '../avatar_upload.js'
 
 async function put_profil_card_html() {
     var profil_card_div = document.getElementById("profil_card_div");
@@ -75,7 +78,7 @@ async function put_profil_card_html() {
         </figure>
     </div>
     `;
-    await renderProfilPage();
+    await check_whos_profil();
     const updateForm = document.getElementById('update_form');
         updateForm.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -95,6 +98,56 @@ async function put_profil_card_html() {
         }
     });
 
+    const addFriend = document.getElementById('addFriend_button');
+    addFriend.addEventListener('click', async function (event) {
+        event.preventDefault();
+
+        const clientURL = window.location.href;
+        const segments = clientURL.split('/');
+        let lastSegment = segments[segments.length - 2];
+        lastSegment += "/";
+        const response = makeApiRequest(`add_friend/${lastSegment}`)
+        displayProfilPage(window.location.pathname);
+    })
+
+    window.uploadAvatar = async function () {
+        handleAvatarUpload()
+    }
+
+}
+
+async function check_whos_profil() {
+    try {
+        let isHimself = await renderProfilPage();
+        if (isHimself == true) {
+            hideDivs(["addFriend_button"]);
+        }
+        else {
+            const currentPath = window.location.pathname.substring(1);
+            const userToAddName = currentPath.replace(/^profil/, 'isFriend');
+            const isFriends = await isFriend(userToAddName);
+            console.log(isFriends);
+            if (isFriends){
+                console.log("is friends")
+                hideDivs(["profilRightSide", "addFriend_button", "2FA_button", "avatar_upload_form"]);
+                showDivs(["profilLeftSide"]);
+            }
+            else {
+                console.log("is not friends")
+                hideDivs(["profilRightSide", "2FA_button", "avatar_upload_form"]);
+                showDivs(["profilLeftSide", "addFriend_button"]);
+            }
+        }
+    }
+    catch (error) {
+        if (error.status === 400) {
+            hideDivs(["profilRightSide"])
+            showDivs(["profilLeftSide", "addFriend_button"]) 
+        }
+        else {
+            throw new Error('Not a profil');
+        }
+    }
 }
 
 async function renderProfilPage() {
@@ -102,6 +155,10 @@ async function renderProfilPage() {
         let isHimself = false;
         const currentPath = window.location.pathname.substring(1) ;
         const response = await makeApiRequest(currentPath)
+        if (!response.ok){
+            console.log("not ok");
+            throw new Error('Not a profil');
+        }
         const userData = await response.json()
         var username_type = document.getElementById('username_key');
         var pseudo_type = document.getElementById('pseudo_key');
@@ -137,9 +194,10 @@ async function renderProfilPage() {
         return (isHimself);
     }
     catch (err) {
-        error404();
+        throw new Error('Not a profil');
     }
 }
+
 
 async function updateFormParse() {
     var inputUsername = document.getElementById('updateUsername');   // update page parsing

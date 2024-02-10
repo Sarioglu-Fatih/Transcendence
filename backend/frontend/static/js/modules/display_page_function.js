@@ -29,34 +29,15 @@ async function displayProfilPage(path) {
     hideAllDivs();
     put_match_history_html();
     put_top_box_form_html();
-    await put_profil_card_html();
-    showDivs(["top_box_div", "profil_page"]);
+    try {
+        await put_profil_card_html();
+        showDivs(["top_box_div", "profil_page"]);
+    }
+    catch {
+        console.log("error 404")
+        error404();
+    }
 
-
-    // try {
-    //     let isHimself = await renderProfilPage();
-    //     if (isHimself == true) {
-    //         showDivs(['top_box', "profil_page", "profilLeftSide", "profilRightSide", "history"]);
-    //     }
-    //     else {
-    //         const currentPath = window.location.pathname.substring(1);
-    //         const userToAddName = currentPath.replace(/^profil/, 'isFriend');
-    //         const isFriends = await isFriend(userToAddName);
-    //         console.log(isFriends);
-    //         if (isFriends)
-    //             showDivs(['top_box', "profil_page", "profilLeftSide", "history"])
-    //         else
-    //             showDivs(['top_box', "profil_page", "profilLeftSide", "addFriend_button", "history"])
-    //     }
-    // }
-    // catch (error) {
-    //     if (error.status === 400) {
-    //         showDivs(['top_box', "profil_page", "profilLeftSide", "addFriend_button", "history"]) 
-    //     }
-    //     else {
-    //         error404();
-    //     }
-    // }
 }
 
 function displayHomePage() {
@@ -75,9 +56,16 @@ function hideDivs(divIds) {
             targetDiv.style.display = 'none';
         }
     });
-  }
+}
   
-  function showDivs(divIds) {
+function showDiv(div){
+    var targetDiv = document.getElementById(div);
+    if (targetDiv) {
+        targetDiv.style.display = 'block';
+    }
+}
+function showDivs(divIds) {
+    console.log(divIds)
     divIds.forEach(function (divId) {
         var targetDiv = document.getElementById(divId);
         if (targetDiv) {
@@ -86,5 +74,5 @@ function hideDivs(divIds) {
       });
     }
 
-export { displayHomePage , displayLoginPage , displayProfilPage, error404, hideDivs, showDivs }
+export { displayHomePage , displayLoginPage , displayProfilPage, error404, hideDivs, showDivs, showDiv }
 
