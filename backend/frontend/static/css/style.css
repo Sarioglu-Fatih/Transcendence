@@ -120,3 +120,8 @@
   /* background-color: #343a40;
   border-color: #343a40; */
 }
+
+.card-body a {
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Inherit text color from the parent */
+}
