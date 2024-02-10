@@ -9,3 +9,6 @@ hupper
 djangorestframework-simplejwt==4.7.2
 Pillow
 requests
+django-otp
+pyotp
+qrcode

@@ -1,5 +1,5 @@
 import { getCookie } from './utils.js'
-import { displayLoginPage } from './display_page_function.js'
+import { displayLoginPage, displayHomePage } from './display_page_function.js'
 
 async function fetchCode(code, state) {
     try {
@@ -16,13 +16,6 @@ async function fetchCode(code, state) {
         })
         if (response.ok) {
             const data = await response.json();
-            if (data.token && data.refresh_token) {
-                const token = data.token;
-                const refreshToken = data.refresh_token;
-                localStorage.setItem('jwt_token', token);
-                localStorage.setItem('refresh_token', refreshToken);
-                console.log('Login successful. Token:', token);
-            }
         }
         else {
             console.error('Error login user:', response.status);
@@ -66,7 +59,7 @@ async function checkAuth42() {
         return;
     }
     await fetchCode(codeValue, stateValue);
-	displayLoginPage();
+	displayHomePage();
 }
 
 export { checkAuth42 };

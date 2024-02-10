@@ -1,37 +1,52 @@
-import { renderProfilPage, displayAvatar, match_history} from "./profilPage.js";
-import { isUserLoggedIn } from "../main.js";
+import { check2faStatus } from "./two_fa.js";
+import { put_register_form_html } from "./renderDiv/register_form.js"
+import {put_login_form_html} from "./renderDiv/login_form.js"
+import {put_top_box_form_html} from "./renderDiv/top_box.js"
+import {put_game_launcher_form_html} from "./renderDiv/game_laucher.js"
+import { put_friend_list_form_html } from "./renderDiv/friend_list.js"
+import { put_profil_card_html } from "./renderDiv/profil_card.js"
+import { put_match_history_html } from "./renderDiv/match_history.js"
+
 
 function hideAllDivs() {
-    hideDivs(['top_box', 'game_launcher', 'friend_list', 'profil_page', 'div_register_form', 'div_login_form', "history", "profile_settings"]);
+    hideDivs(["login_page", "home_page", "profil_page"]);
 }
 
 function displayLoginPage() {
-    if (isUserLoggedIn()) {
-        displayHomePage();
-    }
-    else {
-        history.pushState({}, '', '/login');
-        hideAllDivs();
-        showDivs(['div_register_form', 'div_login_form']);
-        hideDivs(['top_box', 'game_launcher', 'friend_list', 'profil_page', 'avatar_upload_form']);
-    }
+    hideAllDivs();
+    showDivs(["login_page"]);
+    put_register_form_html();
+    put_login_form_html();     
 }
 
-function displayProfilPage(path) {
+function error404() {
+    hideAllDivs();
+    showDivs(['error404'])
+}
+
+async function displayProfilPage(path) {
     history.pushState({}, '', path);
     hideAllDivs();
-    displayAvatar();
-    renderProfilPage();
-    match_history();
-    hideDivs(['div_register_form', 'div_login_form', 'game_launcher', 'friend_list']);
-    showDivs(['top_box', "profil_page", "profile_settings", "history", 'avatar_upload_form'])
+    put_match_history_html();
+    put_top_box_form_html();
+    try {
+        await put_profil_card_html();
+        showDivs(["top_box_div", "profil_page"]);
+    }
+    catch {
+        console.log("error 404")
+        error404();
+    }
+
 }
 
 function displayHomePage() {
     history.pushState({}, '', '/home');
-    displayAvatar();
     hideAllDivs();
-    showDivs(['top_box', 'game_launcher', 'friend_list', 'pong_button'])
+    put_top_box_form_html();
+    put_game_launcher_form_html();
+    put_friend_list_form_html();
+    showDivs(["top_box_div", "home_page"])
 }
 
 function hideDivs(divIds) {
@@ -41,9 +56,16 @@ function hideDivs(divIds) {
             targetDiv.style.display = 'none';
         }
     });
-  }
+}
   
-  function showDivs(divIds) {
+function showDiv(div){
+    var targetDiv = document.getElementById(div);
+    if (targetDiv) {
+        targetDiv.style.display = 'block';
+    }
+}
+function showDivs(divIds) {
+    console.log(divIds)
     divIds.forEach(function (divId) {
         var targetDiv = document.getElementById(divId);
         if (targetDiv) {
@@ -52,4 +74,5 @@ function hideDivs(divIds) {
       });
     }
 
-export { displayHomePage , displayLoginPage , displayProfilPage, hideDivs, showDivs }
+export { displayHomePage , displayLoginPage , displayProfilPage, error404, hideDivs, showDivs, showDiv }
+
