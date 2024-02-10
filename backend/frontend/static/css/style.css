@@ -14,69 +14,30 @@
     font-size: 40px;
 }
 
-
-
 #friendListBody, #history {
     width: 22vw;
     height: 90vh;
     padding: 50px;
 } */
 
-/* The message box is shown when the user clicks on the password field */
-#pwd_checkbox {
-    display:none;
-    background: #f1f1f1;
-    color: #000;
-    position: relative;
-    padding: 20px;
-    margin-top: 10px;
-  }
-  
-  #pwd_checkbox p {
-    padding: 10px 35px;
-    font-size: 18px;
-  }
+.element {
+  margin-bottom: 200px;
+}
 
-  .element {
-    margin-bottom: 200px;
-  }
+.error {
+  border: 1px solid red;
+}
 
-  /* Add a green text color and a checkmark when the requirements are right */
-  .valid {
-    color: green;
-  }
-  
-  .valid:before {
-    position: relative;
-    left: -35px;
-    content: "\2713";
-  }
-  
-  /* Add a red text color and an "x" icon when the requirements are wrong */
-  .invalid {
-    color: #ff0000;
-  }
-  
-  .invalid:before {
-    position: relative;
-    left: -35px;
-    content: "\2715";    
-  }
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+}
 
-  .error {
-    border: 1px solid red;
-  }
-  
-  .error-message {
-    color: red;
-    font-size: 12px;
-    margin-top: 5px;
-    display: block;
-  }
-
-  canvas {
-    border: 1px solid black;
-  }
+canvas {
+  border: 1px solid black;
+}
 
 #2FA_button {
   right: 100px;
@@ -137,15 +98,61 @@
   
 }
 
+/* PASSWORD CHECKBOX */
+
+#pwd_checkbox {
+  display:none;
+  background: #e63737;
+  background-color: #181A21;
+  color: white;
+  font-family: "Motiva Sans", Sans-serif;
+  position: relative;
+  margin-top: 10px;
+
+}
+
+#pwd_checkbox p {
+padding: 10px 35px;
+font-size: 16px;
+}
+
+h3 {
+  font-family : "Protest Revolution", Sans-serif;
+  color: white;
+  text-align: center;
+  font-size: 30px;
+}
+
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
+  color: #46c753;
+}
+
+.valid:before {
+  position: relative;
+  left: -35px;
+  content: "\2713";
+}
+
+/* Add a red text color and an "x" icon when the requirements are wrong */
+.invalid {
+  color: #bf3232;
+}
+
+.invalid:before {
+  position: relative;
+  left: -35px;
+  content: "\2715";    
+}
                                     /* GRAPHIC CHARTER */
 
 /*
 
-font-family :             "Motiva Sans", Sans-serif;
+font-family :                  "Motiva Sans", Sans-serif;
 
-Blue Body Background :    #1B2838
-Black Form :              #181A21 
-Linear Gradient Button :  linear-gradient(90deg, #06BFFF 0%, #2D73FF 100%)
-Grey Input :              #32353c
+Dark Blue Body Background :    #1B2838
+Black Form :                   #181A21 
+Linear Gradient Button :       linear-gradient(90deg, #06BFFF 0%, #2D73FF 100%)
+Grey Input Box :               #32353c
 
 */
