@@ -1,8 +1,9 @@
 import {login} from "../login.js"
 import {displayHomePage} from "../display_page_function.js"
-import { checkAuth42 } from "../auth.js";
+import { checkAuth42 } from "../auth.js";import { state } from "../../main.js";
 
 // await checkAuth42();
+// var state
 
 async function put_login_form_html() {
     // await checkAuth42();
@@ -57,8 +58,9 @@ async function put_login_form_html() {
             return Array.from(array, dec => ('0' + dec.toString(16)).substr(-2)).join('');
         }
         
-        var state = generateRandomState();
-
+        state = generateRandomState();
+        console.log("stateeee : ", state)
+        
         var baseUrl = 'https://api.intra.42.fr/oauth/authorize?';
         var client_id = '&client_id=' + 'u-s4t2ud-e95dac742f419c01abf9f266b8219d8be7c13613ebcc4b3a64edc9e84beac84c';
         var redirect_uri = '&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fhome';
@@ -70,4 +72,4 @@ async function put_login_form_html() {
         window.location = fullUrl;
     });
 }
-export {put_login_form_html}
+export {put_login_form_html, state}
