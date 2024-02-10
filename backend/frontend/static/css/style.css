@@ -20,6 +20,19 @@
     padding: 50px;
 } */
 
+.friend-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.card-body a {
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Inherit text color from the parent */
+}
+
 .element {
   margin-bottom: 200px;
 }
@@ -156,3 +169,4 @@ Linear Gradient Button :       linear-gradient(90deg, #06BFFF 0%, #2D73FF 100%)
 Grey Input Box :               #32353c
 
 */
+

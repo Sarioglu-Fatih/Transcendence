@@ -34,30 +34,6 @@ window.onpopstate = async function() {
     displayProfilPage();
 }
 
-async function getFriendProfil(username) {
-  try {
-    displayProfilPage(`profil/${username}/`);
-    const jwtToken = localStorage.getItem('jwt_token');
-    const response = await fetch(`/api/profil/${username}/`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${jwtToken}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error('Erreur réseau');
-    }
-    
-    const userData = await response.json();
-    console.log(userData);
-  } catch (error) {
-    console.error('Erreur lors de la récupération des données utilisateur :', error);
-  }
-}
-
-
 function isUserLoggedIn() {
 //   const response = await makeApiRequest("isUserLoggedIn");
 //   console.log(response);
