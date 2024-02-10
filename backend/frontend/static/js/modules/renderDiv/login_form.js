@@ -12,13 +12,13 @@ async function put_login_form_html() {
         <div class="card" id="card_login">
         <div class="card-body">
             <label for="inputUsername" class="form-label">Username</label>
-            <input type="text" class="form-control" id="login_Username" placeholder="Username" maxlength="16" required/>
+            <input type="text" class="form-control" id="login_Username" maxlength="16" required/>
             <span id="loginUsernameError" class="error-message"></span>
 
             <label for="inputPassword" class="form-label">Password</label>
-            <input type="password" class="form-control"  id="login_Password" placeholder="Password" maxlength="16" required/>
-            <input class="authButton" id="authButton" type="button" value="42" />
-        </div>
+            <input type="password" class="form-control"  id="login_Password" maxlength="16" required/>
+            <input class="authButton btn btn-primary" id="authButton" type="button" value="Or log in with\n42" />
+            </div>
         <div class="card-footer text-center">
             <button class="btn btn-primary" id="login_button">login</button>
         </div>

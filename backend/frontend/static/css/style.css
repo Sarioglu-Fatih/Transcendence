@@ -82,15 +82,17 @@
   right: 100px;
 }
 
+[data-bs-theme="dark"] body {
+  background-color: #1B2838;
+  font-family: "Motiva Sans", Sans-serif;
+}
+
 .btn-primary {
   background-color: #2A475E;
   border-color: #2A475E;
   color: white;
-}
-
-[data-bs-theme="dark"] body {
-  background-color: #1B2838;
-  
+  background: linear-gradient(90deg, #06BFFF 0%, #2D73FF 100%);
+  border-color: linear-gradient(90deg, #06BFFF 0%, #2D73FF 100%);
 }
 
 #register_form, #login_form {
@@ -99,24 +101,47 @@
   align-items: center;
   min-height: 100vh;
   margin: auto;
-  /* height: 100px; */
   width: 100%;
 }
 
 #card_register, #card_login {
   width: 350px;
   height: 400px;
+  background-color: #181A21;
+  border-color: #181A21;
+}
+
+.card-footer {
+  background-color: #181A21;
+  border-color: #181A21;
 }
 
 .form-label {
   margin-bottom: 10px;
   margin-top: 15px;
-  margin-left: 7px;
+  margin-left: 3px;
 }
 
  .form-control {
-  /* margin-bottom: 20px; */
-  /* margin-top: 10px; */
-  /* background-color: #343a40;
-  border-color: #343a40; */
+  background-color: #32353c;
+  border-color: #32353c;
 }
+
+#authButton {
+  margin-top: 50px;
+  margin-left: 75px;
+  width: 150px;
+  background: #00babc;
+  border-color: #00babc;
+  font-family: "FuturaPT", Sans-serif;
+  
+}
+/* GRAPHIC CHARTER
+
+font-family :             "Motiva Sans", Sans-serif;
+
+Blue Body Background :    #1B2838
+Black Form :              #181A21 
+Linear Gradient Button :  linear-gradient(90deg, #06BFFF 0%, #2D73FF 100%)
+Grey Input :              #32353c
+*/

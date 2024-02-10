@@ -10,15 +10,15 @@ function put_register_form_html() {
                 <div class="card" id="card_register">
                     <div class="card-body" >        
                         <label for="inputUsername" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="inputUsername" placeholder="Username" maxlength="16" required/>
+                        <input type="text" class="form-control" id="inputUsername"  maxlength="16" required/>
                         <span id="usernameError" class="error-message"></span>
 
                         <label for="inputEmail" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="inputEmail" placeholder="yourmail@random.com" maxlength="50" required/>
+                        <input type="email" class="form-control" id="inputEmail"  maxlength="50" required/>
                         <span id="emailError" class="error-message"></span>
-                        
+
                         <label for="inputPassword" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="inputPassword" placeholder="Password" maxlength="16" />
+                        <input type="password" class="form-control" id="inputPassword" maxlength="16" />
 
                         <div id="pwd_checkbox">
                             <h3>Password must contain the following:</h3>
