@@ -119,21 +119,25 @@ async function put_profil_card_html() {
 async function check_whos_profil() {
     try {
         let isHimself = await renderProfilPage();
+        let is42u = await is42user();
         if (isHimself == true) {
             hideDivs(["addFriend_button"]);
+            if (is42u)
+                hideDivs(["profilRightSide"]);
+
+            
         }
         else {
             const currentPath = window.location.pathname.substring(1);
             const userToAddName = currentPath.replace(/^profil/, 'isFriend');
+
             const isFriends = await isFriend(userToAddName);
             console.log(isFriends);
             if (isFriends){
-                console.log("is friends")
                 hideDivs(["profilRightSide", "addFriend_button", "2FA_button", "avatar_upload_form"]);
                 showDivs(["profilLeftSide"]);
             }
             else {
-                console.log("is not friends")
                 hideDivs(["profilRightSide", "2FA_button", "avatar_upload_form"]);
                 showDivs(["profilLeftSide", "addFriend_button"]);
             }
@@ -148,6 +152,23 @@ async function check_whos_profil() {
             throw new Error('Not a profil');
         }
     }
+}
+
+async function is42user() {
+    const currentPath = window.location.pathname.substring(1) ;
+    const response = await makeApiRequest(currentPath)
+    if (!response.ok)
+    {
+        console.log("not ok");
+        throw new Error('Not a profil');
+    }
+    let userData = await response.json()
+    const user = userData.username;
+    if(!user)
+        return false;
+    if (user.substring(user.length - 3) == "@42")
+        return true;
+    return false;
 }
 
 async function renderProfilPage() {
