@@ -14,6 +14,7 @@ function hideAllDivs() {
 
 function displayLoginPage() {
     hideAllDivs();
+    showDivs(["login_page"]);
     put_register_form_html();
     put_login_form_html();     
 }
