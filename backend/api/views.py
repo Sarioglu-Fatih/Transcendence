@@ -88,21 +88,20 @@ def get_user(request, user_profil):
 	if not user_id:
 		return HttpResponseNotFound(status=404)
 	if (User.objects.filter(username=user_profil).exists()):
-		if (User.objects.get(username=user_profil).id != user_id):
-			return HttpResponseNotFound(status=404)
-		user = User.objects.get(username=user_profil)
-		user_win = user.get_total_wins()
-		user_loss = user.get_total_losses()
-		data = {
-			'User_ID': user_id,
-			'username': user.username,
-			'pseudo': user.pseudo,
-			'email': user.email,
-			'win': user_win,
-			'lose': user_loss,
-		}
-		return JsonResponse(data, safe=False)
-	elif (User.objects.filter(pseudo=user_profil).exists()):
+		if (User.objects.get(username=user_profil).id == user_id):
+			user = User.objects.get(username=user_profil)
+			user_win = user.get_total_wins()
+			user_loss = user.get_total_losses()
+			data = {
+				'User_ID': user_id,
+				'username': user.username,
+				'pseudo': user.pseudo,
+				'email': user.email,
+				'win': user_win,
+				'lose': user_loss,
+			}
+			return JsonResponse(data, safe=False)
+	if (User.objects.filter(pseudo=user_profil).exists()):
 		user = User.objects.get(pseudo=user_profil)
 		user_win = user.get_total_wins()
 		user_loss = user.get_total_losses()
@@ -229,3 +228,4 @@ def isUserLoggedIn(request):
 	else:
 		print("yeah")
 		return HttpResponseNotFound(status=200)
+	
