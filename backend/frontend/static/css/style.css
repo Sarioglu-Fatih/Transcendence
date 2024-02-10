@@ -128,3 +128,7 @@
   display: inline-block;
   margin-right: 5px;
 }
+.card-body a {
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Inherit text color from the parent */
+}
