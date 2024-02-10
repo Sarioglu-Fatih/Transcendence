@@ -37,7 +37,6 @@ async function displayProfilPage(path) {
         console.log("error 404")
         error404();
     }
-
 }
 
 function displayHomePage() {

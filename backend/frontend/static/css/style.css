@@ -120,3 +120,11 @@
   /* background-color: #343a40;
   border-color: #343a40; */
 }
+
+.friend-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
