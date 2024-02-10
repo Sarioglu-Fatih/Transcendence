@@ -1,0 +1,83 @@
+.avatar-image {
+    width: 75px; 
+    height: auto;
+}
+
+#error404{
+    display: none;
+}
+
+/* #game_card, #profile_settings_card {
+    width: 75vw;
+    height: 90vh;
+    padding: 60px;
+    font-size: 40px;
+}
+
+
+
+#friendListBody, #history {
+    width: 22vw;
+    height: 90vh;
+    padding: 50px;
+} */
+
+/* The message box is shown when the user clicks on the password field */
+#pwd_checkbox {
+    display:none;
+    background: #f1f1f1;
+    color: #000;
+    position: relative;
+    padding: 20px;
+    margin-top: 10px;
+  }
+  
+  #pwd_checkbox p {
+    padding: 10px 35px;
+    font-size: 18px;
+  }
+
+  .element {
+    margin-bottom: 200px;
+  }
+
+  /* Add a green text color and a checkmark when the requirements are right */
+  .valid {
+    color: green;
+  }
+  
+  .valid:before {
+    position: relative;
+    left: -35px;
+    content: "\2713";
+  }
+  
+  /* Add a red text color and an "x" icon when the requirements are wrong */
+  .invalid {
+    color: #ff0000;
+  }
+  
+  .invalid:before {
+    position: relative;
+    left: -35px;
+    content: "\2715";    
+  }
+
+  .error {
+    border: 1px solid red;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+  }
+
+  canvas {
+    border: 1px solid black;
+  }
+
+  #2FA_button {
+    right: 100px;
+  }

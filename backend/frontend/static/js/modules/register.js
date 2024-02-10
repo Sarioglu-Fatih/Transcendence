@@ -21,6 +21,7 @@ async function registerUser() {
 }
 
 async function updateUser() {
+    console.log("update_user")
     var username = document.getElementById("updateUsername").value; // Get info from the register form
     var email = document.getElementById("updateEmail").value;
     var password = document.getElementById("updatePassword").value;
@@ -29,6 +30,7 @@ async function updateUser() {
         'email': email,
         'password': password
     }
+    console.log(body);
 
     try {
         const csrfToken = getCookie('csrftoken');
@@ -43,7 +45,7 @@ async function updateUser() {
             credentials: 'include',
         })
         if (response.ok) {
-            console.log('UPDATED OKKKKK', response);
+            console.log('Update ok', response);
         }
         else {
             console.error('Failed to register user:', response.statusText);

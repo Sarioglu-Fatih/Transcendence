@@ -2,10 +2,11 @@ from django.http import JsonResponse
 from django.http import HttpResponse, HttpResponseNotFound
 from .utils import decode_Payload
 from api.models import User, AvatarUploadForm
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from .models import User
 import base64, os
 from django.conf import settings
 from dataclasses import dataclass
@@ -116,10 +117,12 @@ def get_user(request, user_profil):
 
   
 @login_required
-def add_friend_request(request, userToAddId):
+def add_friend_request(request, userToAddName):
 	# Get the two user
 	currentUser = request.user
-	userToAdd = get_object_or_404(User, id=userToAddId)
+	print(currentUser)
+	userToAdd = get_object_or_404(User, pseudo=userToAddName)
+	print(userToAdd)
 	# Add the userToAdd to the friendlist if is not already in
 	if userToAdd not in  currentUser.friendlist.all():
 		currentUser.friendlist.add(userToAdd)
@@ -127,6 +130,32 @@ def add_friend_request(request, userToAddId):
 		return HttpResponse("Friend added to the friendlist", status=200)
 	else:
 		return HttpResponse("Friend is already in the friendlist", status=400)
+
+@login_required
+def my_friends(request):
+	user = request.user
+	friend_list = list(user.friendlist.values('username'))
+	return JsonResponse({'friend_list': friend_list})
+
+def isFriend(request, userToAddName):
+	if not request.method == 'GET':
+		return HttpResponseNotFound(status=404)
+	payload = decode_Payload(request)
+	user_id = payload.get('user_id')
+	if (not user_id):
+		return HttpResponseNotFound(status=404)    
+	currentUser = request.user
+	if (User.objects.filter(pseudo=userToAddName).exists):
+		print("exist")
+	userToAdd = User.objects.get(pseudo=userToAddName)
+	print(userToAdd)
+	# userToAdd = get_object_or_404(User, username=userToAddName)
+	print(currentUser.friendlist.all())
+	is_friend = userToAdd in currentUser.friendlist.all()
+	print(is_friend)
+	if (is_friend):
+		return HttpResponseNotFound(status=200)
+	return HttpResponseNotFound(status=400)
 
 @login_required
 @permission_classes([IsAuthenticated])

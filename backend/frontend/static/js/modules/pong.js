@@ -1,8 +1,6 @@
 import {hideDivs, makeApiRequest, showDivs, makeApiRequestPost, getCookie} from './utils.js'
 import { createWebSocket } from './logout.js'
 
-const pong_launcher = document.getElementById("pong_launcher");
-
 async function addPseudo() {
     const pseudo = document.getElementById('pseudo').value;
     console.log(pseudo);
@@ -56,31 +54,8 @@ async function pseudoCheck() {
     }
 }
 
-const playBtn = document.getElementById("play_button");
-playBtn.addEventListener('click', async () => {
-    try {
-        hideDivs(['pong_button']);
-        await pseudoCheck();
-        showDivs(['pong_launcher']);
-        launchGame('normal');
-    } catch (err) {
-        pong_launcher.innerHTML = `<p class="error-msg">${err.message}</p>`;
-    }
-});
-
-const tournamentBtn = document.getElementById("tournament");
-tournamentBtn.addEventListener('click', async ()=> {
-    try {
-        hideDivs(['pong_button']);
-        await pseudoCheck();
-        showDivs(['pong_launcher']);
-        launchGame('tournament');
-    } catch (err) {
-        pong_launcher.innerHTML = `<p class="error-msg">${err.message}</p>`;
-    }
-})
-
 function launchGame(mode) {
+    const pong_launcher = document.getElementById("pong_launcher");
     pong_launcher.innerHTML = `<canvas id="pong" width="600" height="300"></canvas>`
     const socketURL = 'wss://localhost:8000/ws/game/';
     
@@ -233,4 +208,4 @@ function drawPong(player1, player2, bx, by, p1, p2, score1, score2, winner) {
 }
 
 
-export { launchGame , drawPong }
+export { launchGame , drawPong, pseudoCheck }

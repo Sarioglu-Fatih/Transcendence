@@ -146,6 +146,7 @@ def updateUser(request):
 		regexPwd = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
 
 		user = request.user
+		print(data)
 		if User.objects.filter(username=data.username).exists():
 			return HttpResponse(reason="Conflict: Username already exists.", status=409)
 		if User.objects.filter(email=data.email).exists():
