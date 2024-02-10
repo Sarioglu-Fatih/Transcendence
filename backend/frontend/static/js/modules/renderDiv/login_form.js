@@ -12,7 +12,7 @@ async function put_login_form_html() {
         <div class="card" id="card_login">
         <div class="card-body">
             <label for="inputUsername" class="form-label">Username</label>
-            <input type="text" class="form-control" id="login_Username" placeholder="Ex: JohnDoe" maxlength="16" required/>
+            <input type="text" class="form-control" id="login_Username" placeholder="Username" maxlength="16" required/>
             <span id="loginUsernameError" class="error-message"></span>
 
             <label for="inputPassword" class="form-label">Password</label>
