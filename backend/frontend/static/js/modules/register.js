@@ -1,4 +1,4 @@
-import { getCookie, makeApiRequestPost} from './utils.js'
+import { getCookie, makeApiRequestPost, makeApiRequestPatch} from './utils.js'
 
 async function registerUser() {
 	var username = document.getElementById("inputUsername").value; // Get info from the register form
@@ -10,7 +10,7 @@ async function registerUser() {
         'password': password
     }
 	console.log("Les infos du form:", body);
-    
+
     const response = await makeApiRequestPost("register", body)
     if (response.ok) {
         console.log('User registered successfully', response);
@@ -33,17 +33,7 @@ async function updateUser() {
     console.log(body);
 
     try {
-        const csrfToken = getCookie('csrftoken');
-        const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-        const response = await fetch(`${baseURL}/api/update`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken,
-            },
-            body: JSON.stringify(body), // the data we send
-            credentials: 'include',
-        })
+        const response = await  makeApiRequestPatch('update/', body)
         if (response.ok) {
             console.log('Update ok', response);
         }

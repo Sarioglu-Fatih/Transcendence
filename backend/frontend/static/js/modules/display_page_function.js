@@ -6,6 +6,7 @@ import {put_game_launcher_form_html} from "./renderDiv/game_laucher.js"
 import { put_friend_list_form_html } from "./renderDiv/friend_list.js"
 import { put_profil_card_html } from "./renderDiv/profil_card.js"
 import { put_match_history_html } from "./renderDiv/match_history.js"
+import { closeAllWebSockets } from "./utils.js";
 
 
 function hideAllDivs() {
@@ -15,6 +16,7 @@ function hideAllDivs() {
 function displayLoginPage() {
     hideAllDivs();
     showDivs(["login_page"]);
+    closeAllWebSockets();
     put_register_form_html();
     put_login_form_html();     
 }
@@ -29,6 +31,7 @@ async function displayProfilPage(path) {
     hideAllDivs();
     put_match_history_html();
     put_top_box_form_html();
+    closeAllWebSockets();
     try {
         await put_profil_card_html();
         showDivs(["top_box_div", "profil_page"]);
@@ -45,6 +48,7 @@ function displayHomePage() {
     put_top_box_form_html();
     put_game_launcher_form_html();
     put_friend_list_form_html();
+    closeAllWebSockets();
     showDivs(["top_box_div", "home_page"])
 }
 

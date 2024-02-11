@@ -1,20 +1,8 @@
-import { getCookie } from "./utils.js";
+import { makeApiRequestPost } from "./utils.js";
 
 async function enable2fa() {
 	try {
-		const csrfToken = getCookie('csrftoken');
-		const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-
-		// Request a new 2FA setup for the current user
-		const response = await fetch(`${baseURL}/api/enable_2fa`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			'X-CSRFToken': csrfToken,
-		},
-		credentials: 'include',
-		});
- 
+		const response = await makeApiRequestPost('enable_2fa');
 		if (response.ok) {
 			const data = await response.json();
 
@@ -54,18 +42,7 @@ function displayQRCode(otpauthUrl) {
 
 async function disable2fa() {
 	try {
-		const csrfToken = getCookie('csrftoken');
-		const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-
-		const response = await fetch(`${baseURL}/api/disable_2fa`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			'X-CSRFToken': csrfToken,
-		},
-		credentials: 'include',
-		});
- 
+		const response = await makeApiRequestPost('disable_2fa');
 		if (response.ok) {
 			const data = await response.json();
 			const qrCodeContainer = document.getElementById('qrcode');
@@ -83,18 +60,8 @@ async function disable2fa() {
 
 async function check2faStatus() {
     try {
-        const csrfToken = getCookie('csrftoken');
-        const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
 		const switchbox2FA = document.getElementById('switchbox2FA');
-        const response = await fetch(`${baseURL}/api/get_2fa_status`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken,
-            },
-            credentials: 'include',
-        });
-
+		const response = makeApiRequest('get_2fa_status');
         if (response.ok) {
             const data = await response.json();
             if (data.two_factor_enabled) {
