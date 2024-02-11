@@ -39,9 +39,6 @@ async function checkAuth42() {
     var codeValue = urlSearchParams.get("code");
     var stateValue = urlSearchParams.get("state");
     var state = localStorage.getItem('state');
-    console.log("state : ", state);
-    console.log("stateValue : ", stateValue);
-    console.log("code : ", codeValue);
     if (state === null || (urlSearchParams.size !== 2 && stateValue !== state))
     {
         console.error("State value not corresponding.");
