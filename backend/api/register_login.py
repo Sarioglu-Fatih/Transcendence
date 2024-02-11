@@ -137,6 +137,8 @@ def user_logout(request):
 	if not user_id:
 		return JsonResponse({'error': 'User ID not provided'}, status=400)
 	print(user_id)
+	if (not User.objects.filter(id=user_id).exists()):
+		return HttpResponse(status=400)
 	user = User.objects.get(id=user_id)
 	user.user_is_connected = False
 	user.save()

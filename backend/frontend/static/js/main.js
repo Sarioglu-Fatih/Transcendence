@@ -1,8 +1,8 @@
-import { login } from './modules/login.js';
 import { checkAuth42 } from './modules/auth.js';
 import { logout } from './modules/logout.js'
 import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js'
-import { makeApiRequest, getCookie } from './modules/utils.js';
+import { getCookie, makeApiRequest } from './modules/utils.js';
+import { makeApiRequestPatch } from './modules/utils.js';
 
 await checkAuth42();
 
@@ -33,6 +33,18 @@ window.onpopstate = async function() {
   else if (path.startsWith('/profil/'))
     displayProfilPage();
 }
+
+document.onvisibilitychange = function() {
+  if (document.visibilityState === 'hidden') {
+    console.log("leaving")
+    makeApiRequestPatch('change_user_status/leaving/');
+  }
+  else {
+    console.log("arriving")
+    makeApiRequestPatch('change_user_status/arriving/');
+  }
+};
+
 
 function isUserLoggedIn() {
 //   const response = await makeApiRequest("isUserLoggedIn");

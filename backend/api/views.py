@@ -229,3 +229,23 @@ def isUserLoggedIn(request):
 		print("yeah")
 		return HttpResponseNotFound(status=200)
 	
+def change_user_status(request, status):
+	if request.method != 'PATCH':
+		return HttpResponseNotFound(status=404)
+	payload = decode_Payload(request)
+	if (not payload):
+		return HttpResponseNotFound(status=404)
+	user_id = payload.get('user_id')
+	if (not user_id):
+		return HttpResponseNotFound(status=404)
+	if (not User.objects.filter(id=user_id)):
+		return HttpResponseNotFound(status=404)
+	user = User.objects.get(id=user_id)
+	if (status == 'leaving'):
+		user.user_is_connected = False
+	else :
+		user.user_is_connected = True
+	user.save()
+	return HttpResponseNotFound(status=200)
+	
+	
