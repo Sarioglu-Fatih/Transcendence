@@ -3,19 +3,20 @@ import { hideDivs, showDivs } from "../utils.js";
 
 function put_game_launcher_form_html() {
     var game_launcher_div = document.getElementById("game_launcher_div");
-    game_launcher_div.innerHTML = `  
+    game_launcher_div.innerHTML = `
     <div class="card" id="game_launcher">   
-        <div class="card-body"  id="game_card">
+        <div class="card-body d-flex justify-content-center align-items-center text-center"  id="game_card">
             <div class="row" id="pong_button">
-              <div class="col-md-6 text-center">
-                <button class="btn btn-primary btn-block" id="play_button">play</button>
+              <div class="d-grid gap-2 col-6 mx-auto">
+                <button class="btn btn-primary btn-block btn-lg" id="play_button">Play</button>
               </div>
-              <div class="col-md-4 text-center">
-                <button class="btn btn-primary btn-block" id="tournament">Tournament</button>
+              <div class="d-grid gap-2 col-6 mx-auto">
+                <button class="btn btn-primary btn-block btn-lg" id="tournament">Tournament</button>
               </div>
             </div>
             <div id ="pong_launcher"></div>
         </div>
+    </div>
     </div>
     `;
 

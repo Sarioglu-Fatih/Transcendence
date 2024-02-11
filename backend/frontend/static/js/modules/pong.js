@@ -31,9 +31,11 @@ async function pseudoCheck() {
                 const pong_launcher = document.getElementById("pong_launcher");
                 pong_launcher.innerHTML = `
                     <form id="pseudo_form">
-                        <label for="pseudo" class="form-label">pseudo</label>
+                        <label for="pseudo" class="form-label">Pseudo</label>
                         <input type="pseudo" class="form-control" id="pseudo">
-                        <button id="submit_pseudo_button" class="btn btn-primary">Submit</button>
+                        <div class="container d-flex justify-content-center mt-4">
+                            <button id="submit_pseudo_button" class="btn btn-primary">Submit</button>
+                        </div>
                     </form>`;
                 const pseudoForm = document.getElementById('pseudo_form');
                 pseudoForm.addEventListener('submit', async (event) => {
@@ -56,8 +58,12 @@ async function pseudoCheck() {
 
 function launchGame(mode) {
     const pong_launcher = document.getElementById("pong_launcher");
-    pong_launcher.innerHTML = `<canvas id="pong" width="600" height="300"></canvas>`
     const socketURL = 'wss://localhost:8000/ws/game/';
+    pong_launcher.innerHTML = `
+    <p>Looking for Game</p>
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>`
     
     const socket = createWebSocket(socketURL);
     const jwtToken = getCookie('jwt_token');
@@ -169,6 +175,8 @@ function launchGame(mode) {
 
 
 function drawPong(player1, player2, bx, by, p1, p2, score1, score2, winner) {
+    const pong_launcher = document.getElementById("pong_launcher");
+    pong_launcher.innerHTML = `<canvas id="pong" width="858" height="525"></canvas>`
     const canvas = document.getElementById('pong');
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -176,35 +184,40 @@ function drawPong(player1, player2, bx, by, p1, p2, score1, score2, winner) {
     // Draw center dotted line
     if (winner) {
         ctx.font = '50px Arial';
-        ctx.fillStyle = '#000';
-        ctx.fillText(winner + ' WON!', 200, 150);
+        ctx.fillStyle = '#fff';
+        ctx.textAlign = "center";
+        ctx.fillText(winner + ' WON!', 858 / 2, 525 / 2);
         return;
     }
     ctx.beginPath();
     ctx.setLineDash([5, 15]);
     ctx.moveTo(canvas.width / 2, 0);
     ctx.lineTo(canvas.width / 2, canvas.height);
-    ctx.strokeStyle = '#000';
+    ctx.strokeStyle = '#fff';
     ctx.stroke();
     ctx.setLineDash([]);
 
     // Draw paddles
-    ctx.fillStyle = '#000';
+    ctx.fillStyle = '#fff';
     ctx.fillRect(5, p1, 10, 60);
     ctx.fillRect(canvas.width - 15, p2, 10, 60);
 
     // Draw ball
     ctx.beginPath();
     ctx.arc(bx, by, 5, 0, Math.PI * 2);
-    ctx.fillStyle = '#000';
+    ctx.fillStyle = '#fff';
     ctx.fill();
     ctx.closePath();
 
     // Draw player scores
     ctx.font = '20px Arial';
-    ctx.fillStyle = '#000';
-    ctx.fillText(player1 + ':' + score1, 10, 30);
-    ctx.fillText(player2 + ':' + score2, canvas.width - 100, 30);
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = "left";
+    ctx.fillText(player1 + ':' + score1, 30, 30);
+    ctx.textAlign = "right";
+    ctx.fillText(player2 + ':' + score2, 828, 30);
+    ctx.textAlign = 'center';
+    ctx.fillText("PONG", 858 / 2, 30);
 }
 
 
