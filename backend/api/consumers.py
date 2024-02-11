@@ -30,7 +30,7 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def disconnect(self, close_code):
-        if (not close_code):
+        if (close_code == 0):
             await self.close()
             return 0
         user = await self.get_user_by_channel_name()
