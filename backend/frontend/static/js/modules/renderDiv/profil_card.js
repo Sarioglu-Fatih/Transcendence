@@ -2,9 +2,9 @@ import { error404, showDivs } from "../display_page_function.js"
 import { hideDivs, makeApiRequest } from "../utils.js";
 import { updateUser } from "../register.js";
 import { enable2fa, disable2fa } from "../two_fa.js";
-import { isFriend } from "../profilPage.js";
+import { isFriend, handleAvatarUpload} from "../profilPage.js";
 import { displayProfilPage } from "../display_page_function.js";
-import { handleAvatarUpload } from '../avatar_upload.js'
+
 
 async function put_profil_card_html() {
     var profil_card_div = document.getElementById("profil_card_div");
@@ -55,7 +55,7 @@ async function put_profil_card_html() {
                         <span id="updatePasswordError" class="error-message"></span>
                 
                         <div class="card-footer text-center element">
-                            <button class="btn btn-primary" id="register_button">register</button>
+                            <button class="btn btn-primary" id="save_button">Save Change</button>
                         </div>
                     </div>
                 </div>
@@ -263,7 +263,9 @@ async function updateFormParse() {
       isValid = false;
     }
     if (isValid) {
-      await updateUser();
+      let updateValue = await updateUser();
+      if (updateValue == "error")
+        return ;
       document.getElementById('update_form').reset();
       if (userName)
       {

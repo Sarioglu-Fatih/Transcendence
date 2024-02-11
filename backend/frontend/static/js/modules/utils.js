@@ -57,14 +57,13 @@ async function makeApiRequest(endpoint) {
 
 async function makeApiRequestPost(endpoint, body) {
 	try {
+		makeApiRequest('get_csrf_token');
         const csrfToken = getCookie('csrftoken');
-        console.log('CSRF Token in cookie REGISTER:', csrfToken);
         const response = await fetch(`https://localhost:8000/api/${endpoint}`, { // where we send data
             method: 'POST', // post = sending data
             headers: {
                 'Content-Type': 'application/json', //data type we send
                 'X-CSRFToken': csrfToken, // cookie for django
-				// 'Authorization': `Bearer ${accessToken}`
             },
             body: JSON.stringify(body), // the data we send
             credentials: 'include',
@@ -72,7 +71,27 @@ async function makeApiRequestPost(endpoint, body) {
         return response;
     }
     catch (error) {
-        console.error('Error registering user:', error);
+        console.error('Error Post:', error);
+    }
+}
+
+async function makeApiRequestPatch(endpoint, body) {
+	try {
+		makeApiRequest('get_csrf_token');
+        const csrfToken = getCookie('csrftoken');
+        const response = await fetch(`https://localhost:8000/api/${endpoint}`, { // where we send data
+            method: 'PATCH', 
+            headers: {
+                'Content-Type': 'application/json', 
+                'X-CSRFToken': csrfToken, 
+            },
+            body: JSON.stringify(body),
+            credentials: 'include',
+        })
+        return response;
+    }
+    catch (error) {
+        console.error('Error Patch:', error);
     }
 }
 
@@ -105,5 +124,22 @@ async function handleTokenExpiration() {
 	}
 }
 
+const webSocketConnections = [];
 
-export { getCookie, makeApiRequest, showDivs, hideDivs, makeApiRequestPost }
+function createWebSocket(url) {
+  const socket = new WebSocket(url);
+  webSocketConnections.push(socket);
+  return socket;
+}
+
+function closeAllWebSockets() {
+  webSocketConnections.forEach(socket => {
+      if (socket.readyState === WebSocket.OPEN) {
+          socket.close();
+      }
+  });
+  webSocketConnections.length = 0;
+}
+
+
+export { getCookie, makeApiRequest, showDivs, hideDivs, makeApiRequestPost, makeApiRequestPatch ,createWebSocket, closeAllWebSockets }

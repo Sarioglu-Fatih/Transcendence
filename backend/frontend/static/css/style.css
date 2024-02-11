@@ -9,7 +9,7 @@
 
 /* #game_card, #profile_settings_card {
     width: 75vw;
-    height: 90vh;
+    height: 85vh;
     padding: 60px;
     font-size: 40px;
 }
@@ -19,6 +19,10 @@
     height: 90vh;
     padding: 50px;
 } */
+
+#game_launcher {
+  height: 89vh;
+}
 
 .friend-status-dot {
   width: 10px;

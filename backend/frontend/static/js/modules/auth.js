@@ -1,20 +1,13 @@
-import { getCookie, makeApiRequest } from './utils.js'
+import { makeApiRequestPost } from './utils.js'
 import { displayLoginPage, displayHomePage } from './display_page_function.js'
 
 async function fetchCode(code, state) {
+    const body = {
+        code :code,
+        state: state,
+    };
     try {
-        await makeApiRequest("get_csrf_token");
-        const csrfToken = getCookie('csrftoken');
-        const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-        const response = await fetch(`${baseURL}/api/auth42`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken,
-            },
-            body: JSON.stringify({ code: code, state: state}),
-            credentials: 'include',
-        })
+        const response = await makeApiRequestPost('auth42', body);
         if (response.ok) {
             displayHomePage();
         }
