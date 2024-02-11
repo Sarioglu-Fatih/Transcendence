@@ -30,7 +30,7 @@ function put_register_form_html() {
                         </div>
                     </div>
                     <div class="card-footer text-center">
-                        <button class="btn btn-primary" id="register_button">register</button>
+                        <button class="btn btn-primary" id="register_button">Register</button>
                     </div>
                 </div>
             </form>
