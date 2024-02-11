@@ -57,6 +57,7 @@ async function makeApiRequest(endpoint) {
 
 async function makeApiRequestPost(endpoint, body) {
 	try {
+		makeApiRequest('get_csrf_token');
         const csrfToken = getCookie('csrftoken');
         console.log('CSRF Token in cookie REGISTER:', csrfToken);
         const response = await fetch(`https://localhost:8000/api/${endpoint}`, { // where we send data

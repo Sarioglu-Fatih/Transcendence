@@ -10,7 +10,7 @@ async function registerUser() {
         'password': password
     }
 	console.log("Les infos du form:", body);
-
+    
     const response = await makeApiRequestPost("register", body)
     if (response.ok) {
         console.log('User registered successfully', response);

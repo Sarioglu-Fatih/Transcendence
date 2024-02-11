@@ -52,9 +52,9 @@ class User(AbstractUser):
 			.count()
     	)
 	
-	def get_last_5_games(self):
+	def get_all_games(self):
         # Retrieve the last 5 games for the user
-		last_5_games = Match.objects.filter(Q(player1_id=self) | Q(player2_id=self)).order_by('-date')[:5]
+		last_5_games = Match.objects.filter(Q(player1_id=self) | Q(player2_id=self)).order_by('-date')
 		serialized_games = serialize('json', last_5_games)
 		return serialized_games
 	

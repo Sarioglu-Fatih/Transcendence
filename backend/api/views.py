@@ -70,12 +70,12 @@ def get_history(request, user_profil):
 		return HttpResponseNotFound(status=404)
 	if (User.objects.filter(username=user_profil).exists()):
 		user = User.objects.get(username=user_profil)
-		last_5_games = user.get_last_5_games()
-		return JsonResponse({'last_5_games': last_5_games}, safe=False)
+		all_games = user.get_all_games()
+		return JsonResponse({'all_games': all_games}, safe=False)
 	elif (User.objects.filter(pseudo=user_profil).exists()) :
 		user = User.objects.get(pseudo=user_profil)
-		last_5_games = user.get_last_5_games()
-		return JsonResponse({'last_5_games': last_5_games}, safe=False)
+		all_games = user.get_all_games()
+		return JsonResponse({'all_games': all_games}, safe=False)
 	return HttpResponseNotFound(status=404)
 	
 @login_required	

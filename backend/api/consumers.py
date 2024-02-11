@@ -18,8 +18,8 @@ from django.db.models import Q
 class MultiplayerConsumer(AsyncWebsocketConsumer):
 	players = {}
 	update_lock = asyncio.Lock()
-	GAME_X = 600
-	GAME_Y = 300
+	GAME_X = 858
+	GAME_Y = 525
 	PADDLE_X = 10
 	PADDLE_Y = 60
 	PADDLE_SPEED = 6

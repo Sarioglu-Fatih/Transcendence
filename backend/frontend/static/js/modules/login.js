@@ -26,19 +26,7 @@ async function login() {
     console.log("Les infos du form:", body);
     
     try {
-      makeApiRequest("get_csrf_token");
-      const csrfToken = getCookie('csrftoken');
-      const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-      // Perform login
-      const response = await fetch(`${baseURL}/api/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': csrfToken,
-        },
-        body: JSON.stringify(body),
-        credentials: 'include',
-      })
+      const response = await makeApiRequestPost("login", body)
       if (response.ok) {
         if (response.status === 222){
           const token = prompt("enter code biatch")
