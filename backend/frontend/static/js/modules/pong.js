@@ -1,5 +1,5 @@
 import {hideDivs, makeApiRequest, showDivs, makeApiRequestPost, getCookie} from './utils.js'
-import { createWebSocket } from './logout.js'
+import { createWebSocket } from './utils.js';
 
 async function addPseudo() {
     const pseudo = document.getElementById('pseudo').value;

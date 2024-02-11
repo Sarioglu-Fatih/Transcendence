@@ -55,7 +55,7 @@ def upload_avatar(request):
 			if user.avatar and os.path.exists(user.avatar.path) and user.avatar.path != '/app/backend/media/avatars/default_avatar.png':
 				os.remove(user.avatar.path) 
 			form.save()
-			return JsonResponse({'message': 'Avatar uploaded successfully'})
+			return HttpResponse(status=200)
 	return JsonResponse({'error': 'Invalid form submission'}, status=400)
 
 

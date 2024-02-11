@@ -17,7 +17,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('add_friend/<str:userToAddName>/', views.add_friend_request),
     path('my_friends/', views.my_friends, name='my_friends'),
-    path('update', register_login.updateUser),
+    path('update/', register_login.updateUser),
     path('isFriend/<str:userToAddName>/', views.isFriend),
     path('upload_avatar/', views.upload_avatar, name='upload_avatar'),
     path('username', views.username),
