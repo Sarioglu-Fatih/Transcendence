@@ -29,4 +29,5 @@ urlpatterns = [
     path('disable_2fa', two_fa.disable2fa),
     path('get_2fa_status', two_fa.get_2fa_status),
     path('check_totp', two_fa.check_totp),
+    path('change_user_status/<str:status>/', views.change_user_status),
 ]
