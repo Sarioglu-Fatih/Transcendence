@@ -26,6 +26,14 @@ export async function isFriend(user) {
     }
 }
 
+function updateAvatarImage(dataUri) {
+    const avatarImage = document.getElementById('avatar-image');
+    if (avatarImage) {
+        avatarImage.src = '';  // Clear the current source
+        avatarImage.src = dataUri;  // Set the new source
+        avatarImage.alt = 'user-avatar';
+    }
+}
 
 async function displayAvatar() {
     try {
@@ -41,14 +49,6 @@ async function displayAvatar() {
     }
 }
 
-function updateAvatarImage(dataUri) {
-    const avatarImage = document.getElementById('avatar-image');
-    if (avatarImage) {
-        avatarImage.src = '';  // Clear the current source
-        avatarImage.src = dataUri;  // Set the new source
-        avatarImage.alt = 'user-avatar';
-    }
-}
 
 async function handleAvatarUpload() {
 	const form = document.getElementById('avatar_upload_form');
