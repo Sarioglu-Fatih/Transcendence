@@ -1,6 +1,5 @@
 import { getCookie, makeApiRequest } from './utils.js'
 import { displayLoginPage, displayHomePage } from './display_page_function.js'
-import { state } from '../main.js';
 
 async function fetchCode(code, state) {
     try {
@@ -17,7 +16,6 @@ async function fetchCode(code, state) {
             credentials: 'include',
         })
         if (response.ok) {
-            // const data = await response.json();
             displayHomePage();
         }
         else {
@@ -32,7 +30,6 @@ async function fetchCode(code, state) {
 }
 
 async function checkAuth42() {
-    var url = window.location;
     var urlSearch = window.location.search;
     var urlSearchParams = new URLSearchParams(urlSearch);
     var urlPathname = window.location.pathname;
@@ -48,16 +45,18 @@ async function checkAuth42() {
     }
     var codeValue = urlSearchParams.get("code");
     var stateValue = urlSearchParams.get("state");
-    console.log("state : ", state)
-    console.log("stateValue : ", stateValue)
-    console.log("params : ", urlSearchParams.size)
-    if (urlSearchParams.size !== 2 && stateValue !== state)
+    var state = localStorage.getItem('state');
+    console.log("state : ", state);
+    console.log("stateValue : ", stateValue);
+    console.log("code : ", codeValue);
+    if (state === null || (urlSearchParams.size !== 2 && stateValue !== state))
     {
-        console.log("ici")
+        console.error("State value not corresponding.");
         displayLoginPage();
         return;
     }
     await fetchCode(codeValue, stateValue);
+    localStorage.removeItem('state');
 }
 
 export { checkAuth42 };

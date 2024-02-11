@@ -4,9 +4,7 @@ import { logout } from './modules/logout.js'
 import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js'
 import { makeApiRequest, getCookie } from './modules/utils.js';
 
-var state
 await checkAuth42();
-console.log(state)
 
 var path = window.location.pathname;
 if (!isUserLoggedIn())
@@ -49,7 +47,7 @@ function isUserLoggedIn() {
     return (false)
 }
 
-export { isUserLoggedIn, state }
+export { isUserLoggedIn }
 
 
  
