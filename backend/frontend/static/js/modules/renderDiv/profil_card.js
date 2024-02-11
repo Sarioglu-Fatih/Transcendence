@@ -263,8 +263,9 @@ async function updateFormParse() {
       isValid = false;
     }
     if (isValid) {
-        console.log("update info")
-      await updateUser();
+      let updateValue = await updateUser();
+      if (updateValue == "error")
+        return ;
       document.getElementById('update_form').reset();
       if (userName)
       {

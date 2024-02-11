@@ -169,6 +169,8 @@ def updateUser(request):
 			return HttpResponse(reason="Conflict: Username already exists.", status=409)
 		if User.objects.filter(email=data.email).exists():
 			return HttpResponse(reason="Conflict: Email already exists.", status=409)
+		if (user.user_is_in_game or user.user_is_looking_tournament or user.user_is_looking_game):
+			return HttpResponse(reason="Can't change info while in game.", status=454)
 		if (data.username):
 			if not re.match(regexUsername, user.username):
 				return JsonResponse({'error': 'Username not valide'})

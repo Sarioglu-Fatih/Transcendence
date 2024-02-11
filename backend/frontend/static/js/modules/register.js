@@ -39,6 +39,7 @@ async function updateUser() {
         }
         else {
             console.error('Failed to register user:', response.statusText);
+            return "error";
         }
     }
     catch (error) {
