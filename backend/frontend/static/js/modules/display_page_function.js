@@ -10,7 +10,7 @@ import { closeAllWebSockets } from "./utils.js";
 
 
 function hideAllDivs() {
-    hideDivs(["login_page", "home_page", "profil_page"]);
+    hideDivs(["login_page", "home_page", "profil_page", "error404"]);
 }
 
 function displayLoginPage() {

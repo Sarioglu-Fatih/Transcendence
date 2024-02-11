@@ -140,6 +140,13 @@ h3 {
   font-size: 30px;
 }
 
+h5 {
+  font-family : "Roboto", Sans-serif;
+  color: white;
+  text-align: center;
+  margin-top: 10px;
+}
+
 /* Add a green text color and a checkmark when the requirements are right */
 .valid {
   color: #46c753;
@@ -160,6 +167,34 @@ h3 {
   position: relative;
   left: -35px;
   content: "\2715";    
+}
+
+#top_box {
+  border-color: #181A21;
+  background-color: #181A21;
+  display: flex;
+}
+
+#logout_button {
+  width: 30%;
+  min-width: 7vh;
+  max-width: 1vh;
+  height: 60%;
+  margin-right: 30px;
+}
+
+#profil_button {
+  width: 40%;
+  height: 60%;
+  min-width: 5vh;
+  max-width: 70vh;
+}
+
+#friendListBody {
+  border-color: #181A21;
+  background-color: #181A21;
+  display: flex;
+  margin-top: 2%;
 }
                                     /* GRAPHIC CHARTER */
 

@@ -8,17 +8,17 @@ function put_top_box_form_html() {
     top_box_div.innerHTML = `  
     <div class="card" id="top_box">
         <div class="card-body d-flex flex-column justify-content-between" style="width:100vw;">
-            <div class="row">
-              <div class="col-md-4">
+            <div class="row justify-content-center">
+              <div class="col-md-4 col-sm-3">
                 <div class="img img-fluid" id="avatar">
                   <a id="homelink" href="#"  ><img id="avatar-image" class="avatar-image" src="" alt="user-avatar"></a>
                 </div>
               </div>
-              <div class="col-md-4">
-                <button class="btn btn-primary " id="profil_button">profil</button>
+              <div class="col-md-4 d-flex col-sm-3 justify-content-center align-items-center">
+               <button class="btn btn-primary " id="profil_button">Profil</button>
               </div>
-              <div class="col-md-4">
-                <button class="btn btn-primary" id="logout_button">logout</button>
+              <div class="col-md-4  d-flex col-sm-3 justify-content-end align-items-center">
+                <button class="btn btn-primary" id="logout_button">Logout</button>
               </div>
             </div>
         </div>
