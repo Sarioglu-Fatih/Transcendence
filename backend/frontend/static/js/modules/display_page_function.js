@@ -9,7 +9,7 @@ import { put_match_history_html } from "./renderDiv/match_history.js"
 
 
 function hideAllDivs() {
-    hideDivs(["login_page", "home_page", "profil_page"]);
+    hideDivs(["login_page", "home_page", "profil_page", "error404"]);
 }
 
 function displayLoginPage() {

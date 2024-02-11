@@ -2,9 +2,9 @@ import { displayProfilPage } from "../display_page_function.js"
 
 function put_friend_list_form_html() {
     var friend_list_div = document.getElementById("friend_list_div");
-    friend_list_div.innerHTML = `  
+    friend_list_div.innerHTML = `
     <div class="card" id="friendListBody">                     
-          <h3>My friends :<p></br></p></h3>
+          <h5>Friends<p></br></p></h5>
           <div class="card-body" id="friendListCard"></div>
     </div>
     `;
