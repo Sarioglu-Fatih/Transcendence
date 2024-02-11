@@ -133,7 +133,7 @@ def add_friend_request(request, userToAddName):
 @login_required
 def my_friends(request):
 	user = request.user
-	friend_list = list(user.friendlist.values('username'))
+	friend_list = list(user.friendlist.values('pseudo', 'user_is_connected', 'user_is_in_game', 'user_is_looking_game', 'user_is_looking_tournament'))
 	return JsonResponse({'friend_list': friend_list})
 
 def isFriend(request, userToAddName):

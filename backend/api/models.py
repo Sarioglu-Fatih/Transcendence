@@ -11,6 +11,7 @@ from django_otp.plugins.otp_totp.models import TOTPDevice
 class User(AbstractUser):
 	pseudo = models.CharField(max_length=16)
 	avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+	user_is_connected = models.BooleanField(default=False)
 	user_is_looking_game = models.BooleanField(default=False)
 	user_is_looking_tournament = models.BooleanField(default=False)
 	user_is_in_game = models.BooleanField(default=False)

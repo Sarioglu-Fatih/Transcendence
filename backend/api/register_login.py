@@ -14,6 +14,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from django_otp.plugins.otp_totp.models import TOTPDevice
+from .utils import decode_Payload
 
 
 @dataclass
@@ -67,6 +68,8 @@ def user_login(request):
 			refresh = RefreshToken.for_user(user)
 			jwt_token = str(refresh.access_token)
 			refresh_token = str(refresh)
+			user.user_is_connected = True
+			user.save()
 			# Set JWT token in a cookie
 			response = JsonResponse({
 				'status': 'success',
@@ -125,7 +128,18 @@ def user_login2fa(request):
 		return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
 def user_logout(request):
-
+	if request.method != 'PATCH':
+		return JsonResponse({'error': 'Invalid request method'}, status=405)
+	payload = decode_Payload(request)
+	if not payload:
+		return JsonResponse({'error': 'User ID not provided'}, status=400)
+	user_id = payload.get('user_id')
+	if not user_id:
+		return JsonResponse({'error': 'User ID not provided'}, status=400)
+	print(user_id)
+	user = User.objects.get(id=user_id)
+	user.user_is_connected = False
+	user.save()
 	logout(request)
 	Session.objects.filter(session_key=request.session.session_key).delete()
 	response = JsonResponse({
