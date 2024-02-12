@@ -35,12 +35,13 @@ def create_user(request):
 	regexEmail = r'\A\S+@\S+\.\S+\Z'
 	secRegexEmail = r'^[a-zA-Z0-9@.-]+$'
 	regexPwd = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
+	print("===========================")
 	if not re.match(regexUsername, data.username):
-		return JsonResponse({'error': 'Username not valide'})
+		return JsonResponse({'error': 'Username not valide'}, status=419)
 	if not (re.match(regexEmail, data.email) and re.match(secRegexEmail, data.email)):
-		return JsonResponse({'error': 'Email not valide'})
+		return JsonResponse({'error': 'Email not valide'}, status=420)
 	if  not re.match(regexPwd, data.password):
-		return JsonResponse({'error': "Special characters allowed : @$!%#?&"})
+		return JsonResponse({'error': "Special characters allowed : @$!%#?&"}, status=421)
 	if User.objects.filter(username=data.username).exists():
 		return HttpResponse(reason="Conflict: Username already exists.", status=409)
 	if User.objects.filter(email=data.email).exists():

@@ -42,21 +42,21 @@ def avatar(request):
 		
 @login_required	
 def upload_avatar(request):
-	if request.method == 'POST':
-		payload = decode_Payload(request)
-		if not payload:
-			return JsonResponse({'error': 'User ID not provided'}, status=400)
-		user_id = payload.get('user_id')
-		if not user_id:
-			return JsonResponse({'error': 'User ID not provided'}, status=400)
-		user = get_object_or_404(User, id=user_id)
-		form = AvatarUploadForm(request.POST, request.FILES, instance=request.user)
-		if form.is_valid() and request.user == form.instance:
-			if user.avatar and os.path.exists(user.avatar.path) and user.avatar.path != '/app/backend/media/avatars/default_avatar.png':
-				os.remove(user.avatar.path) 
-			form.save()
-			return HttpResponse(status=200)
-	return JsonResponse({'error': 'Invalid form submission'}, status=400)
+	if request.method != 'POST':
+		return HttpResponse(status=405)
+	payload = decode_Payload(request)
+	if not payload:
+		return HttpResponse({'error': 'User ID not provided'}, status=400)
+	user_id = payload.get('user_id')
+	if not user_id:
+		return HttpResponse({'error': 'User ID not provided'}, status=400)
+	user = get_object_or_404(User, id=user_id)
+	form = AvatarUploadForm(request.POST, request.FILES, instance=request.user)
+	if form.is_valid() and request.user == form.instance:
+		if user.avatar and os.path.exists(user.avatar.path) and user.avatar.path != '/app/backend/media/avatars/default_avatar.png':
+			os.remove(user.avatar.path) 
+		form.save()
+		return HttpResponse(status=200)
 
 
 @login_required	

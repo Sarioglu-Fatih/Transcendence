@@ -27,15 +27,21 @@ function put_top_box_form_html() {
 
     const logoutBtn = document.getElementById('logout_button');
     logoutBtn.addEventListener('click', () => {
+        event.preventDefault();
         displayLoginPage();
         logout();
     });
 
     const profilBtn = document.getElementById('profil_button');
-    profilBtn.addEventListener('click', async () => {
-        const response = await makeApiRequest("username");
-        const data = await response.json()
-        displayProfilPage("/profil/" + data.username);
+    profilBtn.addEventListener('click', async (event) => {
+      event.preventDefault();
+      const response = await makeApiRequest("username");
+      const data = await response.json()
+      const path = window.location.pathname;
+      if (path === `/profil/${data.username}/`){
+        return;
+      }
+      displayProfilPage(`/profil/${data.username}/`);
     });
 
     displayAvatar()
