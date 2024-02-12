@@ -1,7 +1,7 @@
 import { error404, showDivs } from "../display_page_function.js"
 import { hideDivs, makeApiRequest } from "../utils.js";
 import { updateUser } from "../register.js";
-import { enable2fa, disable2fa } from "../two_fa.js";
+import { enable2fa, disable2fa, check2faStatus} from "../two_fa.js";
 import { isFriend, handleAvatarUpload} from "../profilPage.js";
 import { displayProfilPage } from "../display_page_function.js";
 
@@ -86,6 +86,7 @@ async function put_profil_card_html() {
     });
     // Switchbox for enable 2FA
     var switchbox2FA = document.getElementById('switchbox2FA');
+    switchbox2FA = await check2faStatus();
     switchbox2FA.addEventListener('change', async (event) => {
         event.preventDefault();
         if (switchbox2FA.checked) {

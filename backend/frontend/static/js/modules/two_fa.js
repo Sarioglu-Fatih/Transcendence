@@ -1,4 +1,4 @@
-import { makeApiRequestPost } from "./utils.js";
+import { makeApiRequestPost, makeApiRequest} from "./utils.js";
 
 async function enable2fa() {
 	try {
@@ -61,8 +61,9 @@ async function disable2fa() {
 async function check2faStatus() {
     try {
 		const switchbox2FA = document.getElementById('switchbox2FA');
-		const response = makeApiRequest('get_2fa_status');
+		const response = await makeApiRequest('get_2fa_status');
         if (response.ok) {
+			console.log("2fa", response)
             const data = await response.json();
             if (data.two_factor_enabled) {
                 switchbox2FA.checked = true
@@ -73,6 +74,7 @@ async function check2faStatus() {
 			else {
                 switchbox2FA.checked = false
             }
+			return switchbox2FA;
         }
 		else {
             console.error('Error checking 2FA status:', response.status);
