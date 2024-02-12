@@ -40,13 +40,13 @@ async function match_history() {
         const allGamesArray = JSON.parse(userData.all_games);
         if (!allGamesArray)
             throw new Error('Invalid or missing data for all_games');
-        console.log(allGamesArray);
+        console.log("allGamesArray :",allGamesArray);
 
         const loadfiveMatches = () => {
             history.innerHTML = ""
             const nextMatches = allGamesArray.slice(offset, offset + 5);
-            console.log(offset);
-            console.log(nextMatches.length)
+            console.log("offset :", offset);
+            console.log("nextMatches.length :", nextMatches.length)
             if (nextMatches.length > 0) {
                 nextMatches.forEach(game => {
                     const cardElement = document.createElement('div');
@@ -101,7 +101,9 @@ async function match_history() {
         };
         // Attach click event to the "Load More" button
         loadMoreButton.addEventListener('click', async () => {
-            offset += 5;
+            const nextMatches = allGamesArray.slice(offset, offset + 5);
+            if (nextMatches.length > 4)
+                offset += 5;
             loadfiveMatches();
         });
 
