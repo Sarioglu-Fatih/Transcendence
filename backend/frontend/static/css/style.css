@@ -7,23 +7,6 @@
     display: none;
 }
 
-/* #game_card, #profile_settings_card {
-    width: 75vw;
-    height: 85vh;
-    padding: 60px;
-    font-size: 40px;
-}
-
-#friendListBody, #history {
-    width: 22vw;
-    height: 90vh;
-    padding: 50px;
-} */
-
-#game_launcher {
-  height: 89vh;
-}
-
 .friend-status-dot {
   width: 10px;
   height: 10px;
@@ -73,6 +56,8 @@ canvas {
   border-color: linear-gradient(90deg, #06BFFF 0%, #2D73FF 100%);
 }
 
+/* LOGIN PAGE */
+
 #register_form, #login_form {
   display: flex;
   justify-content: center;
@@ -115,7 +100,7 @@ canvas {
   
 }
 
-/* PASSWORD CHECKBOX */
+/* Password checkbox */
 
 #pwd_checkbox {
   display:none;
@@ -169,10 +154,14 @@ h5 {
   content: "\2715";    
 }
 
+/* LOGIN PAGE */
+
 #top_box {
   border-color: #181A21;
   background-color: #181A21;
   display: flex;
+  margin-top: 1vh;
+  height: 8vh;
 }
 
 #logout_button {
@@ -180,7 +169,6 @@ h5 {
   min-width: 7vh;
   max-width: 1vh;
   height: 60%;
-  margin-right: 30px;
 }
 
 #profil_button {
@@ -193,9 +181,27 @@ h5 {
 #friendListBody {
   border-color: #181A21;
   background-color: #181A21;
-  display: flex;
-  margin-top: 2%;
+  margin-top: 1vh;
+  height: 89vh;
 }
+
+#game_launcher {
+  height: 89vh;
+  margin-top: 1vh;
+  border-color: #181A21;
+  background-color: #181A21;
+  
+}
+
+/* PROFIL PAGE */
+
+#profile_settings_card {
+  height: 89vh;
+  margin-top: 1vh;
+  border-color: #181A21;
+  background-color: #181A21;
+}
+
                                     /* GRAPHIC CHARTER */
 
 /*

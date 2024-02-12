@@ -4,7 +4,7 @@ function put_friend_list_form_html() {
     var friend_list_div = document.getElementById("friend_list_div");
     friend_list_div.innerHTML = `
     <div class="card" id="friendListBody">                     
-          <h5>Friends<p></br></p></h5>
+          <h5>Friends</h5>
           <div class="card-body" id="friendListCard"></div>
     </div>
     `;

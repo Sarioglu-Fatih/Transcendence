@@ -10,17 +10,14 @@ async function put_profil_card_html() {
     var profil_card_div = document.getElementById("profil_card_div");
     profil_card_div.innerHTML = `  
     <div class="card" >                     
-    <div class="card-body"  id="profile_settings_card">
-    <div id="2FA_button">
-        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample">
-        2FA
-        </button>
+        <div class="card-body"  id="profile_settings_card">
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample">2FA</button>
         <div style="min-height: 120px;">
         <div class="collapse collapse-horizontal" id="collapseWidthExample">
             <div class="card card-body" style="width: 300px;">
             <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="switchbox2FA">
-                <label class="form-check-label" for="switchbox2FA">Enable 2FA</label>
+            <input class="form-check-input" type="checkbox" role="switch" id="switchbox2FA">
+            <label class="form-check-label" for="switchbox2FA">Enable 2FA</label>
             </div>
             <div id="qrcode"></div>
             </div>
@@ -28,6 +25,7 @@ async function put_profil_card_html() {
         </div>
         <div class="cardtext-center col-md-6 text-center">
         </div>
+    <div id="2FA_button">
     </div>
     <form id="update_form" class="update_form">
                 <div class="d-flex justify-content-center">
