@@ -38,9 +38,9 @@ async function match_history() {
         if (!userData)
             throw new Error('no userData')
         const allGamesArray = JSON.parse(userData.all_games);
-        console.log("allGamesArray :",allGamesArray);
         if (!allGamesArray)
             throw new Error('Invalid or missing data for all_games');
+        console.log("allGamesArray :",allGamesArray);
 
         const loadfiveMatches = () => {
             history.innerHTML = ""
