@@ -57,7 +57,7 @@ async function makeApiRequest(endpoint) {
 
 async function makeApiRequestPost(endpoint, body) {
 	try {
-		makeApiRequest('get_csrf_token');
+		await makeApiRequest('get_csrf_token');
         const csrfToken = getCookie('csrftoken');
         const response = await fetch(`https://localhost:8000/api/${endpoint}`, { // where we send data
             method: 'POST', // post = sending data
@@ -77,7 +77,7 @@ async function makeApiRequestPost(endpoint, body) {
 
 async function makeApiRequestPatch(endpoint, body) {
 	try {
-		makeApiRequest('get_csrf_token');
+		await makeApiRequest('get_csrf_token');
         const csrfToken = getCookie('csrftoken');
         const response = await fetch(`https://localhost:8000/api/${endpoint}`, { // where we send data
             method: 'PATCH', 

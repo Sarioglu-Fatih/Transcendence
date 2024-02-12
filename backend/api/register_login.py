@@ -166,7 +166,7 @@ def auth42(request):
 		print("Token response content : ")
 		print(response.content)
 		response_data = json.loads(response.content.decode('utf-8'))
-		print("JSON response_data : ")
+		# print("JSON response_data : ")
 		# {
 		#     'access_token': 'd5sg45g4s54g5sg', 
 		#     'token_type': 'bearer', 
@@ -178,16 +178,11 @@ def auth42(request):
 		# }
 		access_token = response_data.get('access_token')
 		authorization = "Bearer " + access_token
-		# url = "https://api.intra.42.fr/oauth/token/info"
 		url = "https://api.intra.42.fr/v2/me"
 		headers = {
 			"Authorization": authorization
 		}
-
-		# Get info about the user
 		response = requests.get(url, headers=headers)
-
-		# Conversion de la réponse en json
 		json_response = response.json()
 
 		# print("Réponse en JSON :", json_response)
@@ -213,7 +208,6 @@ def auth42(request):
 
 		user_login = json_response.get('login')
 		user_email = json_response.get('email')
-		# user_avatar = json_response.get('image', {}).get('link')
 		user_password = 'PWDauth42!' + user_login
 		user_data = {
 			"username": user_login + '@42',
@@ -221,12 +215,13 @@ def auth42(request):
 			"password": user_password
 		}
 		user_creation = create_user42(user_data)
-		print(user_creation) 
 		if (user_creation.get('status') == 'error'):
 			return JsonResponse({'status': 'error', 'message': user_creation.get('message')}, status=401)
 		if (user_creation.get('status') == 'exist'):
 			return user_login42(request, user_data)
-	return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+	else:
+		# Return an error for an invalid request method.
+		return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
 def create_user42(data):
 	if User.objects.filter(username=data['username']).exists():
@@ -242,8 +237,6 @@ def user_login42(request, data):
 	username = data['username']
 	password = data['password']
 	user = authenticate(username=username, password=password)
-	print("user is : ")
-	print(user)
 	if user is not None:
 		login(request, user)
 		# Generate JWT token, access and refresh
@@ -262,26 +255,3 @@ def user_login42(request, data):
 	else:
 		# Authentication failed. Return an error response.
 		return JsonResponse({'status': 'error', 'message': 'Invalid login credentials'}, status=401)
-
-# def avatar42(user, url)
-#     response = requests.get(url)
-
-#     if response.response_status == 200:
-#         img_tmp = NamedTemporaryFile(delete=True)
-#         img_tmp.write(response.content)
-#         img_tmp.flush()
-
-#         user.avatar.save(f"avatar.jpg", File(img_tmp), save=True)
-
-def auth_42(request):
-	url = 'https://api.intra.42.fr/oauth/authorize'
-	params = {
-		'client_id': os.getenv('CLIENT_ID'),
-		'redirect_uri': 'https://localhost:8000/home',
-		'scope': 'public',
-		# ajouter state quand on fera la protection xss
-		'response_type': 'code',
-	}
-	response = requests.get(url, params=params)
-	print(response.status_code)     
-	return HttpResponse(status=200)#('https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-e95dac742f419c01abf9f266b8219d8be7c13613ebcc4b3a64edc9e84beac84c&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fhome&response_type=code')  
