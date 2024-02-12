@@ -14,6 +14,7 @@ from channels.db import database_sync_to_async
 from django.utils import timezone
 from datetime import datetime
 from django.db.models import Q
+from django.http import HttpResponse
 
 class MultiplayerConsumer(AsyncWebsocketConsumer):
     players = {}
@@ -32,6 +33,9 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         if (close_code == 0):
             await self.close()
+            return 0
+        if (close_code == 2):
+            await self.close(code=4001)
             return 0
         user = await self.get_user_by_channel_name()
         if not user:
@@ -93,6 +97,9 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
                 user = await self.get_user_id(data)
                 if (user == 0):
                     await self.disconnect(0)
+                    return
+                if (user.user_is_in_game or user.user_is_looking_tournament or user.user_is_looking_game):
+                    await self.disconnect(2)
                     return
                 await self.update_user_status(user, 'match')
                 await self.setup_player(user)

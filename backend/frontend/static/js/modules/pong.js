@@ -115,6 +115,9 @@ function launchGame(mode) {
     // Connection closed
     socket.addEventListener('close', (event) => {
         console.log('WebSocket connection closed:', event);
+        if (event.code === 4001) {
+            pong_launcher.innerHTML = `<p>Can't launch game if already in game</p>`
+        }
     });
   
     // Connection error

@@ -7,23 +7,6 @@
     display: none;
 }
 
-/* #game_card, #profile_settings_card {
-    width: 75vw;
-    height: 85vh;
-    padding: 60px;
-    font-size: 40px;
-}
-
-#friendListBody, #history {
-    width: 22vw;
-    height: 90vh;
-    padding: 50px;
-} */
-
-#game_launcher {
-  height: 89vh;
-}
-
 .friend-status-dot {
   width: 10px;
   height: 10px;
@@ -35,10 +18,6 @@
 .card-body a {
   text-decoration: none; /* Remove underline */
   color: inherit; /* Inherit text color from the parent */
-}
-
-.element {
-  margin-bottom: 200px;
 }
 
 .error {
@@ -56,10 +35,6 @@ canvas {
   border: 1px solid black;
 }
 
-#2FA_button {
-  right: 100px;
-}
-
 [data-bs-theme="dark"] body {
   background-color: #1B2838;
   font-family: "Motiva Sans", Sans-serif;
@@ -72,6 +47,8 @@ canvas {
   background: linear-gradient(90deg, #06BFFF 0%, #2D73FF 100%);
   border-color: linear-gradient(90deg, #06BFFF 0%, #2D73FF 100%);
 }
+
+/* LOGIN PAGE */
 
 #register_form, #login_form {
   display: flex;
@@ -115,7 +92,7 @@ canvas {
   
 }
 
-/* PASSWORD CHECKBOX */
+/* Password checkbox */
 
 #pwd_checkbox {
   display:none;
@@ -140,6 +117,13 @@ h3 {
   font-size: 30px;
 }
 
+h5 {
+  font-family : "Roboto", Sans-serif;
+  color: white;
+  text-align: center;
+  margin-top: 10px;
+}
+
 /* Add a green text color and a checkmark when the requirements are right */
 .valid {
   color: #46c753;
@@ -161,6 +145,106 @@ h3 {
   left: -35px;
   content: "\2715";    
 }
+
+/* LOGIN PAGE */
+
+#top_box {
+  border-color: #181A21;
+  background-color: #181A21;
+  display: flex;
+  margin-top: 1vh;
+  height: 8vh;
+}
+
+#logout_button {
+  width: 30%;
+  min-width: 7vh;
+  max-width: 1vh;
+  height: 60%;
+}
+
+#profil_button {
+  width: 40%;
+  height: 60%;
+  min-width: 5vh;
+  max-width: 70vh;
+}
+
+#friendListBody {
+  border-color: #181A21;
+  background-color: #181A21;
+  margin-top: 1vh;
+  height: 89vh;
+}
+
+#friendListCard {
+}
+
+#friend_list_div {
+  width: 100%;
+}
+
+#game_launcher {
+  height: 89vh;
+  margin-top: 1vh;
+  border-color: #181A21;
+  background-color: #181A21;
+  
+}
+
+/* PROFIL PAGE */
+
+#profile_settings_card {
+  height: 89vh;
+  margin-top: 1vh;
+  border-color: #181A21;
+  background-color: #181A21;
+}
+
+#match_history {
+  height: 89vh;
+  margin-top: 1vh;
+  border-color: #181A21;
+  background-color: #181A21;
+}
+
+#popup2fa {
+  border-color: #32353c;
+  background-color: #32353c;
+  width: 20vh;
+}
+
+.blockquote-figure {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+#profilRightSide {
+  margin-top: 1vh;
+}
+
+#avatar_upload_form {
+
+}
+
+#profilLeftSide .element {
+  margin-bottom: 100px;
+}
+
+#profilRightSide .element {
+  margin-bottom: 50px;
+}
+
+#save_button {
+}
+
+#btn_2fa {
+  justify-content: center;
+  display: flex;
+  margin-bottom: 10vh;
+}
+ 
                                     /* GRAPHIC CHARTER */
 
 /*

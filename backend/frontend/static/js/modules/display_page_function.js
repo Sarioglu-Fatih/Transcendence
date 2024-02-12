@@ -10,7 +10,7 @@ import { closeAllWebSockets } from "./utils.js";
 
 
 function hideAllDivs() {
-    hideDivs(["login_page", "home_page", "profil_page"]);
+    hideDivs(["login_page", "home_page", "profil_page", "error404", "top_box_div"]);
 }
 
 function displayLoginPage() {
@@ -28,7 +28,7 @@ function error404() {
 
 async function displayProfilPage(path) {
     history.pushState({}, '', path);
-    hideAllDivs();
+    hideDivs(["login_page", "home_page", "profil page", "error404"]);
     put_match_history_html();
     put_top_box_form_html();
     closeAllWebSockets();
