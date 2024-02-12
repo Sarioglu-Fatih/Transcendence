@@ -20,10 +20,6 @@
   color: inherit; /* Inherit text color from the parent */
 }
 
-.element {
-  margin-bottom: 200px;
-}
-
 .error {
   border: 1px solid red;
 }
@@ -37,10 +33,6 @@
 
 canvas {
   border: 1px solid black;
-}
-
-#2FA_button {
-  right: 100px;
 }
 
 [data-bs-theme="dark"] body {
@@ -185,6 +177,13 @@ h5 {
   height: 89vh;
 }
 
+#friendListCard {
+}
+
+#friend_list_div {
+  width: 100%;
+}
+
 #game_launcher {
   height: 89vh;
   margin-top: 1vh;
@@ -202,6 +201,50 @@ h5 {
   background-color: #181A21;
 }
 
+#match_history {
+  height: 89vh;
+  margin-top: 1vh;
+  border-color: #181A21;
+  background-color: #181A21;
+}
+
+#popup2fa {
+  border-color: #32353c;
+  background-color: #32353c;
+  width: 20vh;
+}
+
+.blockquote-figure {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+#profilRightSide {
+  margin-top: 1vh;
+}
+
+#avatar_upload_form {
+
+}
+
+#profilLeftSide .element {
+  margin-bottom: 100px;
+}
+
+#profilRightSide .element {
+  margin-bottom: 50px;
+}
+
+#save_button {
+}
+
+#btn_2fa {
+  justify-content: center;
+  display: flex;
+  margin-bottom: 10vh;
+}
+ 
                                     /* GRAPHIC CHARTER */
 
 /*

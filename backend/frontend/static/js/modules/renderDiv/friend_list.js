@@ -5,7 +5,7 @@ function put_friend_list_form_html() {
     friend_list_div.innerHTML = `
     <div class="card" id="friendListBody">                     
           <h5>Friends</h5>
-          <div class="card-body" id="friendListCard"></div>
+          <div class="card-body col-md-6 d-flex justify-content-center align-items-center" id="friendListCard"></div>
     </div>
     `;
     friend_list(); 
