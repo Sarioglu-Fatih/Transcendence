@@ -7,7 +7,7 @@ function put_top_box_form_html() {
     var top_box_div = document.getElementById("top_box_div");
     top_box_div.innerHTML = `  
     <div class="card" id="top_box">
-        <div class="card-body d-flex flex-column justify-content-between" style="width:100vw;">
+        <div class="card-body d-flex flex-column justify-content-center">
             <div class="row justify-content-center">
               <div class="col-md-4 col-sm-3">
                 <div class="img img-fluid" id="avatar">

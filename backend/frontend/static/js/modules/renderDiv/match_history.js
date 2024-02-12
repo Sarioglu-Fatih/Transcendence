@@ -3,8 +3,8 @@ import { makeApiRequest } from "../utils.js";
 function put_match_history_html() {
     var match_history_div = document.getElementById("match_history_div");
     match_history_div.innerHTML = `  
-    <div class="card">                      
-        <div class="card-body" id="history">
+    <div class="card" id="match_history">                      
+        <div class="card-body">
             <p>History</p>
         </div>
         <div class="card-footer" id="history_footer">
