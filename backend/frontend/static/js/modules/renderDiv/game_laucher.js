@@ -1,5 +1,6 @@
 import { launchGame , pseudoCheck} from "../pong.js"
 import { hideDivs, showDivs } from "../utils.js";
+import {displayHomePage} from "../display_page_function.js"
 
 function put_game_launcher_form_html() {
     var game_launcher_div = document.getElementById("game_launcher_div");
@@ -16,7 +17,7 @@ function put_game_launcher_form_html() {
             </div>
             <div id ="pong_launcher"></div>
         </div>
-    </div>
+        
     </div>
     `;
 
@@ -43,6 +44,13 @@ function put_game_launcher_form_html() {
             pong_launcher.innerHTML = `<p class="error-msg">${err.message}</p>`;
         }
     })
+
+    // hideDivs(['replay'])
+    // const logoutBtn = document.getElementById('replay_button');
+    //     logoutBtn.addEventListener('click', () => {
+    //         event.preventDefault();
+    //         displayHomePage();
+    //     });
 
 }
 

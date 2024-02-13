@@ -87,11 +87,9 @@ function launchGame(mode) {
     var winner = '';
 
     socket.addEventListener('message', (event) => {
-        //console.log('Received message from server:', event.data);
         // Parse the JSON string
         const data = JSON.parse(event.data);
         // Extract values as integers
-        console.log(data);
         if (data.type === 'position_update'){
             var p1 = parseInt(data.p1);
             var p2 = parseInt(data.p2);
@@ -190,15 +188,16 @@ function drawPong(player1, player2, bx, by, p1, p2, score1, score2, winner) {
         ctx.fillStyle = '#fff';
         ctx.textAlign = "center";
         ctx.fillText(winner + ' WON!', 858 / 2, 525 / 2);
+        showDivs(["replay"]);
         return;
     }
-    ctx.beginPath();
-    ctx.setLineDash([5, 15]);
-    ctx.moveTo(canvas.width / 2, 0);
-    ctx.lineTo(canvas.width / 2, canvas.height);
-    ctx.strokeStyle = '#fff';
-    ctx.stroke();
-    ctx.setLineDash([]);
+    // ctx.beginPath();
+    // ctx.setLineDash([5, 15]);
+    // ctx.moveTo(canvas.width / 2, 0);
+    // ctx.lineTo(canvas.width / 2, canvas.height);
+    // ctx.strokeStyle = '#fff';
+    // ctx.stroke();
+    // ctx.setLineDash([]);
 
     // Draw paddles
     ctx.fillStyle = '#fff';
@@ -213,14 +212,14 @@ function drawPong(player1, player2, bx, by, p1, p2, score1, score2, winner) {
     ctx.closePath();
 
     // Draw player scores
-    ctx.font = '20px Arial';
-    ctx.fillStyle = '#fff';
-    ctx.textAlign = "left";
-    ctx.fillText(player1 + ':' + score1, 30, 30);
-    ctx.textAlign = "right";
-    ctx.fillText(player2 + ':' + score2, 828, 30);
-    ctx.textAlign = 'center';
-    ctx.fillText("PONG", 858 / 2, 30);
+    // ctx.font = '20px Arial';
+    // ctx.fillStyle = '#fff';
+    // ctx.textAlign = "left";
+    // ctx.fillText(player1 + ':' + score1, 30, 30);
+    // ctx.textAlign = "right";
+    // ctx.fillText(player2 + ':' + score2, 828, 30);
+    // ctx.textAlign = 'center';
+    // ctx.fillText("PONG", 858 / 2, 30);
 }
 
 
