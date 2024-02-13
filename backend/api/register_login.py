@@ -124,8 +124,11 @@ def updateUser(request):
 	user = request.user
 	if User.objects.filter(username=data.username).exists():
 		return HttpResponse(reason="Conflict: Username already exists.", status=409)
-	if User.objects.filter(pseudo=data.pseudo).exists():
-		return HttpResponse(reason="Conflict: Pseudo already exists.", status=410)
+	print("-------", data.pseudo, "----------")
+	print(data)
+	if (data.pseudo != ""):
+		if User.objects.filter(pseudo=data.pseudo).exists():
+			return HttpResponse(reason="Conflict: Pseudo already exists.", status=410)
 	if User.objects.filter(email=data.email).exists():
 		return HttpResponse(reason="Conflict: Email already exists.", status=411)
 	if (user.user_is_in_game or user.user_is_looking_tournament or user.user_is_looking_game):
