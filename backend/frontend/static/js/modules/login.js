@@ -1,6 +1,6 @@
 import {getCookie, makeApiRequest,  makeApiRequestPost} from './utils.js'
 import { check2faStatus } from './two_fa.js';
-import { displayHomePage } from './display_page_function.js';
+import { displayHomePage, error404 } from './display_page_function.js';
 
 async function send_TOTP(token, username) {
   try {
@@ -9,6 +9,7 @@ async function send_TOTP(token, username) {
       'username': username
     };
     const response = await makeApiRequestPost("check_totp", body);
+    return response
   }
   catch (error) {
     console.error('Error login user:', error);
@@ -31,7 +32,10 @@ async function login() {
         if (response.status === 222){
           const token = prompt("enter code biatch")
           console.log(token);
-          await send_TOTP(token, username);
+          const response_TOPT = await send_TOTP(token, username);
+          if (!response_TOPT.ok){
+            throw new Error("Error in sending TOTP")
+          }
         }
         displayHomePage();
       }
