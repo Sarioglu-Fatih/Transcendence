@@ -51,7 +51,8 @@ async function match_history() {
                 nextMatches.forEach(game => {
                     const cardElement = document.createElement('div');
                     cardElement.classList.add('card', 'text-center', 'mb-3');
-
+                    cardElement.style.backgroundColor = "#32353c";
+                    cardElement.style.borderColor = "#32353c";
                     // Create card body
                     const cardBodyElement = document.createElement('div');
                     cardBodyElement.classList.add('card-body');
@@ -89,7 +90,9 @@ async function match_history() {
                     const cardFooterElement = document.createElement('div');
                     cardFooterElement.classList.add('card-footer', 'text-muted');
                     cardFooterElement.innerHTML = `<p class="card-text">Date: ${formattedDate}</p>`; // Replace with desired footer content
-
+                    cardFooterElement.style.backgroundColor = "#32353c";
+                    cardFooterElement.style.borderColor = "#32353c";
+   
                     // Append the card body and footer to the card
                     cardElement.appendChild(cardBodyElement);
                     cardElement.appendChild(cardFooterElement);
