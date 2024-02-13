@@ -7,7 +7,8 @@ async function registerUser() {
     let body = {
         'username': username,
         'email': email,
-        'password': password
+        'password': password,
+        'pseudo': ""
     }
 	console.log("Les infos du form:", body);
 
@@ -23,12 +24,14 @@ async function registerUser() {
 async function updateUser() {
     console.log("update_user")
     var username = document.getElementById("updateUsername").value; // Get info from the register form
+    var pseudo = document.getElementById("updatePseudo").value;
     var email = document.getElementById("updateEmail").value;
     var password = document.getElementById("updatePassword").value;
     let body = {
         'username': username,
         'email': email,
-        'password': password
+        'password': password,
+        'pseudo': pseudo
     }
     console.log(body);
 

@@ -22,6 +22,7 @@ class registerPostParameters():
 	username: str
 	email: str
 	password: str
+	pseudo : str
 
 
 def create_user(request):
@@ -114,24 +115,32 @@ def updateUser(request):
 			data = registerPostParameters(**json.loads(request.body))
 	except Exception  as e:   
 		return HttpResponse(status=400, reason="Bad request: " + str(e))
-	regexUsername = r'^[a-zA-Z0-9_-]+$'																# register page parsing
+	print("======================================")
+	regexUsername = r'^[a-zA-Z0-9_-]+$'	
+	regexPseudo = r'^[a-zA-Z0-9_-]+$'																# register page parsing
 	regexEmail = r'\A\S+@\S+\.\S+\Z'
 	secRegexEmail = r'^[a-zA-Z0-9@.-]+$'
 	regexPwd = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
 	user = request.user
 	if User.objects.filter(username=data.username).exists():
 		return HttpResponse(reason="Conflict: Username already exists.", status=409)
+	if User.objects.filter(pseudo=data.pseudo).exists():
+		return HttpResponse(reason="Conflict: Pseudo already exists.", status=410)
 	if User.objects.filter(email=data.email).exists():
-		return HttpResponse(reason="Conflict: Email already exists.", status=409)
+		return HttpResponse(reason="Conflict: Email already exists.", status=411)
 	if (user.user_is_in_game or user.user_is_looking_tournament or user.user_is_looking_game):
 		return HttpResponse(reason="Can't change info while in game.", status=454)
 	if (data.username):
 		if not re.match(regexUsername, user.username):
-			return JsonResponse({'error': 'Username not valide'})
+			return JsonResponse({'error': 'Username not valid'})
 		user.username = data.username
+	if (data.pseudo):
+		if not re.match(regexPseudo, data.pseudo):
+			return JsonResponse({'error': 'pseudo not valid'}, status=476)
+		user.pseudo = data.pseudo
 	if (data.email):
-		if not (re.match(regexEmail, user.email) and re.match(secRegexEmail, user.email)):
-			return JsonResponse({'error': 'Email not valide'})
+		if not (re.match(regexEmail, data.email) and re.match(secRegexEmail, user.email)):
+			return JsonResponse({'error': 'Email not valid'})
 		user.email = data.email
 	if (data.password):
 		if  not re.match(regexPwd, data.password):

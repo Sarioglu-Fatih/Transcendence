@@ -223,6 +223,10 @@ async function updateFormParse() {
     var inputUsername = document.getElementById('updateUsername');   // update page parsing
     var userName = inputUsername.value;
     var username_regex = /^[a-zA-Z0-9-_]+$/;
+
+    var inputPseudo = document.getElementById('updatePseudo');   // update page parsing
+    var Pseudo = inputPseudo.value;
+    var Pseudo_regex = /^[a-zA-Z0-9-_]+$/;
     
     
     var inputEmail = document.getElementById('updateEmail');
@@ -241,7 +245,15 @@ async function updateFormParse() {
     }
     else {
         updateUsernameError.textContent = "Please enter letters, numbers, '-' or '_'."
-        console.log("Username not valide");
+        console.log("Username not valid");
+        isValid = false;
+    }
+    if (Pseudo_regex.test(Pseudo) || (Pseudo === null || Pseudo === undefined || Pseudo === '')) {
+        document.getElementById('updatePseudoError').innerHTML = '';
+    }
+    else {
+        updatePseudoError.textContent = "Please enter letters, numbers, '-' or '_'."
+        console.log("Pseudo not valid");
         isValid = false;
     }
     if ((regex.test(userEmail) && secRegexEmail.test(userEmail)) || (userEmail === null || userEmail === undefined || userEmail === '')) {
@@ -258,13 +270,13 @@ async function updateFormParse() {
     }
     else {
         updatePasswordError.textContent = "Password must contain the following: lowercase letter, uppercase letter, number, 8 characters and special character(!@#$%&?)"
-        console.log("Username not valide");
+        console.log("Password not valid");
         isValid = false;
     }
     if (isValid) {
         let updateValue = await updateUser();
         if (updateValue == "error")
-        return ;
+            return ;
         document.getElementById('update_form').reset();
         if (userName)
         {
@@ -272,7 +284,7 @@ async function updateFormParse() {
             var newPath = path + userName;
             displayProfilPage(newPath);
         }
-        else if (userEmail)
+        else if (userEmail || Pseudo)
         {
             displayProfilPage(window.location.pathname);
         }
