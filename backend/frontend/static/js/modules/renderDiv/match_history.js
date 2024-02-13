@@ -4,7 +4,7 @@ function put_match_history_html() {
     var match_history_div = document.getElementById("match_history_div");
     match_history_div.innerHTML = `  
     <div class="card" id="match_history">                      
-        <div class="card-body">
+        <div class="card-body" id="history">
             <p>History</p>
         </div>
         <div class="card-footer" id="history_footer">

@@ -56,15 +56,18 @@ async function pseudoCheck() {
     }
 }
 
+
+
 function launchGame(mode) {
     const pong_launcher = document.getElementById("pong_launcher");
     const socketURL = 'wss://localhost:8000/ws/game/';
+    let canvas;
     pong_launcher.innerHTML = `
     <p>Looking for Game</p>
     <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Loading...</span>
     </div>`
-    
+
     const socket = createWebSocket(socketURL);
     const jwtToken = getCookie('jwt_token');
     // Connection opened
@@ -102,12 +105,14 @@ function launchGame(mode) {
         else if (data.type === 'match_info'){
             player1 = data.player1;
             player2 = data.player2;
+            pong_launcher.innerHTML = `<canvas id="pong" width="858" height="525"></canvas>`
+            canvas = document.getElementById('pong');
         }
         else if (data.type === 'game_end') {
             winner = data.winner;
         }
 
-        drawPong(player1, player2, bx, by, p1, p2, score1, score2, winner);
+        drawPong(canvas, player1, player2, bx, by, p1, p2, score1, score2, winner);
     });
 
     // Connection closed
@@ -175,10 +180,7 @@ function launchGame(mode) {
 
 
 
-function drawPong(player1, player2, bx, by, p1, p2, score1, score2, winner) {
-    const pong_launcher = document.getElementById("pong_launcher");
-    pong_launcher.innerHTML = `<canvas id="pong" width="858" height="525"></canvas>`
-    const canvas = document.getElementById('pong');
+function drawPong(canvas, player1, player2, bx, by, p1, p2, score1, score2, winner) {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -191,13 +193,13 @@ function drawPong(player1, player2, bx, by, p1, p2, score1, score2, winner) {
         showDivs(["replay"]);
         return;
     }
-    // ctx.beginPath();
-    // ctx.setLineDash([5, 15]);
-    // ctx.moveTo(canvas.width / 2, 0);
-    // ctx.lineTo(canvas.width / 2, canvas.height);
-    // ctx.strokeStyle = '#fff';
-    // ctx.stroke();
-    // ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.setLineDash([5, 15]);
+    ctx.moveTo(canvas.width / 2, 0);
+    ctx.lineTo(canvas.width / 2, canvas.height);
+    ctx.strokeStyle = '#fff';
+    ctx.stroke();
+    ctx.setLineDash([]);
 
     // Draw paddles
     ctx.fillStyle = '#fff';
@@ -211,15 +213,15 @@ function drawPong(player1, player2, bx, by, p1, p2, score1, score2, winner) {
     ctx.fill();
     ctx.closePath();
 
-    // Draw player scores
-    // ctx.font = '20px Arial';
-    // ctx.fillStyle = '#fff';
-    // ctx.textAlign = "left";
-    // ctx.fillText(player1 + ':' + score1, 30, 30);
-    // ctx.textAlign = "right";
-    // ctx.fillText(player2 + ':' + score2, 828, 30);
-    // ctx.textAlign = 'center';
-    // ctx.fillText("PONG", 858 / 2, 30);
+    //Draw player scores
+    ctx.font = '20px Arial';
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = "left";
+    ctx.fillText(player1 + ':' + score1, 30, 30);
+    ctx.textAlign = "right";
+    ctx.fillText(player2 + ':' + score2, 828, 30);
+    ctx.textAlign = 'center';
+    ctx.fillText("PONG", 858 / 2, 30);
 }
 
 

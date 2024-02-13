@@ -17,7 +17,9 @@ function put_game_launcher_form_html() {
             </div>
             <div id ="pong_launcher"></div>
         </div>
-        
+        <div class="card-footer text-center" id="replay">
+            <button class="btn btn-primary btn-block" id="replay_button">Replay</button>
+        </div>    
     </div>
     `;
 
@@ -45,12 +47,12 @@ function put_game_launcher_form_html() {
         }
     })
 
-    // hideDivs(['replay'])
-    // const logoutBtn = document.getElementById('replay_button');
-    //     logoutBtn.addEventListener('click', () => {
-    //         event.preventDefault();
-    //         displayHomePage();
-    //     });
+    hideDivs(['replay'])
+    const logoutBtn = document.getElementById('replay_button');
+        logoutBtn.addEventListener('click', () => {
+            event.preventDefault();
+            displayHomePage();
+        });
 
 }
 

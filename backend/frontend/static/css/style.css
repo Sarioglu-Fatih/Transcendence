@@ -192,6 +192,10 @@ h5 {
   
 }
 
+#replay_button{
+  margin-bottom: 1vh;
+}
+
 /* PROFIL PAGE */
 
 #profile_settings_card {

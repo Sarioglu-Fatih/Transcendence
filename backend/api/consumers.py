@@ -195,8 +195,8 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
         player = self.players.get(match.player1_id.id)
         opponent = self.players.get(match.player2_id.id)
         while p1_score < 5 and p2_score < 5:
-            b_pos_x += Vx * 1
-            b_pos_y += Vy * 1
+            b_pos_x += Vx * 6
+            b_pos_y += Vy * 6
 
             if b_pos_y < self.MARGIN or b_pos_y > (self.GAME_Y - self.MARGIN):
                 Vy = -Vy
@@ -239,7 +239,7 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
                     'p2_score': str(p2_score),
                 }
             )
-            await asyncio.sleep(0.015)
+            await asyncio.sleep(0.01)
             if (player['actif'] == False or opponent['actif'] == False):
                 break
         winner = await self.end_match(match, player, opponent, p1_score, p2_score, mode)
