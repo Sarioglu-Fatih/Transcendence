@@ -283,12 +283,8 @@ async function updateFormParse() {
 }
 
 function removeCharactersAfterLastSlash(str) {
-    const lastSlashIndex = str.lastIndexOf('/');
-    if (lastSlashIndex !== -1) {
-        return str.substring(0, lastSlashIndex + 1);
-    } else {
-        return str;
-    }
+    var secondSlashIndex = str.indexOf('/', str.indexOf('/') + 1);
+    return str.substring(0, secondSlashIndex + 1);
 }
 
 
