@@ -39,7 +39,7 @@ document.onvisibilitychange = function() {
     console.log("leaving")
     makeApiRequestPatch('change_user_status/leaving/');
   }
-  else {
+  else if (document.onvisibilitychange  === 'visible') {
     console.log("arriving")
     makeApiRequestPatch('change_user_status/arriving/');
   }
