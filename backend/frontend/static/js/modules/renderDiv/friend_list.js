@@ -5,7 +5,7 @@ function put_friend_list_form_html() {
     friend_list_div.innerHTML = `
     <div class="card" id="friendListBody">                     
           <h5>Friends</h5>
-          <div class="card-body col-md-6 " id="friendListCard"></div>
+          <div class="card-body d-flex flex-column" id="friendListCard"></div>
     </div>
     `;
     friend_list(); 
@@ -45,6 +45,8 @@ async function friend_list() {
     data.friend_list.forEach(friend => {
       var friendElement = document.createElement('div');
       friendElement.classList.add('card', 'text-center', 'mb-3');
+      friendElement.style.backgroundColor = "#32353c";
+      friendElement.style.borderColor = "#32353c";
       var color = '#ff0000';
       if (friend.user_is_in_game) {
         color = '#ff9900';
@@ -62,7 +64,7 @@ async function friend_list() {
         <div class="row">
           <div class="col">
             <span class="friend-status-dot" style="background-color: ${color}"></span>
-            <button class="btn friend-button">${friend.pseudo}</button>
+            <button class="btn friend-button" >${friend.pseudo}</button>
           </div>
         </div>`;
       friendListElement.appendChild(friendElement);
