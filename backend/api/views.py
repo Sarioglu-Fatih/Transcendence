@@ -57,6 +57,8 @@ def upload_avatar(request):
 			os.remove(user.avatar.path) 
 		form.save()
 		return HttpResponse(status=200)
+	else:
+		return HttpResponse(status=400)
 
 
 @login_required	

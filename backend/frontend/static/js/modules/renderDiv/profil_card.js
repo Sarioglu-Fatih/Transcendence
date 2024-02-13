@@ -191,28 +191,28 @@ async function renderProfilPage() {
         let lose_string = userData.lose.toString();
         
         if (userData.username){
-            username_type.textContent = "username : ";
+            username_type.textContent = "Username : ";
             username_type.textContent += userData.username;
         }
         else
         username_type.textContent = '';
         
-        pseudo_type.textContent = "pseudo   : ";
+        pseudo_type.textContent = "Pseudo   : ";
         pseudo_type.textContent += userData.pseudo;
         
         if (userData.email){
-            email_type.textContent = "email     : ";
+            email_type.textContent = "Email     : ";
             email_type.textContent += userData.email;
             isHimself = true;
         }
         else
         email_type.textContent = "";
         
-        resulte_type.textContent = "win  ";
+        resulte_type.textContent = "Win  ";
         resulte_type.textContent += win_string;
         resulte_type.textContent += " : ";
         resulte_type.textContent += lose_string;
-        resulte_type.textContent += "  lose";
+        resulte_type.textContent += "  Lose";
         return (isHimself);
     }
     catch (err) {
