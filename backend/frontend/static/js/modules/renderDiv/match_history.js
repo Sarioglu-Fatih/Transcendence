@@ -5,7 +5,7 @@ function put_match_history_html() {
     match_history_div.innerHTML = `  
     <div class="card" id="match_history">                      
         <div class="card-body">
-            <p>History</p>
+            <h5>History</h5>
         </div>
         <div class="card-footer" id="history_footer">
             <div class="row">
