@@ -177,9 +177,6 @@ h5 {
   height: 89vh;
 }
 
-#friendListCard {
-}
-
 #friend_list_div {
   width: 100%;
 }
@@ -247,7 +244,6 @@ h5 {
 
 #upload_avatar_button {
   margin-top: 10px;
-  justify-content: end;
 }
  
                                     /* GRAPHIC CHARTER */
