@@ -1,20 +1,33 @@
 import {hideDivs, makeApiRequest, showDivs, makeApiRequestPost, getCookie} from './utils.js'
-import { createWebSocket } from './utils.js';
+import { createWebSocket, IP } from './utils.js';
+
 
 async function addPseudo() {
+    var pseudo_regex = /^[a-zA-Z0-9-_]+$/;
     const pseudo = document.getElementById('pseudo').value;
     console.log(pseudo);
-    const body = {
-        'pseudo': pseudo,
-    };
-
-    const response = await makeApiRequestPost("registerpseudo", body);
-    if (response.ok) {
-        console.log('Pseudo registered successfully', response);
-    } else {
-        console.error('Failed to register user:', response.statusText);
+    if (pseudo_regex.test(pseudo))
+    {   
+        document.getElementById('pseudoError').innerHTML = '';
+        const body = {
+            'pseudo': pseudo,
+        };
+        const response = await makeApiRequestPost("registerpseudo", body);
+        if (response.ok) {
+            console.log('Pseudo registered successfully', response);
+        } else {
+            document.getElementById('pseudoError').innerHTML = "Pseudo already taken"
+            console.error('Failed to register pseudo:', response.statusText); 
+            throw new Error('Failed to register pseudo');
+        };
+    }
+    else
+    {
+        document.getElementById('pseudoError').innerHTML = "Please enter letters, numbers, '-' or '_'."
+        console.error('Failed to register pseudo:', response.statusText);
         throw new Error('Failed to register pseudo');
     }
+
 }
 
 async function pseudoCheck() {
@@ -33,6 +46,7 @@ async function pseudoCheck() {
                     <form id="pseudo_form">
                         <label for="pseudo" class="form-label">Pseudo</label>
                         <input type="pseudo" class="form-control" id="pseudo">
+                        <span id="pseudoError" class="error-message"></span>
                         <div class="container d-flex justify-content-center mt-4">
                             <button id="submit_pseudo_button" class="btn btn-primary">Submit</button>
                         </div>
@@ -60,7 +74,7 @@ async function pseudoCheck() {
 
 function launchGame(mode) {
     const pong_launcher = document.getElementById("pong_launcher");
-    const socketURL = 'wss://localhost:8000/ws/game/';
+    const socketURL = `wss://${IP}:8000/ws/game/`;
     let canvas;
     pong_launcher.innerHTML = `
     <p>Looking for Game</p>

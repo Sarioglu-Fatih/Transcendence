@@ -1,9 +1,9 @@
 import {login} from "../login.js"
 import {displayHomePage} from "../display_page_function.js"
 import { checkAuth42 } from "../auth.js";
+import { IP } from "../utils.js";
 
 async function put_login_form_html() {
-    // await checkAuth42();
     var login_div = document.getElementById("login");
     login_div.innerHTML = `  
     <form id="login_form" class="login_form">
@@ -60,7 +60,7 @@ async function put_login_form_html() {
         
         var baseUrl = 'https://api.intra.42.fr/oauth/authorize?';
         var client_id = '&client_id=' + 'u-s4t2ud-e95dac742f419c01abf9f266b8219d8be7c13613ebcc4b3a64edc9e84beac84c';
-        var redirect_uri = '&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fhome';
+        var redirect_uri = `&redirect_uri=https%3A%2F%2F${IP}%3A8000%2Fhome`;
         var response_type = '&response_type=code';
         var random_state = '&state=' + state;
         var scope = '&scope=public';

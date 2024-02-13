@@ -177,6 +177,7 @@ h5 {
   height: 89vh;
 }
 
+
 #friend_list_div {
   width: 100%;
 }
@@ -229,12 +230,15 @@ h5 {
 
 }
 
+#profilLeftSide{
+  margin-top: 75px;
+}
 #profilLeftSide .element {
   margin-bottom: 100px;
 }
 
 #profilRightSide .element {
-  margin-bottom: 50px;
+  margin-bottom: 60px;
 }
 
 #save_button {

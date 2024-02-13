@@ -53,7 +53,6 @@ function put_game_launcher_form_html() {
             event.preventDefault();
             displayHomePage();
         });
-
 }
 
 export { put_game_launcher_form_html };

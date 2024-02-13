@@ -1,4 +1,4 @@
-import { makeApiRequest } from "../utils.js";
+import { makeApiRequest, IP } from "../utils.js";
 
 function put_match_history_html() {
     var match_history_div = document.getElementById("match_history_div");
@@ -40,7 +40,6 @@ async function match_history() {
         const allGamesArray = JSON.parse(userData.all_games);
         if (!allGamesArray)
             throw new Error('Invalid or missing data for all_games');
-        console.log("allGamesArray :",allGamesArray);
 
         const loadfiveMatches = () => {
             history.innerHTML = ""
@@ -63,13 +62,13 @@ async function match_history() {
                     cardBodyElement.innerHTML = `
                         <div class="row">
                             <div class="col">
-                            <p><a href="https://localhost:8000/profil/${game.fields.player1_username}">${game.fields.player1_username}</a></p>
+                            <p><a href="https://${IP}:8000/profil/${game.fields.player1_username}">${game.fields.player1_username}</a></p>
                             </div>
                             <div class="col">
                                 <p>VS</p>
                             </div>
                             <div class="col">
-                                <p><a href="https://localhost:8000/profil/${game.fields.player2_username}">${game.fields.player2_username}</a></p>
+                                <p><a href="https://${IP}:8000/profil/${game.fields.player2_username}">${game.fields.player2_username}</a></p>
                             </div>
                         </div>
                         <div class="row">

@@ -1,5 +1,7 @@
 import { logout } from './logout.js'
 
+var IP = '10.12.6.8';
+
 function hideDivs(divIds) {
 divIds.forEach(function (divId) {
 	var targetDiv = document.getElementById(divId);
@@ -36,7 +38,7 @@ function getCookie(name) {
 
 async function makeApiRequest(endpoint) {
 	try {
-		const response = await fetch(`https://localhost:8000/api/${endpoint}`, {
+		const response = await fetch(`https://${IP}:8000/api/${endpoint}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
@@ -59,7 +61,7 @@ async function makeApiRequestPost(endpoint, body) {
 	try {
 		await makeApiRequest('get_csrf_token');
         const csrfToken = getCookie('csrftoken');
-        const response = await fetch(`https://localhost:8000/api/${endpoint}`, { // where we send data
+        const response = await fetch(`https://${IP}:8000/api/${endpoint}`, { // where we send data
             method: 'POST', // post = sending data
             headers: {
                 'Content-Type': 'application/json', //data type we send
@@ -79,7 +81,7 @@ async function makeApiRequestPatch(endpoint, body) {
 	try {
 		await makeApiRequest('get_csrf_token');
         const csrfToken = getCookie('csrftoken');
-        const response = await fetch(`https://localhost:8000/api/${endpoint}`, { // where we send data
+        const response = await fetch(`https://${IP}:8000/api/${endpoint}`, { // where we send data
             method: 'PATCH', 
             headers: {
                 'Content-Type': 'application/json', 
@@ -96,7 +98,7 @@ async function makeApiRequestPatch(endpoint, body) {
 }
 
 async function handleTokenExpiration() {
-	const response = await fetch('https://localhost:8000/api/token/refresh/', {
+	const response = await fetch(`https://${IP}:8000/api/token/refresh/`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -142,4 +144,4 @@ function closeAllWebSockets() {
 }
 
 
-export { getCookie, makeApiRequest, showDivs, hideDivs, makeApiRequestPost, makeApiRequestPatch ,createWebSocket, closeAllWebSockets }
+export { getCookie, makeApiRequest, showDivs, hideDivs, makeApiRequestPost, makeApiRequestPatch ,createWebSocket, closeAllWebSockets, IP }

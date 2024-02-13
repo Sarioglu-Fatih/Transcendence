@@ -170,18 +170,19 @@ CORS_ALLOW_CREDENTIALS = True
 
 CSRF_COOKIE_SECURE = True
 
+ip_value = os.getenv('IP')
 CSRF_TRUSTED_ORIGINS = [
-  'https://localhost:8000',
+  f'https://{ip_value}:8000',
   'https://10.12.4.8:8000'
 ]
 
 CORS_TRUSTED_ORIGINS = [
-	'https://localhost:8000',
+	f'https://{ip_value}:8000',
 	'https://10.12.4.8:8000'
 ]
 
 CORS_ALLOWED_ORIGINS = [
-	'https://localhost:8000',
+	f'https://{ip_value}:8000',
 	'https://10.12.4.8:8000',
 ]
 

@@ -12,10 +12,10 @@ async function put_profil_card_html() {
     <div class="card" id="profile_settings_card">                     
         <div class="card-body" style="flex:0 1 auto">
            
+        <div class="d-flex justify-content-center">
+            <button class="btn btn-primary" id="addFriend_button">Add friend</button>
+        </div>
             <form id="update_form" class="update_form">
-                <div class="d-flex justify-content-center">
-                    <button class="btn btn-primary" id="addFriend_button">Add friend</button>
-                </div>
                 <div class="row">
                     <div class="col-md-6 text-center" style="align-self:center" id="profilLeftSide">
                         <div class="element" id="username_key"></div>
@@ -24,23 +24,25 @@ async function put_profil_card_html() {
                         <div class="element" id="win_lose_key"></div>
                     </div>
                     <div class="col-md-4 element text-center" id="profilRightSide">
-                        <label for="inputUsername" class="form-label"></label>
+                        <label for="inputUsername" class="form-label  element"></label>
                         <input type="text" class="form-control" id="updateUsername" placeholder="Username" maxlength="16">
                         <span id="updateUsernameError" class="error-message"></span>
                         
-                        <label for="inputPseudo" class="form-label"></label>
+                        <div id="pseudo42">
+                        <label for="inputPseudo" class="form-label  element"></label>
                         <input type="text" class="form-control" id="updatePseudo" placeholder="Pseudo" maxlength="16">
                         <span id="updatePseudoError" class="error-message"></span>
+                        </div>
 
-                        <label for="inputEmail" class="form-label"></label>
+                        <label for="inputEmail" class="form-label  element"></label>
                         <input type="email" class="form-control" id="updateEmail" placeholder="yourmail@random.com" maxlength="50">
                         <span id="updateEmailError" class="error-message"></span>
-                        
-                        <label for="inputPassword" class="form-label"></label>
+                    
+                        <label for="inputPassword" class="form-label  element"></label>
                         <input type="password" class="form-control" id="updatePassword" placeholder="Password" maxlength="16">
                         <span id="updatePasswordError" class="error-message"></span>
                         
-                        <div class="card-footer text-center element">
+                        <div class="card-footer text-center element" id="save">
                             <button class="btn btn-primary" id="save_button">Save Change</button>
                         </div>
                         
@@ -78,7 +80,7 @@ async function put_profil_card_html() {
     `;
     await check_whos_profil();
     const updateForm = document.getElementById('update_form');
-    updateForm.addEventListener('submit', async (event) => {
+    updateForm.addEventListener('submit', async function (event) {
         event.preventDefault();
         updateFormParse();
     });
@@ -121,10 +123,10 @@ async function check_whos_profil() {
         let is42u = await is42user();
         if (isHimself == true) {
             hideDivs(["addFriend_button"]);
-            if (is42u)
-            hideDivs(["profilRightSide"]);
-            
-            
+            if (is42u){
+                hideDivs(["profilRightSide"]);
+                showDivs(["pseudo42", "save"])
+            }
         }
         else {
             const currentPath = window.location.pathname.substring(1);

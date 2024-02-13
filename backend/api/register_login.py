@@ -6,7 +6,7 @@ import random
 import string
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from dataclasses import dataclass
-from .models import User
+from .models import User, Match
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.sessions.models import Session
@@ -115,7 +115,6 @@ def updateUser(request):
 			data = registerPostParameters(**json.loads(request.body))
 	except Exception  as e:   
 		return HttpResponse(status=400, reason="Bad request: " + str(e))
-	print("======================================")
 	regexUsername = r'^[a-zA-Z0-9_-]+$'	
 	regexPseudo = r'^[a-zA-Z0-9_-]+$'																# register page parsing
 	regexEmail = r'\A\S+@\S+\.\S+\Z'
@@ -124,8 +123,6 @@ def updateUser(request):
 	user = request.user
 	if User.objects.filter(username=data.username).exists():
 		return HttpResponse(reason="Conflict: Username already exists.", status=409)
-	print("-------", data.pseudo, "----------")
-	print(data)
 	if (data.pseudo != ""):
 		if User.objects.filter(pseudo=data.pseudo).exists():
 			return HttpResponse(reason="Conflict: Pseudo already exists.", status=410)
@@ -140,6 +137,7 @@ def updateUser(request):
 	if (data.pseudo):
 		if not re.match(regexPseudo, data.pseudo):
 			return JsonResponse({'error': 'pseudo not valid'}, status=476)
+		Match.update_match_usernames(user.pseudo, data.pseudo)
 		user.pseudo = data.pseudo
 	if (data.email):
 		if not (re.match(regexEmail, data.email) and re.match(secRegexEmail, user.email)):
@@ -162,7 +160,7 @@ def auth42(request):
 			"client_id": os.getenv('CLIENT_ID'),
 			"client_secret": os.getenv('CLIENT_SECRET'),
 			"code": data.get('code'),
-			"redirect_uri": "https://localhost:8000/home",
+			"redirect_uri": "https://{ip_value}:8000/home",
 			"state": data.get('state')
 		}
 

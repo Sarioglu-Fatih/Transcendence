@@ -144,15 +144,12 @@ def isFriend(request, userToAddName):
 	if (not user_id):
 		return HttpResponseNotFound(status=404)    
 	currentUser = request.user
-	if (User.objects.filter(pseudo=userToAddName).exists):
-		print("exist")
+	if (not User.objects.filter(pseudo=userToAddName).exists):
+		return HttpResponseNotFound(status=404)
 	userToAdd = User.objects.get(pseudo=userToAddName)
-	print(userToAdd)
 	# userToAdd = get_object_or_404(User, username=userToAddName)
-	print(currentUser.friendlist.all())
 	is_friend = userToAdd in currentUser.friendlist.all()
-	print(is_friend)
-	if (is_friend):
+	if (is_friend or currentUser == userToAdd):
 		return HttpResponseNotFound(status=200)
 	return HttpResponseNotFound(status=400)
 
@@ -230,6 +227,7 @@ def isUserLoggedIn(request):
 		return HttpResponseNotFound(status=200)
 	
 def change_user_status(request, status):
+	print("====================================")
 	if request.method != 'PATCH':
 		return HttpResponseNotFound(status=404)
 	payload = decode_Payload(request)

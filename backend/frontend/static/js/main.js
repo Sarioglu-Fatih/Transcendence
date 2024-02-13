@@ -5,7 +5,6 @@ import { getCookie, makeApiRequest } from './modules/utils.js';
 import { makeApiRequestPatch } from './modules/utils.js';
 
 await checkAuth42();
-
 var path = window.location.pathname;
 if (!isUserLoggedIn())
 	history.pushState({}, '', '/login');
@@ -39,7 +38,7 @@ document.onvisibilitychange = function() {
     console.log("leaving")
     makeApiRequestPatch('change_user_status/leaving/');
   }
-  else if (document.onvisibilitychange  === 'visible') {
+  else {
     console.log("arriving")
     makeApiRequestPatch('change_user_status/arriving/');
   }

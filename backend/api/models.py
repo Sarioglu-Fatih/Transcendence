@@ -50,10 +50,10 @@ class User(AbstractUser):
 			self.player2_matches.exclude(win_lose=self.id)
 			.exclude(win_lose=0)
 			.count()
-    	)
+		)
 	
 	def get_all_games(self):
-        # Retrieve the last 5 games for the user
+		# Retrieve the last 5 games for the user
 		last_5_games = Match.objects.filter(Q(player1_id=self) | Q(player2_id=self)).order_by('-date')
 		serialized_games = serialize('json', last_5_games)
 		return serialized_games
@@ -83,6 +83,12 @@ class Match(models.Model):
 	p1_score = models.PositiveIntegerField(default=0)
 	p2_score = models.PositiveIntegerField(default=0)
 	win_lose = models.PositiveIntegerField(default=0)
+
+	def update_match_usernames(old_username, new_username):
+	# Update player1_username
+		Match.objects.filter(player1_username=old_username).update(player1_username=new_username)
+	# Update player2_username
+		Match.objects.filter(player2_username=old_username).update(player2_username=new_username)
 	
 
 	def __str__(self):
