@@ -248,6 +248,11 @@ h5 {
   display: flex;
   margin-bottom: 10vh;
 }
+
+#upload_avatar_button {
+  margin-top: 10px;
+  justify-content: end;
+}
  
                                     /* GRAPHIC CHARTER */
 
