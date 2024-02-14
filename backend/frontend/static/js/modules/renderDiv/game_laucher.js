@@ -22,7 +22,16 @@ function put_game_launcher_form_html() {
             </div>
             <div class="card-footer text-center" id="replay">
             <button class="btn btn-primary btn-block" id="replay_button">Replay</button>
-        </div>    
+        </div>
+        <div class="card-body d-flex justify-content-center align-items-center text-center"  id="controls_card">
+            <div class="row" id="controls_scheme">
+                  <div class="d-grid  col">
+                  <button class="btn btn-primary btn-block btn-lg" id="up">Up: W or ↑</button>
+                  <button class="btn btn-primary btn-block btn-lg" id="down">Down: S or ↓</button>
+                  </div>
+                  </div>
+            <div id ="controls_scheme"></div>
+        </div>  
     </div>
     `;
 
