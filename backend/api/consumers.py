@@ -85,7 +85,7 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 					return
 				async with self.update_lock:
 					if player['player'] == 'p1':
-						if data.get('content') == 's':
+						if data.get('content') == 's' or data.get('content') == 'ArrowDown':
 							if player['p1'] <= (self.GAME_Y - self.PADDLE_Y - self.MARGIN):
 								player['p1'] += self.PADDLE_SPEED
 								opponent['p1'] += self.PADDLE_SPEED
@@ -94,7 +94,7 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 								player['p1'] -= self.PADDLE_SPEED
 								opponent['p1'] -= self.PADDLE_SPEED
 					else:
-						if data.get('content') == 's':
+						if data.get('content') == 's' or data.get('content') == 'ArrowDown':
 							if player['p2'] <= (self.GAME_Y - self.PADDLE_Y - self.MARGIN):
 								player['p2'] += self.PADDLE_SPEED
 								opponent['p2'] += self.PADDLE_SPEED

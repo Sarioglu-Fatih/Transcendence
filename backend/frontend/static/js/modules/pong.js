@@ -1,4 +1,4 @@
-import {hideDivs, makeApiRequest, showDivs, makeApiRequestPost, getCookie} from './utils.js'
+import {hideDivs, makeApiRequest, showDivs, makeApiRequestPost, getCookie, closeAllWebSockets} from './utils.js'
 import { createWebSocket, IP } from './utils.js';
 
 
@@ -132,11 +132,11 @@ function launchGame(mode) {
     // Connection closed
     socket.addEventListener('close', (event) => {
         console.log('WebSocket connection closed:', event);
-        // if (event.code === 4001) {
-        //     pong_launcher.innerHTML = `<p>Can't launch game if already in game</p>`
-        // }
-        socket.close();
-        return;
+        if (event.code === 4001) {
+            pong_launcher.innerHTML = `<p>Can't launch game if already in game</p>`
+        }
+        closeAllWebSockets();
+        clearInterval(keyPressInterval);
     });
   
     // Connection error

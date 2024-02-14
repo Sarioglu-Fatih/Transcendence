@@ -1,6 +1,6 @@
 import { displayAvatar } from "../profilPage.js";
 import { makeApiRequest } from "../utils.js";
-import { displayProfilPage, displayLoginPage } from "../display_page_function.js";
+import { displayProfilPage, displayLoginPage, displayHomePage } from "../display_page_function.js";
 import { logout } from "../logout.js";
 
 function put_top_box_form_html() {
@@ -11,7 +11,7 @@ function put_top_box_form_html() {
             <div class="row justify-content-center">
               <div class="col-md-4 col-sm-3">
                 <div class="img img-fluid" id="avatar">
-                  <a id="homelink" href="#"  ><img id="avatar-image" class="avatar-image" src="" alt="user-avatar"></a>
+                  <img id="avatar-image" class="avatar-image" src="" alt="user-avatar">
                 </div>
               </div>
               <div class="col-md-4 d-flex col-sm-3 justify-content-center align-items-center">
@@ -41,17 +41,15 @@ function put_top_box_form_html() {
       if (path === `/profil/${data.username}/`){
         return;
       }
-      displayProfilPage(`/profil/${data.username}/`);
+      await displayProfilPage(`/profil/${data.username}/`);
     });
 
-    displayAvatar()
-    
-    const baseURL = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-    const homePageURL = '/home';
-    const fullHomePageURL = baseURL + homePageURL;
-    const homelink = document.getElementById('homelink');
-    homelink.href = fullHomePageURL;
-    
+    displayAvatar();
+    const avatar_image = document.getElementById('avatar-image');
+    avatar_image.addEventListener('click', (event) => {
+      event.preventDefault();
+      displayHomePage();
+    })
 }
 
 export { put_top_box_form_html };

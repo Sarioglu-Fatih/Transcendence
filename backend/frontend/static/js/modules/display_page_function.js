@@ -8,7 +8,7 @@ import { put_profil_card_html } from "./renderDiv/profil_card.js"
 import { put_match_history_html } from "./renderDiv/match_history.js"
 import { closeAllWebSockets } from "./utils.js";
 
-
+var isTopBoxDisplayed = false;
 function hideAllDivs() {
     hideDivs(["login_page", "home_page", "profil_page", "error404", "top_box_div"]);
 }
@@ -30,7 +30,10 @@ async function displayProfilPage(path) {
     history.pushState({}, '', path);
     hideDivs(["login_page", "home_page", "profil page", "error404"]);
     put_match_history_html();
-    put_top_box_form_html();
+    if (!isTopBoxDisplayed){
+        put_top_box_form_html();
+        isTopBoxDisplayed = true;
+    }
     closeAllWebSockets();
     try {
         await put_profil_card_html();
@@ -42,14 +45,28 @@ async function displayProfilPage(path) {
     }
 }
 
+function extractPathname() {
+    // Get the pathname from the current window location
+    const pathname = window.location.pathname;
+
+    // Remove any leading and trailing slashes
+    const trimmedPathname = pathname.replace(/^\/|\/$/g, '');
+
+    return `/${trimmedPathname}`;
+}
+
 function displayHomePage() {
     history.pushState({}, '', '/home');
-    hideAllDivs();
-    put_top_box_form_html();
+    if (!isTopBoxDisplayed){
+        put_top_box_form_html();
+        isTopBoxDisplayed = true;
+    }
+    console.log("hihi")
     put_game_launcher_form_html();
     put_friend_list_form_html();
     closeAllWebSockets();
-    showDivs(["top_box_div", "home_page"])
+    hideDivs(["login_page", "home_page", "profil_page", "error404", "top_box_div"]);
+    showDivs(["home_page", "top_box_div"])
 }
 
 function hideDivs(divIds) {

@@ -276,6 +276,14 @@ h5 {
   margin-top: 10px;
 }
  
+#replay {
+  margin-top: 10vh;
+}
+
+
+#login_page, #top_box_div, #home_page, #profil_page, #error404 {
+  display: none;
+}
                                     /* GRAPHIC CHARTER */
 
 /*
@@ -288,8 +296,3 @@ Linear Gradient Button :       linear-gradient(90deg, #06BFFF 0%, #2D73FF 100%)
 Grey Input Box :               #32353c
 
 */
-
-#replay {
-  margin-top: 10vh;
-}
-
