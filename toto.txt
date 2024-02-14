@@ -1,0 +1,20 @@
+curl 'https://localhost:8000/api/update/' \
+  -w "\n%{http_code}" \
+  -X 'PATCH' \
+  -H 'Accept: */*' \
+  -H 'Accept-Language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7' \
+  -H 'Connection: keep-alive' \
+  -H 'Content-Type: application/json' \
+  -H 'Cookie: refresh_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwNzk0NzM0OCwianRpIjoiNzIzMDkxNTJkNTllNDJmOTlhNjY1NjY2ZGI1NjliMDEiLCJ1c2VyX2lkIjoyfQ.PrvV94wYtGEHv7pb9WpT9r0ax5_w96ocmd878TpHYWk; jwt_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA3OTQ3MzQ4LCJqdGkiOiJhMjYxMjQ5NzJhZTY0ZjJmOWRkNjE5MjdjYzA5YWNmNCIsInVzZXJfaWQiOjJ9.7ig9o6hSP1HftEB2LosDm7hfZxGXhfk4wUtpAjvAlEc; csrftoken=Fux47BdsCurVLFvpVMnQNm5GcBHC18E4; sessionid=88r1678h1j2zanbww1yfvc6aqkopeucz' \
+  -H 'Origin: https://localhost:8000' \
+  -H 'Referer: https://localhost:8000/profil/kloox/' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36' \
+  -H 'X-CSRFToken: Fux47BdsCurVLFvpVMnQNm5GcBHC18E4' \
+  -H 'sec-ch-ua: "Chromium";v="122", "Not(A:Brand";v="24", "Google Chrome";v="122"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  --data-raw '{"username":"","email":"","password":"","pseudo":"ffff"}' \
+  --insecure
