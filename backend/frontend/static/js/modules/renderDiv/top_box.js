@@ -38,17 +38,22 @@ function put_top_box_form_html() {
       const response = await makeApiRequest("username");
       const data = await response.json()
       const path = window.location.pathname;
-      if (path === `/profil/${data.username}/`){
-        return;
+      if (path !== `/profil/${data.username}/`){
+        history.pushState({}, '', `/profil/${data.username}/`);
       }
-      await displayProfilPage(`/profil/${data.username}/`);
+      await displayProfilPage();
     });
 
     displayAvatar();
     const avatar_image = document.getElementById('avatar-image');
     avatar_image.addEventListener('click', (event) => {
       event.preventDefault();
+      const path = window.location.pathname;
+      if (path !== `/home`){
+        history.pushState({}, '', '/home');
+      }
       displayHomePage();
+      console.log("ici")
     })
 }
 

@@ -6,10 +6,10 @@ import { closeAllWebSockets } from "./utils.js";
 async function logout() {
     try {
       const response = await  makeApiRequestPatch('logout/')
+      history.pushState({}, '', '/login');
       if (response.ok) {
-        document.getElementById('emailError').innerHTML = '';
-        document.getElementById('usernameError').innerHTML = '';
-        history.pushState({}, '', '/login');
+        // document.getElementById('emailError').innerHTML = '';
+        // document.getElementById('usernameError').innerHTML = '';
         closeAllWebSockets();
         hideDivs(['top_box',  'game_launcher', 'friend_list', 'profil_page', 'profile_settings', 'history', 'avatar_upload_form']);
         showDivs(['div_register_form', 'div_login_form']);
