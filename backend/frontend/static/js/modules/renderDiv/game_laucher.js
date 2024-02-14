@@ -8,19 +8,19 @@ function put_game_launcher_form_html() {
     <div class="card" id="game_launcher">   
         <div class="card-body d-flex justify-content-center align-items-center text-center"  id="game_card">
             <div class="row" id="pong_button">
-              <div class="d-grid gap-2 col-4 ">
-                <button class="btn btn-primary btn-block btn-lg" id="play_button">Play</button>
+              <div class="d-grid col">
+                <button class="btn btn-primary btn-block btn-lg" id="play_button">Play online</button>
               </div>
-              <div class="d-grid gap-2 col-4 ">
+              <div class="d-grid  col">
                 <button class="btn btn-primary btn-block btn-lg" id="tournament">Tournament</button>
               </div>
-              <div class="d-grid gap-2 col-4 ">
+              <div class="d-grid  col">
                 <button class="btn btn-primary btn-block btn-lg" id="local">Local</button>
               </div>
               </div>
             <div id ="pong_launcher"></div>
-        </div>
-        <div class="card-footer text-center" id="replay">
+            </div>
+            <div class="card-footer text-center" id="replay">
             <button class="btn btn-primary btn-block" id="replay_button">Replay</button>
         </div>    
     </div>
