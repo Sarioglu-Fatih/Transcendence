@@ -117,10 +117,16 @@ def updateUser(request):
 		return HttpResponse(status=400, reason="Bad request: " + str(e))
 	regexUsername = r'^[a-zA-Z0-9_-]+$'	
 	regexPseudo = r'^[a-zA-Z0-9_-]+$'																# register page parsing
-	regexEmail = r'\A\S+@\S+\.\S+\Z'
+	regexEmail = r'\A[^%\s]+@\S+\.\S+\Z'
 	secRegexEmail = r'^[a-zA-Z0-9@.-]+$'
-	regexPwd = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
-	user = request.user
+	regexPwd = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!#%?&])[^\s]{8,}$'
+	payload = decode_Payload(request)
+	user_id = payload.get('user_id')
+	if (not user_id):
+		return HttpResponseNotFound(status=404)
+	if (not User.objects.filter(id=user_id)):
+		return HttpResponseNotFound(status=404)
+	user = User.objects.get(id=user_id)
 	if User.objects.filter(username=data.username).exists():
 		return HttpResponse(reason="Conflict: Username already exists.", status=409)
 	if (data.pseudo != ""):
@@ -131,8 +137,8 @@ def updateUser(request):
 	if (user.user_is_in_game or user.user_is_looking_tournament or user.user_is_looking_game):
 		return HttpResponse(reason="Can't change info while in game.", status=454)
 	if (data.username):
-		if not re.match(regexUsername, user.username):
-			return JsonResponse({'error': 'Username not valid'})
+		if not re.match(regexUsername, data.username):
+			return JsonResponse({'error': 'Username not valid'}, status=452)
 		user.username = data.username
 	if (data.pseudo):
 		if not re.match(regexPseudo, data.pseudo):
@@ -140,12 +146,12 @@ def updateUser(request):
 		Match.update_match_usernames(user.pseudo, data.pseudo)
 		user.pseudo = data.pseudo
 	if (data.email):
-		if not (re.match(regexEmail, data.email) and re.match(secRegexEmail, user.email)):
-			return JsonResponse({'error': 'Email not valid'})
+		if not (re.match(regexEmail, data.email) and re.match(secRegexEmail, data.email)):
+			return JsonResponse({'error': 'Email not valid'}, status=453)
 		user.email = data.email
 	if (data.password):
 		if  not re.match(regexPwd, data.password):
-			return JsonResponse({'error': "Special characters allowed : @$!%#?&"})
+			return JsonResponse({'error': "Special characters allowed : @$!%#?&"}, status=453)
 		user.password = make_password(data.password)
 	user.save()
 	return HttpResponse(status=200)
