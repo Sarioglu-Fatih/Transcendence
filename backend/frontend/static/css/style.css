@@ -83,13 +83,21 @@ canvas {
 }
 
 #authButton {
-  margin-top: 50px;
-  margin-left: 83px;
+  margin-top: 3vh;
+  margin-left: 84px;
   width: 150px;
   background: #00babc;
   border-color: #00babc;
   font-family: "FuturaPT", Sans-serif;
   
+}
+
+#login_button {
+  margin-top: 1vh;
+}
+
+#register_button {
+  margin-bottom: 2vh;
 }
 
 /* Password checkbox */
@@ -146,7 +154,7 @@ h5 {
   content: "\2715";    
 }
 
-/* LOGIN PAGE */
+/* HOMEPAGE */
 
 #top_box {
   border-color: #181A21;
