@@ -15,11 +15,11 @@ async function put_login_form_html() {
 
             <label for="inputPassword" class="form-label">Password</label>
             <input type="password" class="form-control"  id="login_Password" maxlength="16" required/>
+            <div class="card-footer text-center">
+                <button class="btn btn-primary" id="login_button">Login</button>
+            </div>
             <input class="authButton btn btn-primary" id="authButton" type="button" value="Log in with\n42" />
             </div>
-        <div class="card-footer text-center">
-            <button class="btn btn-primary" id="login_button">Login</button>
-        </div>
         </div>
     </form>
     `;
