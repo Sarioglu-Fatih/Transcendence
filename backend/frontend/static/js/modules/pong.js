@@ -135,6 +135,8 @@ function launchGame(mode) {
         // if (event.code === 4001) {
         //     pong_launcher.innerHTML = `<p>Can't launch game if already in game</p>`
         // }
+        socket.close();
+        return;
     });
   
     // Connection error

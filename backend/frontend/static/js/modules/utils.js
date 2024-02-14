@@ -81,6 +81,7 @@ async function makeApiRequestPatch(endpoint, body) {
 	try {
 		await makeApiRequest('get_csrf_token');
         const csrfToken = getCookie('csrftoken');
+		console.log(csrfToken)
         const response = await fetch(`https://${IP}:8000/api/${endpoint}`, { // where we send data
             method: 'PATCH', 
             headers: {

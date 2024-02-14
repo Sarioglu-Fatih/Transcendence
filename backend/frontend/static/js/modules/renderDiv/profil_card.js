@@ -24,24 +24,27 @@ async function put_profil_card_html() {
                         <div class="element" id="win_lose_key"></div>
                     </div>
                     <div class="col-md-4 element text-center" id="profilRightSide">
+                        <div id="input_username_div">
                         <label for="inputUsername" class="form-label  element"></label>
                         <input type="text" class="form-control" id="updateUsername" placeholder="Username" maxlength="16">
                         <span id="updateUsernameError" class="error-message"></span>
-                        
+                        </div>
                         <div id="pseudo42">
-                        <label for="inputPseudo" class="form-label  element"></label>
-                        <input type="text" class="form-control" id="updatePseudo" placeholder="Pseudo" maxlength="16">
-                        <span id="updatePseudoError" class="error-message"></span>
+                            <label for="inputPseudo" class="form-label  element"></label>
+                            <input type="text" class="form-control" id="updatePseudo" placeholder="Pseudo" maxlength="16">
+                            <span id="updatePseudoError" class="error-message"></span>
                         </div>
 
+                        <div id="input_email_div">
                         <label for="inputEmail" class="form-label  element"></label>
                         <input type="email" class="form-control" id="updateEmail" placeholder="yourmail@random.com" maxlength="50">
                         <span id="updateEmailError" class="error-message"></span>
-                    
+                        </div>
+                        <div id="input_pwd_div">
                         <label for="inputPassword" class="form-label  element"></label>
                         <input type="password" class="form-control" id="updatePassword" placeholder="Password" maxlength="16">
                         <span id="updatePasswordError" class="error-message"></span>
-                        
+                        </div>
                         <div class="card-footer text-center element" id="save">
                             <button class="btn btn-primary" id="save_button">Save Change</button>
                         </div>
@@ -50,7 +53,7 @@ async function put_profil_card_html() {
                     </div>
                 </div>
             </form>
-            <div class="container" id="container_2fa">
+        <div class="container" id="container_2fa">
             <div id="btn_2fa">
                 <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample">2FA</button>
                     <div class="collapse collapse-horizontal" id="collapseWidthExample">
@@ -63,6 +66,8 @@ async function put_profil_card_html() {
                         </div>
                     </div>
             </div>
+        </div>
+        <div>
             <form id="avatar_upload_form" enctype="multipart/form-data" > 
                 <label for="id_avatar">Choose an avatar:</label>
                 <input type="file" id="id_avatar" name="avatar" accept="image/*" class="form-control" aria-label="file example" required/>
@@ -71,7 +76,7 @@ async function put_profil_card_html() {
 
             <figure class="blockquote-figure">
                 <blockquote class="blockquote ">
-                    <p>This website is the most ergonomic that I have seen in my entire life, period.</p>
+                <p>This website is the most ergonomic that I have seen in my entire life, period.</p>
                 </blockquote>
                 <figcaption class="blockquote-footer">Bill Gates in <cite title="Source evian mon reuf">The Washington Post</cite></figcaption>
             </figure>
@@ -124,7 +129,8 @@ async function check_whos_profil() {
         if (isHimself == true) {
             hideDivs(["addFriend_button"]);
             if (is42u){
-                hideDivs(["profilRightSide"]);
+                console.log("iciiiiiiiii")
+                hideDivs(["input_username_div", "input_email_div", "input_pwd_div", "container_2fa"]);
                 showDivs(["pseudo42", "save"])
             }
         }

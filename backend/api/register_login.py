@@ -157,6 +157,7 @@ def updateUser(request):
 	return HttpResponse(status=200)
 
 def auth42(request):
+	ip_value = os.getenv('IP')
 	if request.method == 'POST':
 		data = json.loads(request.body.decode('utf-8'))
 
@@ -166,7 +167,7 @@ def auth42(request):
 			"client_id": os.getenv('CLIENT_ID'),
 			"client_secret": os.getenv('CLIENT_SECRET'),
 			"code": data.get('code'),
-			"redirect_uri": "https://{ip_value}:8000/home",
+			"redirect_uri": f"https://{ip_value}:8000/home",
 			"state": data.get('state')
 		}
 
