@@ -1,6 +1,6 @@
 import { logout } from './logout.js'
 
-var IP = '10.12.6.8';
+var IP = '10.12.4.3';
 
 function hideDivs(divIds) {
 divIds.forEach(function (divId) {

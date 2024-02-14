@@ -8,13 +8,16 @@ function put_game_launcher_form_html() {
     <div class="card" id="game_launcher">   
         <div class="card-body d-flex justify-content-center align-items-center text-center"  id="game_card">
             <div class="row" id="pong_button">
-              <div class="d-grid gap-2 col-6 mx-auto">
+              <div class="d-grid gap-2 col-4 ">
                 <button class="btn btn-primary btn-block btn-lg" id="play_button">Play</button>
               </div>
-              <div class="d-grid gap-2 col-6 mx-auto">
+              <div class="d-grid gap-2 col-4 ">
                 <button class="btn btn-primary btn-block btn-lg" id="tournament">Tournament</button>
               </div>
-            </div>
+              <div class="d-grid gap-2 col-4 ">
+                <button class="btn btn-primary btn-block btn-lg" id="local">Local</button>
+              </div>
+              </div>
             <div id ="pong_launcher"></div>
         </div>
         <div class="card-footer text-center" id="replay">
@@ -42,6 +45,17 @@ function put_game_launcher_form_html() {
             await pseudoCheck();
             showDivs(['pong_launcher']);
             launchGame('tournament');
+        } catch (err) {
+            pong_launcher.innerHTML = `<p class="error-msg">${err.message}</p>`;
+        }
+    })
+
+    const localBtn = document.getElementById("local");
+    localBtn.addEventListener('click', async ()=> {
+        try {
+            hideDivs(['pong_button']);
+            showDivs(['pong_launcher']);
+            launchGame('local');
         } catch (err) {
             pong_launcher.innerHTML = `<p class="error-msg">${err.message}</p>`;
         }

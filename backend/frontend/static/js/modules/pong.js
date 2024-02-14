@@ -132,9 +132,9 @@ function launchGame(mode) {
     // Connection closed
     socket.addEventListener('close', (event) => {
         console.log('WebSocket connection closed:', event);
-        if (event.code === 4001) {
-            pong_launcher.innerHTML = `<p>Can't launch game if already in game</p>`
-        }
+        // if (event.code === 4001) {
+        //     pong_launcher.innerHTML = `<p>Can't launch game if already in game</p>`
+        // }
     });
   
     // Connection error
@@ -144,18 +144,28 @@ function launchGame(mode) {
 
     let key_w_press = false;
     let key_s_press = false;
+    let key_arrow_up = false;
+    let key_arrow_down = false;
 
     document.addEventListener('keydown', function(event) {
         // Check for the pressed key
         switch (event.key) {
-          case 'w':
-            key_w_press = true
-            key_s_press = false
-            break;
-          case 's':
-            key_s_press = true
-            key_w_press = false
-            break;
+            case 'w':
+                key_w_press = true
+                key_s_press = false
+                break;
+            case 's':
+                key_s_press = true
+                key_w_press = false
+                break;
+            case 'ArrowUp':
+                key_arrow_up = true
+                key_arrow_down = false
+                break;
+            case 'ArrowDown':
+                key_arrow_down = true
+                key_arrow_up = false
+                break;  
         }
     });
     
@@ -167,17 +177,28 @@ function launchGame(mode) {
             case 's':
                 key_s_press = false
                 break;
+            case 'ArrowUp':
+                key_arrow_up = false
+                break;
+            case 'ArrowDown':
+                key_arrow_down = false
+                break;
         }
     })
 
     window.addEventListener('blur', function() {
         key_w_press = false;
         key_s_press = false;
+        key_arrow_down = false;
+        key_arrow_up = false;
     });
 
     let keyPressInterval = setInterval(function() {
         if (key_w_press || key_s_press) {
-            KeyPress(key_w_press ? 'w' : 's');
+            KeyPress(key_w_press ? 'w' : 's', mode);
+        }
+        if (key_arrow_up || key_arrow_down) {
+            KeyPress(key_arrow_up ? 'ArrowUp' : 'ArrowDown', mode);
         }
     }, 20);
     
@@ -185,6 +206,7 @@ function launchGame(mode) {
         
         const keyMsg = {
             type: 'keyPress',
+            mode: mode,
             content: key,
             jwtToken: jwtToken,
         };
