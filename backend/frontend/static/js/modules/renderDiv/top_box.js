@@ -26,10 +26,10 @@ function put_top_box_form_html() {
     `;
 
     const logoutBtn = document.getElementById('logout_button');
-    logoutBtn.addEventListener('click', () => {
+    logoutBtn.addEventListener('click', async (event) => {
         event.preventDefault();
+        await logout();
         displayLoginPage();
-        logout();
     });
 
     const profilBtn = document.getElementById('profil_button');
@@ -41,13 +41,19 @@ function put_top_box_form_html() {
       if (path === `/profil/${data.username}/`){
         return;
       }
-      await displayProfilPage(`/profil/${data.username}/`);
+      history.pushState({}, '', `/profil/${data.username}/`);
+      await displayProfilPage();
     });
 
     displayAvatar();
     const avatar_image = document.getElementById('avatar-image');
     avatar_image.addEventListener('click', (event) => {
       event.preventDefault();
+      const path = window.location.pathname;
+      if (path === `/home`){
+        return;
+      }
+      history.pushState({}, '', '/home');
       displayHomePage();
     })
 }

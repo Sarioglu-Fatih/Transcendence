@@ -7,6 +7,7 @@ import { put_friend_list_form_html } from "./renderDiv/friend_list.js"
 import { put_profil_card_html } from "./renderDiv/profil_card.js"
 import { put_match_history_html } from "./renderDiv/match_history.js"
 import { closeAllWebSockets } from "./utils.js";
+import { isUserLoggedIn } from "../main.js";
 
 var isTopBoxDisplayed = false;
 function hideAllDivs() {
@@ -14,6 +15,12 @@ function hideAllDivs() {
 }
 
 function displayLoginPage() {
+    isTopBoxDisplayed = false;
+    if (isUserLoggedIn()){
+        history.pushState({}, '', '/home');
+        displayHomePage();
+        return;
+    }
     hideAllDivs();
     showDivs(["login_page"]);
     closeAllWebSockets();
@@ -26,8 +33,7 @@ function error404() {
     showDivs(['error404'])
 }
 
-async function displayProfilPage(path) {
-    history.pushState({}, '', path);
+async function displayProfilPage() {
     hideDivs(["login_page", "home_page", "profil page", "error404"]);
     put_match_history_html();
     if (!isTopBoxDisplayed){
@@ -45,23 +51,16 @@ async function displayProfilPage(path) {
     }
 }
 
-function extractPathname() {
-    // Get the pathname from the current window location
-    const pathname = window.location.pathname;
-
-    // Remove any leading and trailing slashes
-    const trimmedPathname = pathname.replace(/^\/|\/$/g, '');
-
-    return `/${trimmedPathname}`;
-}
-
 function displayHomePage() {
-    history.pushState({}, '', '/home');
+    if (!isUserLoggedIn()){
+        history.pushState({}, '', '/login');
+        displayLoginPage();
+        return;
+    }
     if (!isTopBoxDisplayed){
         put_top_box_form_html();
         isTopBoxDisplayed = true;
     }
-    console.log("hihi")
     put_game_launcher_form_html();
     put_friend_list_form_html();
     closeAllWebSockets();

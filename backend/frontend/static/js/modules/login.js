@@ -37,6 +37,7 @@ async function login() {
             throw new Error("Error in sending TOTP")
           }
         }
+        history.pushState({}, '', '/home');
         displayHomePage();
       }
       else {

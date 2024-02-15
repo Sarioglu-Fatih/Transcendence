@@ -7,8 +7,6 @@ async function logout() {
     try {
       const response = await  makeApiRequestPatch('logout/')
       if (response.ok) {
-        document.getElementById('emailError').innerHTML = '';
-        document.getElementById('usernameError').innerHTML = '';
         history.pushState({}, '', '/login');
         closeAllWebSockets();
         hideDivs(['top_box',  'game_launcher', 'friend_list', 'profil_page', 'profile_settings', 'history', 'avatar_upload_form']);

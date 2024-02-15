@@ -5,13 +5,6 @@ import { getCookie, makeApiRequest } from './modules/utils.js';
 import { makeApiRequestPatch } from './modules/utils.js';
 
 await checkAuth42();
-var path = window.location.pathname;
-if (!isUserLoggedIn())
-	history.pushState({}, '', '/login');
-else if (path === '/')
-	history.pushState({}, '', '/home');
-else
-	history.pushState({}, '', path);
 
 window.onload = function() {
 	var path = window.location.pathname;

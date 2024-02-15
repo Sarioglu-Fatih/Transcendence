@@ -1,6 +1,6 @@
 import { logout } from './logout.js'
 
-var IP = '10.12.4.3';
+var IP = 'localhost';
 
 function hideDivs(divIds) {
 divIds.forEach(function (divId) {
@@ -50,6 +50,7 @@ async function makeApiRequest(endpoint) {
 			// Retry the original request
 			return makeApiRequest(endpoint);
 		}
+		console.log(response);
 		return response
 	}
 	catch {
