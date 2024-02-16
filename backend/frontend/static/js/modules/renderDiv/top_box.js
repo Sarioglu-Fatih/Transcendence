@@ -42,6 +42,7 @@ function put_top_box_form_html() {
         return;
       }
       history.pushState({}, '', `/profil/${data.username}/`);
+      makeApiRequest('refresh_user_status');
       await displayProfilPage();
     });
 
@@ -54,6 +55,7 @@ function put_top_box_form_html() {
         return;
       }
       history.pushState({}, '', '/home');
+      makeApiRequest('refresh_user_status');
       displayHomePage();
     })
 }

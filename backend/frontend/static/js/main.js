@@ -19,7 +19,7 @@ window.onload = function() {
 window.onpopstate = async function() {
   var path = window.location.pathname;
   if (path === "/home")
-      displayHomePage();
+    displayHomePage();
   else if (path === '/login')
     displayLoginPage();
   else if (path.startsWith('/profil/'))
