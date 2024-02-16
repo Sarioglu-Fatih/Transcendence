@@ -16,11 +16,6 @@ function hideAllDivs() {
 
 function displayLoginPage() {
     isTopBoxDisplayed = false;
-    if (isUserLoggedIn()){
-        history.pushState({}, '', '/home');
-        displayHomePage();
-        return;
-    }
     hideAllDivs();
     showDivs(["login_page"]);
     closeAllWebSockets();
@@ -53,8 +48,7 @@ async function displayProfilPage() {
 
 function displayHomePage() {
     if (!isUserLoggedIn()){
-        history.pushState({}, '', '/login');
-        displayLoginPage();
+        error404();
         return;
     }
     if (!isTopBoxDisplayed){
