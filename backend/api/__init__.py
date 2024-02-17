@@ -12,16 +12,11 @@ async def check_last_activity(user_id, last_refresh_time):
     current_time = datetime.datetime.now()
     last_time = last_refresh_time[user_id]
     time_difference = current_time - last_time
-    two_seconds = datetime.timedelta(seconds=2)
-    
-    print("Time Difference:", time_difference)
-    print("Two Seconds:", two_seconds)
+    two_seconds = datetime.timedelta(seconds=60)
     
     if time_difference > two_seconds:
-        print("Within 2 seconds")
         return False
     
-    print("Not within 2 seconds")
     return True
 
 @database_sync_to_async
@@ -30,15 +25,15 @@ def get_user(id):
 
 @database_sync_to_async
 def change_user_status(user):
-    user.user_is_connected = not user.user_is_connected 
+    user.user_is_connected = False
     user.save()
 
 async def continuous_activity_check():
-    await asyncio.sleep(2)
+    await asyncio.sleep(5)
     from .models import User
     from .views import last_refresh_time
     while True:
-        await asyncio.sleep(2)
+        await asyncio.sleep(30)
         print("check activity")
         print(last_refresh_time)
         for id in last_refresh_time.keys():

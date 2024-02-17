@@ -23,6 +23,8 @@ class registerPostParameters():
 def refresh_user_status(request):
 	user = request.user
 	last_refresh_time[user.id] = datetime.datetime.now()
+	user.user_is_connected = True
+	user.save()
 	return (HttpResponse(status=200))
 
 def avatar(request):
