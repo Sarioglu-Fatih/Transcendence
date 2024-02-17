@@ -1,3 +1,4 @@
+import { displayLoginPage } from "./display_page_function.js";
 import { hideDivs, showDivs } from "./utils.js";
 import { makeApiRequest, makeApiRequestPatch, getCookie } from "./utils.js";
 import { closeAllWebSockets } from "./utils.js";
@@ -9,8 +10,7 @@ async function logout() {
       if (response.ok) {
         history.pushState({}, '', '/login');
         closeAllWebSockets();
-        hideDivs(['top_box',  'game_launcher', 'friend_list', 'profil_page', 'profile_settings', 'history', 'avatar_upload_form']);
-        showDivs(['div_register_form', 'div_login_form']);
+        displayLoginPage()
         console.log('Logout successful.');
       }
       else {

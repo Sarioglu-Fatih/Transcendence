@@ -15,6 +15,7 @@ from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from django_otp.plugins.otp_totp.models import TOTPDevice
 from .utils import decode_Payload
+from django.contrib.auth.decorators import login_required
 
 
 @dataclass
@@ -108,6 +109,7 @@ def user_logout(request):
 	response.set_cookie('jwt_token', '', expires=0)
 	return response
 
+@login_required
 def updateUser(request):
 	if request.method != 'PATCH':
 		return JsonResponse({'error': 'Invalid request method'}, status=405)
@@ -154,6 +156,7 @@ def updateUser(request):
 			return JsonResponse({'error': "Special characters allowed : @$!%#?&"}, status=453)
 		user.password = make_password(data.password)
 	user.save()
+	print(user.password, user.pseudo)
 	return HttpResponse(status=200)
 
 def auth42(request):

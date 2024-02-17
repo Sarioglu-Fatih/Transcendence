@@ -20,13 +20,21 @@ last_refresh_time = {}
 class registerPostParameters():
 	pseudo: str
 
+@login_required	
 def refresh_user_status(request):
+	payload = decode_Payload(request)
+	if not payload:
+		return JsonResponse({'error': 'User ID not provided'}, status=400)
+	user_id = payload.get('user_id')
+	if not user_id:
+		return JsonResponse({'error': 'User ID not provided'}, status=400)
 	user = request.user
 	last_refresh_time[user.id] = datetime.datetime.now()
 	user.user_is_connected = True
 	user.save()
 	return (HttpResponse(status=200))
 
+@login_required	
 def avatar(request):
 	if request.method != 'GET':
 		return JsonResponse({'error': 'Invalid request method'}, status=405)
@@ -49,7 +57,7 @@ def avatar(request):
 	return JsonResponse({'avatar': avatar_data})
 
 		
-@login_required	
+@login_required
 def upload_avatar(request):
 	if request.method != 'POST':
 		return HttpResponse(status=405)
@@ -71,7 +79,6 @@ def upload_avatar(request):
 
 
 @login_required	
-@permission_classes([IsAuthenticated])
 def get_history(request, user_profil):
 	if request.method != 'GET':
 		return HttpResponseNotFound(status=404)
@@ -90,7 +97,6 @@ def get_history(request, user_profil):
 	return HttpResponseNotFound(status=404)
 	
 @login_required	
-@permission_classes([IsAuthenticated])
 def get_user(request, user_profil):
 	if request.method != 'GET':
 		return HttpResponseNotFound(status=404)
@@ -147,6 +153,7 @@ def my_friends(request):
 	friend_list = list(user.friendlist.values('pseudo', 'user_is_connected', 'user_is_in_game', 'user_is_looking_game', 'user_is_looking_tournament').order_by('-user_is_connected', "pseudo"))
 	return JsonResponse({'friend_list': friend_list})
 
+@login_required
 def isFriend(request, userToAddName):
 	if not request.method == 'GET':
 		return HttpResponseNotFound(status=404)
@@ -165,7 +172,6 @@ def isFriend(request, userToAddName):
 	return HttpResponseNotFound(status=400)
 
 @login_required
-@permission_classes([IsAuthenticated])
 def username(request):
 	if not request.method == 'GET':
 		return HttpResponseNotFound(status=404)
@@ -182,7 +188,6 @@ def username(request):
 	return JsonResponse(data, safe=False)
 
 @login_required
-@permission_classes([IsAuthenticated])
 def pseudo(request):
 	if not request.method == 'GET':
 		return HttpResponseNotFound(status=404)
@@ -199,7 +204,6 @@ def pseudo(request):
 	return JsonResponse(data, safe=False)
 
 @login_required
-@permission_classes([IsAuthenticated])
 def registerpseudo(request):
 	if not request.method == 'POST':
 		return HttpResponseNotFound(status=404)
@@ -223,7 +227,7 @@ def registerpseudo(request):
 	user.save()
 	return HttpResponse(status=200)
 
-@permission_classes([IsAuthenticated])
+@login_required
 def isUserLoggedIn(request):
 	if request.method != 'GET':
 		return HttpResponseNotFound(status=404)
@@ -236,7 +240,8 @@ def isUserLoggedIn(request):
 	else:
 		print("yeah")
 		return HttpResponseNotFound(status=200)
-	
+
+@login_required
 def change_user_status(request, status):
 	print("====================================")
 	if request.method != 'PATCH':

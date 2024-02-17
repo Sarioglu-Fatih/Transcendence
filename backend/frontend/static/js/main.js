@@ -3,7 +3,9 @@ import { displayHomePage , displayLoginPage , displayProfilPage } from './module
 import { getCookie, makeApiRequest } from './modules/utils.js';
 
 await checkAuth42();
-makeApiRequest('refresh_user_status');
+if (isUserLoggedIn()){
+  makeApiRequest('refresh_user_status');
+}
 
 window.onload = function() {
 	var path = window.location.pathname;

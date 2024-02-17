@@ -63,7 +63,7 @@ def get_2fa_status(request):
 		else:
 			return JsonResponse({'two_factor_enabled': False}, status=270)
 	except Exception as e:
-		return JsonResponse({'error': str(e)}, status=500)
+		return JsonResponse({'error': str(e)}, status=486)
 
 @permission_classes([IsAuthenticated])
 def check_totp(request):

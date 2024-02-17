@@ -1,6 +1,6 @@
 import { logout } from './logout.js'
 
-var IP = 'localhost';
+var IP = '10.12.7.6';
 
 function hideDivs(divIds) {
 divIds.forEach(function (divId) {
@@ -38,6 +38,7 @@ function getCookie(name) {
 
 async function makeApiRequest(endpoint) {
 	try {
+		console.log(`https://${IP}:8000/api/${endpoint}`)
 		const response = await fetch(`https://${IP}:8000/api/${endpoint}`, {
 			method: 'GET',
 			headers: {

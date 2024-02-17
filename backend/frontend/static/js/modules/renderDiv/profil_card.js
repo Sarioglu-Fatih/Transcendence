@@ -4,6 +4,7 @@ import { updateUser } from "../register.js";
 import { enable2fa, disable2fa, check2faStatus} from "../two_fa.js";
 import { isFriend, handleAvatarUpload} from "../profilPage.js";
 import { displayProfilPage } from "../display_page_function.js";
+import { logout } from "../logout.js";
 
 
 async function put_profil_card_html() {
@@ -286,7 +287,10 @@ async function updateFormParse() {
         if (updateValue == "error")
             return ;
         document.getElementById('update_form').reset();
-        if (userName)
+        if (userPassword){
+            logout();
+        }
+        else if (userName)
         {
             var path = removeCharactersAfterLastSlash(window.location.pathname);
             var newPath = path + userName;
