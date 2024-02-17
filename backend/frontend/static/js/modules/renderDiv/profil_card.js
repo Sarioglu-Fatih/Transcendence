@@ -1,4 +1,4 @@
-import { error404, showDivs } from "../display_page_function.js"
+import { error404, showDivs, hideAllDivs } from "../display_page_function.js"
 import { hideDivs, makeApiRequest } from "../utils.js";
 import { updateUser } from "../register.js";
 import { enable2fa, disable2fa, check2faStatus} from "../two_fa.js";
@@ -97,11 +97,9 @@ async function put_profil_card_html() {
         event.preventDefault();
         if (switchbox2FA.checked) {
             enable2fa();
-            console.log('2FA is enabled');
         }
         else {
             disable2fa();
-            console.log('2FA is disabled');
         }
     });
     
@@ -114,7 +112,7 @@ async function put_profil_card_html() {
         let lastSegment = segments[segments.length - 2];
         lastSegment += "/";
         const response = makeApiRequest(`add_friend/${lastSegment}`)
-        displayProfilPage(window.location.pathname);
+        displayProfilPage();
     })
     
     window.uploadAvatar = async function () {
@@ -125,12 +123,12 @@ async function put_profil_card_html() {
 
 async function check_whos_profil() {
     try {
+        hideAllDivs()
         let isHimself = await renderProfilPage();
         let is42u = await is42user();
         if (isHimself == true) {
             hideDivs(["addFriend_button"]);
             if (is42u){
-                console.log("iciiiiiiiii")
                 hideDivs(["input_username_div", "input_email_div", "input_pwd_div", "container_2fa"]);
                 showDivs(["pseudo42", "save"])
             }
@@ -140,7 +138,6 @@ async function check_whos_profil() {
             const userToAddName = currentPath.replace(/^profil/, 'isFriend');
             
             const isFriends = await isFriend(userToAddName);
-            console.log(isFriends);
             if (isFriends){
                 hideDivs(["profilRightSide", "addFriend_button", "btn_2fa", "avatar_upload_form"]);
                 showDivs(["profilLeftSide"]);
@@ -167,7 +164,6 @@ async function is42user() {
     const response = await makeApiRequest(currentPath)
     if (!response.ok)
     {
-        console.log("not ok");
         throw new Error('Not a profil');
     }
     let userData = await response.json()
@@ -185,7 +181,6 @@ async function renderProfilPage() {
         const currentPath = window.location.pathname.substring(1) ;
         const response = await makeApiRequest(currentPath)
         if (!response.ok){
-            console.log("not ok");
             throw new Error('Not a profil');
         }
         const userData = await response.json()

@@ -6,7 +6,6 @@ const avatar = document.getElementById('avatar');
 
 
 export async function isFriend(user) {
-    console.log(user);
     try {
         const response = await makeApiRequest(user)
         if (response.status == 400) {

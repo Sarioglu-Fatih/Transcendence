@@ -32,7 +32,6 @@ async function put_login_form_html() {
     	var userName = inputUsername.value;
     	var username_regex = /^[a-zA-Z0-9-_]+$/;
 
-    	console.log(inputUsername.value);
     	if (username_regex.test(userName))
     	{
     		document.getElementById('loginUsernameError').innerHTML = '';
@@ -52,7 +51,7 @@ async function put_login_form_html() {
         function generateRandomState() {
             var array = new Uint8Array(16);
             window.crypto.getRandomValues(array);
-            return Array.from(array, dec => ('0' + dec.toString(16)).substr(-2)).join('');
+            return Array.from(array, dec => ('0' + dec.toString(16)).substring(-2)).join('');
         }
         
         var state = generateRandomState();

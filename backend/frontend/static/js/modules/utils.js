@@ -38,7 +38,6 @@ function getCookie(name) {
 
 async function makeApiRequest(endpoint) {
 	try {
-		console.log(`https://${IP}:8000/api/${endpoint}`)
 		const response = await fetch(`https://${IP}:8000/api/${endpoint}`, {
 			method: 'GET',
 			headers: {
@@ -51,7 +50,6 @@ async function makeApiRequest(endpoint) {
 			// Retry the original request
 			return makeApiRequest(endpoint);
 		}
-		console.log(response);
 		return response
 	}
 	catch {
@@ -83,7 +81,6 @@ async function makeApiRequestPatch(endpoint, body) {
 	try {
 		await makeApiRequest('get_csrf_token');
         const csrfToken = getCookie('csrftoken');
-		console.log(csrfToken)
         const response = await fetch(`https://${IP}:8000/api/${endpoint}`, { // where we send data
             method: 'PATCH', 
             headers: {

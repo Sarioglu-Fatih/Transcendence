@@ -11,7 +11,7 @@ import { isUserLoggedIn } from "../main.js";
 
 var isTopBoxDisplayed = false;
 function hideAllDivs() {
-    hideDivs(["login_page", "home_page", "profil_page", "error404", "top_box_div"]);
+    hideDivs(["login_page", "home_page", "profil_page", "error404"]);
 }
 
 function displayLoginPage() {
@@ -29,21 +29,20 @@ function error404() {
 }
 
 async function displayProfilPage() {
-    hideDivs(["login_page", "home_page", "profil page", "error404"]);
-    put_match_history_html();
     if (!isTopBoxDisplayed){
         put_top_box_form_html();
         isTopBoxDisplayed = true;
     }
-    closeAllWebSockets();
+    put_match_history_html();
+    hideDivs(["login_page", "home_page", "profil page", "error404"]);
     try {
         await put_profil_card_html();
         showDivs(["top_box_div", "profil_page"]);
     }
     catch {
-        console.log("error 404")
         error404();
     }
+    closeAllWebSockets();
 }
 
 function displayHomePage() {
@@ -78,7 +77,6 @@ function showDiv(div){
     }
 }
 function showDivs(divIds) {
-    console.log(divIds)
     divIds.forEach(function (divId) {
         var targetDiv = document.getElementById(divId);
         if (targetDiv) {
@@ -87,5 +85,5 @@ function showDivs(divIds) {
       });
     }
 
-export { displayHomePage , displayLoginPage , displayProfilPage, error404, hideDivs, showDivs, showDiv }
+export { displayHomePage , displayLoginPage , displayProfilPage, error404, hideDivs, showDivs, showDiv, hideAllDivs }
 

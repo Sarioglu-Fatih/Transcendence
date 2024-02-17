@@ -5,7 +5,6 @@ import { createWebSocket, IP } from './utils.js';
 async function addPseudo() {
     var pseudo_regex = /^[a-zA-Z0-9-_]+$/;
     const pseudo = document.getElementById('pseudo').value;
-    console.log(pseudo);
     if (pseudo_regex.test(pseudo))
     {   
         document.getElementById('pseudoError').innerHTML = '';
@@ -14,7 +13,6 @@ async function addPseudo() {
         };
         const response = await makeApiRequestPost("registerpseudo", body);
         if (response.ok) {
-            console.log('Pseudo registered successfully', response);
         } else {
             document.getElementById('pseudoError').innerHTML = "Pseudo already taken"
             console.error('Failed to register pseudo:', response.statusText); 
@@ -38,7 +36,6 @@ async function pseudoCheck() {
         const data = await response.json();
         if (!data)
             throw new Error('No Data');
-        console.log(data);
         if (data.pseudo === '') {
             await new Promise((resolve) => {
                 const pong_launcher = document.getElementById("pong_launcher");
@@ -87,7 +84,6 @@ function launchGame(mode) {
     // Connection opened
 
     socket.addEventListener('open', (event) => {
-        console.log('WebSocket connection opened:', event);
         // Send a message to the server
         const message = {
             type: 'open',
@@ -131,7 +127,6 @@ function launchGame(mode) {
 
     // Connection closed
     socket.addEventListener('close', (event) => {
-        console.log('WebSocket connection closed:', event);
         if (event.code === 4001) {
             pong_launcher.innerHTML = `<p>Can't launch game if already in game</p>`
         }

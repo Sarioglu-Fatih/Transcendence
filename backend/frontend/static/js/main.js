@@ -36,14 +36,10 @@ document.onvisibilitychange = function() {
 
 function isUserLoggedIn() {
 //   const response = await makeApiRequest("isUserLoggedIn");
-//   console.log(response);
   const jwtToken = getCookie('jwt_token');
-  console.log(jwtToken);
   if (jwtToken !== null) {
-      console.log("user connected")
       return (true)
   }
-    console.log("user not  connected")
     return (false)
 }
 

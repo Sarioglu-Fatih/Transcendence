@@ -10,7 +10,6 @@ async function registerUser() {
         'password': password,
         'pseudo': ""
     }
-	console.log("Les infos du form:", body);
 
     const response = await makeApiRequestPost("register", body)
     if (response.ok) {
@@ -22,7 +21,6 @@ async function registerUser() {
 }
 
 async function updateUser() {
-    console.log("update_user")
     var username = document.getElementById("updateUsername").value; // Get info from the register form
     var pseudo = document.getElementById("updatePseudo").value;
     var email = document.getElementById("updateEmail").value;
@@ -33,7 +31,6 @@ async function updateUser() {
         'password': password,
         'pseudo': pseudo
     }
-    console.log(body);
 
     try {
         const response = await  makeApiRequestPatch('update/', body)

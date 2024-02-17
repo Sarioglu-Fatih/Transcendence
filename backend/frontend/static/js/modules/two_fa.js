@@ -9,7 +9,6 @@ async function enable2fa() {
 			if (data.success) {
 				// Generate the OTP URL
 				const qrcode = data.qrcode;
-				console.log("enable 2fa: ", data.qrcode)
 				displayQRCode(qrcode);
 			}
 			else {
@@ -26,8 +25,7 @@ async function enable2fa() {
 }
 
 function displayQRCode(otpauthUrl) {
-	const qrCodeContainer = document.getElementById('qrcode'); // Replace with your container ID
-	console.log(otpauthUrl)
+	const qrCodeContainer = document.getElementById('qrcode');
 	// Construct the data URI for the QR code image
 	const dataUri = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(otpauthUrl)}`;
 
@@ -63,12 +61,10 @@ async function check2faStatus() {
 		const switchbox2FA = document.getElementById('switchbox2FA');
 		const response = await makeApiRequest('get_2fa_status');
         if (response.ok) {
-			console.log("2fa", response)
             const data = await response.json();
             if (data.two_factor_enabled) {
                 switchbox2FA.checked = true
 				const qrcode = data.qrcode;
-				console.log("check 2fa: ", qrcode)
 				displayQRCode(qrcode);
             }
 			else {

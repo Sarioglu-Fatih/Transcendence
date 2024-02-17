@@ -63,7 +63,6 @@ function put_register_form_html() {
     myInput.onkeyup = function() {
     // Perform the validation
     var isValid = updateValidationState(myInput, letter, capital, number, length, ForbiddenCharElement);
-    console.log(isValid);
     };
 
     const registerForm = document.getElementById('register_form')
@@ -93,7 +92,7 @@ async function inputRegisterForm(myInput, letter, capital, number, length, Forbi
 	}
 	else {
 	  usernameError.textContent = "Please enter letters, numbers, '-' or '_'."
-	  console.log("Username not valide");
+	  console.log("Username not valid");
 	}
 	if (regex.test(userEmail) && secRegexEmail.test(userEmail)) {
 	  document.getElementById('emailError').innerHTML = '';

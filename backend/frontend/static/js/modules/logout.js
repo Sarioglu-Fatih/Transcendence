@@ -11,7 +11,6 @@ async function logout() {
         history.pushState({}, '', '/login');
         closeAllWebSockets();
         displayLoginPage()
-        console.log('Logout successful.');
       }
       else {
         console.error('Error logout:', response.status);

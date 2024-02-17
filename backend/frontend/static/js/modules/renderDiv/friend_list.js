@@ -25,21 +25,6 @@ async function getFriendProfil(username) {
   try {
     history.pushState({}, '', `/profil/${username}/`);
     displayProfilPage();
-    const jwtToken = localStorage.getItem('jwt_token');
-    const response = await fetch(`/api/profil/${username}/`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${jwtToken}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error('Erreur réseau');
-    }
-    
-    const userData = await response.json();
-    console.log(userData);
   } catch (error) {
     console.error('Erreur lors de la récupération des données utilisateur :', error);
   }
@@ -53,7 +38,6 @@ async function friend_list() {
   try {
     const response = await fetch('/api/my_friends');
     const data = await response.json();
-    console.log(data);
     
     const loadTwentyFriends = () => {
       friendListElement.innerHTML = '';
@@ -88,7 +72,6 @@ async function friend_list() {
     
           friendElement.querySelector('.friend-button').addEventListener('click', () => {
             const pseudo = friend.pseudo;
-            console.log(`Clic sur le bouton de ${pseudo}`);
             getFriendProfil(pseudo);
           });
         });
@@ -115,4 +98,4 @@ async function friend_list() {
 }
 
 
-export { put_friend_list_form_html };
+export { put_friend_list_form_html, getFriendProfil };

@@ -24,14 +24,12 @@ async function login() {
       'username': username,
       'password': password
     }
-    console.log("Les infos du form:", body);
     
     try {
       const response = await makeApiRequestPost("login", body)
       if (response.ok) {
         if (response.status === 222){
           const token = prompt("Enter the code from your authenticator")
-          console.log(token);
           const response_TOPT = await send_TOTP(token, username);
           if (!response_TOPT.ok){
             throw new Error("Error in sending TOTP")
