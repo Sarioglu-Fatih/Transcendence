@@ -12,7 +12,7 @@ async def check_last_activity(user_id, last_refresh_time):
     current_time = datetime.datetime.now()
     last_time = last_refresh_time[user_id]
     time_difference = current_time - last_time
-    two_seconds = datetime.timedelta(seconds=60)
+    two_seconds = datetime.timedelta(seconds=10)
     
     if time_difference > two_seconds:
         return False
@@ -33,7 +33,7 @@ async def continuous_activity_check():
     from .models import User
     from .views import last_refresh_time
     while True:
-        await asyncio.sleep(30)
+        await asyncio.sleep(3)
         print("check activity")
         print(last_refresh_time)
         for id in last_refresh_time.keys():

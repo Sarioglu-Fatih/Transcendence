@@ -23,7 +23,8 @@ function put_friend_list_form_html() {
 
 async function getFriendProfil(username) {
   try {
-    displayProfilPage(`profil/${username}/`);
+    history.pushState({}, '', `/profil/${username}/`);
+    displayProfilPage();
     const jwtToken = localStorage.getItem('jwt_token');
     const response = await fetch(`/api/profil/${username}/`, {
       method: 'GET',
