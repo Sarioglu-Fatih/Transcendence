@@ -30,7 +30,7 @@ async function login() {
       const response = await makeApiRequestPost("login", body)
       if (response.ok) {
         if (response.status === 222){
-          const token = prompt("enter code biatch")
+          const token = prompt("Enter the code from your authenticator")
           console.log(token);
           const response_TOPT = await send_TOTP(token, username);
           if (!response_TOPT.ok){
