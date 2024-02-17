@@ -38,6 +38,7 @@ async function login() {
           }
         }
         history.pushState({}, '', '/home');
+        makeApiRequest('refresh_user_status');
         displayHomePage();
       }
       else {

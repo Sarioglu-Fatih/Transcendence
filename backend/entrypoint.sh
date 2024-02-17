@@ -29,4 +29,6 @@ done &
    
 # daphne backend.asgi:application -u $SOCK_DIR/daphne.sock
 hupper -m daphne -u $SOCK_DIR/daphne.sock backend.asgi:application -v
+
+
    

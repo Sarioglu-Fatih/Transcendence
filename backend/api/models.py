@@ -21,6 +21,7 @@ class User(AbstractUser):
 	status_2fa = models.BooleanField(default=False)
 	qrcode = models.TextField(default=None, null=True)
 
+
 	def get_avatar(self):
 		if self.avatar:
 			return self.avatar
