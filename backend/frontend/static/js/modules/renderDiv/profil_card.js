@@ -290,7 +290,8 @@ async function updateFormParse() {
         {
             var path = removeCharactersAfterLastSlash(window.location.pathname);
             var newPath = path + userName;
-            displayProfilPage(newPath);
+            history.pushState({}, '', newPath);
+            displayProfilPage();
         }
         else if (userEmail || Pseudo)
         {
