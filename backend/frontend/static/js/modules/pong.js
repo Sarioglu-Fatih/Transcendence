@@ -3,7 +3,7 @@ import { createWebSocket, IP } from './utils.js';
 
 
 async function addPseudo() {
-    var pseudo_regex = /^[a-zA-Z0-9-_]+$/;
+    var pseudo_regex = /^[a-zA-Z0-9-_]{1,20}$/;
     const pseudo = document.getElementById('pseudo').value;
     if (pseudo_regex.test(pseudo))
     {   
