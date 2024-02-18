@@ -5,6 +5,7 @@ import { getCookie, makeApiRequest } from './modules/utils.js';
 if ((await checkAuth42()) === false){
   history.pushState({}, '', '/login');
   displayLoginPage();
+  alert('42 authentification failed !');
 }
 if (isUserLoggedIn()){
   makeApiRequest('refresh_user_status');
