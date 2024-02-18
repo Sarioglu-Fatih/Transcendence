@@ -9,16 +9,18 @@ async function fetchCode(code, state) {
     try {
         const response = await makeApiRequestPost('auth42', body);
         if (response.ok) {
+            history.pushState({}, '', '/home');
             displayHomePage();
+            return true;
         }
         else {
             console.error('Error login user:', response.status);
-            displayLoginPage();
+            return false;
         }
     }
     catch (error) {
         console.error('Error login user:', error);
-        displayLoginPage();
+        return false;
     }
 }
 
@@ -27,14 +29,17 @@ async function checkAuth42() {
     var urlSearchParams = new URLSearchParams(urlSearch);
     var urlPathname = window.location.pathname;
     var totalPath = urlPathname + urlSearch;
-
     // Vérifie si l'URL contient "/home"
     if (!totalPath.match(/^\/home/)) {
-        return;
+        return true;
     }
     // Vérifie si la partie parser.search ne commence pas par "error"
     if (!urlSearch.startsWith("?code")) {
-        return;
+        if (urlSearch.startsWith("?error"))
+            return false;
+        else{
+            return true;
+        }
     }
     var codeValue = urlSearchParams.get("code");
     var stateValue = urlSearchParams.get("state");
@@ -42,11 +47,11 @@ async function checkAuth42() {
     if (state === null || (urlSearchParams.size !== 2 && stateValue !== state))
     {
         console.error("State value not corresponding.");
-        displayLoginPage();
-        return;
+        return false;
     }
-    await fetchCode(codeValue, stateValue);
+    var ret = await fetchCode(codeValue, stateValue);
     localStorage.removeItem('state');
+    return ret;
 }
 
 export { checkAuth42 };
