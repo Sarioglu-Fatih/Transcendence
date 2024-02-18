@@ -1,4 +1,4 @@
-import { makeApiRequestPost } from './utils.js'
+import { makeApiRequest, makeApiRequestPost } from './utils.js'
 import { displayLoginPage, displayHomePage } from './display_page_function.js'
 
 async function fetchCode(code, state) {
@@ -10,6 +10,7 @@ async function fetchCode(code, state) {
         const response = await makeApiRequestPost('auth42', body);
         if (response.ok) {
             history.pushState({}, '', '/home');
+            makeApiRequest('refresh_user_status');
             displayHomePage();
             return true;
         }
@@ -54,4 +55,12 @@ async function checkAuth42() {
     return ret;
 }
 
-export { checkAuth42 };
+async function auth42(){
+    if ((await checkAuth42()) === false) {
+        history.pushState({}, '', '/login');
+        displayLoginPage();
+        alert('42 authentification failed !');
+    }
+}
+
+export { auth42 };

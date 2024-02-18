@@ -1,11 +1,9 @@
-import { checkAuth42 } from './modules/auth.js';
+import { auth42 } from './modules/auth42.js';
 import { displayHomePage , displayLoginPage , displayProfilPage } from './modules/display_page_function.js'
 import { getCookie, makeApiRequest } from './modules/utils.js';
 
-if ((await checkAuth42()) === false){
-  history.pushState({}, '', '/login');
-  displayLoginPage();
-}
+await auth42();
+
 if (isUserLoggedIn()){
   makeApiRequest('refresh_user_status');
 }

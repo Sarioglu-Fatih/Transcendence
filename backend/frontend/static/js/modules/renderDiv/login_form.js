@@ -1,6 +1,4 @@
 import {login} from "../login.js"
-import {displayHomePage} from "../display_page_function.js"
-import { checkAuth42 } from "../auth.js";
 import { IP } from "../utils.js";
 
 async function put_login_form_html() {
