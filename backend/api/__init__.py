@@ -34,8 +34,6 @@ async def continuous_activity_check():
     from .views import last_refresh_time
     while True:
         await asyncio.sleep(3)
-        print("check activity")
-        print(last_refresh_time)
         for id in last_refresh_time.keys():
             if (not await check_last_activity(id, last_refresh_time)):
                 user = await sync_to_async(User.objects.get)(id=id)
