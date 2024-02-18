@@ -14,9 +14,12 @@ async function registerUser() {
     const response = await makeApiRequestPost("register", body)
     if (response.ok) {
         console.log('User registered successfully', response);
+        alert('User registered successfully!');
     }
     else {
+        const errorResponse = await response.json();
         console.error('Failed to register user:', response.statusText);
+        alert('Registration failed: ' + errorResponse.error);
     }
 }
 
@@ -36,9 +39,12 @@ async function updateUser() {
         const response = await  makeApiRequestPatch('update/', body)
         if (response.ok) {
             console.log('Update ok', response);
+            alert('Update of your profil done.');
         }
         else {
+            const errorResponse = await response.json();
             console.error('Failed to register user:', response.statusText);
+            alert('Registration failed: ' + errorResponse.error);
             return "error";
         }
     }

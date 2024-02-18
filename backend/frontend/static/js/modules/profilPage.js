@@ -1,8 +1,7 @@
 import { makeApiRequest, getCookie } from "./utils.js";
 import { renderProfilPage } from "./renderDiv/profil_card.js"
 
-const profilPage = document.getElementById('profil_page');
-const avatar = document.getElementById('avatar');
+const top_box_div = document.getElementById('top_box_div');
 
 
 export async function isFriend(user) {
@@ -67,13 +66,14 @@ async function handleAvatarUpload() {
 	  });
   
 	  if (response.ok) {
-		// Optionally, update the displayed avatar immediately
-		await displayAvatar();
-		// Provide feedback to the user if needed
-	  } else {
-		console.error('Avatar upload failed');
+		  await displayAvatar();
 	  }
-	} catch (error) {
+    else {
+		  console.error('Avatar upload failed');
+      alert('Avatar upload failed.')
+	  }
+	}
+  catch (error) {
 	  console.error('Avatar upload failed:', error);
 	}
 }

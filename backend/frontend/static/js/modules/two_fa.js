@@ -55,6 +55,7 @@ async function enable2faWithTOTP(token) {
 			if (data.success) {
 				// 2FA enabled successfully
 				console.log('2FA enabled successfully');
+				alert("2FA enabled successfully");
 			}
 			else {
 				console.error('Error enabling 2FA:', data.error);
@@ -64,6 +65,7 @@ async function enable2faWithTOTP(token) {
 			await disable2fa();
 			await check2faStatus();
 			console.error('Invalid TOTP token', response.status);
+			alert("Invalid TOTP token, 2FA disable");
 		}
 	}
 	catch (error)
