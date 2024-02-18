@@ -42,7 +42,7 @@ function put_top_box_form_html() {
       if (path === `/profil/${data.username}/`){
         return;
       }
-      history.pushState({}, '', `/profil/${data.username}/`);
+      history.pushState({}, '', `/profil/${data.username}`);
       await makeApiRequest('refresh_user_status');
       await displayProfilPage();
     });

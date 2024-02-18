@@ -28,6 +28,6 @@ def custom_redirect(request):
 urlpatterns = [
 	path('home', views.renderMainPage),
 	path('login', views.renderMainPage),
-	path('profil/<str:user_profil>/', views.renderProfilPage),
+	path('profil/<str:user_profil>', views.renderProfilPage),
 	re_path(r'^(?!api/|home$|login$|profil/).*$', custom_redirect),
 ]

@@ -109,11 +109,10 @@ async function put_profil_card_html() {
     addFriend.addEventListener('click', async function (event) {
         event.preventDefault();
         
-        const clientURL = window.location.href;
-        const segments = clientURL.split('/');
-        let lastSegment = segments[segments.length - 2];
-        lastSegment += "/";
-        const response = makeApiRequest(`add_friend/${lastSegment}`)
+        const path = window.location.pathname;
+        let parts = path.split("/");
+        let desiredPart = parts[parts.length - 1];
+        const response = makeApiRequest(`add_friend/${desiredPart}`)
         displayProfilPage();
     })
 
@@ -121,11 +120,10 @@ async function put_profil_card_html() {
     removeFriend.addEventListener('click', async function (event) {
         event.preventDefault();
         
-        const clientURL = window.location.href;
-        const segments = clientURL.split('/');
-        let lastSegment = segments[segments.length - 2];
-        lastSegment += "/";
-        const response = makeApiRequest(`remove_friend/${lastSegment}`)
+        const path = window.location.pathname;
+        let parts = path.split("/");
+        let desiredPart = parts[parts.length - 1];
+        const response = makeApiRequest(`remove_friend/${desiredPart}`)
         displayProfilPage();
     })
     

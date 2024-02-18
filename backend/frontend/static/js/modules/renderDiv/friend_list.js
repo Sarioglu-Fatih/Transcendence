@@ -23,7 +23,7 @@ function put_friend_list_form_html() {
 
 async function getFriendProfil(username) {
   try {
-    history.pushState({}, '', `/profil/${username}/`);
+    history.pushState({}, '', `/profil/${username}`);
     displayProfilPage();
   } catch (error) {
     console.error('Erreur lors de la récupération des données utilisateur :', error);
@@ -93,7 +93,7 @@ async function friend_list() {
     // Initial load of matches
     loadTwentyFriends();
   } catch (error) {
-    console.error('Erreur lors de la récupération de la liste d\'amis :', error);
+    console.error('Erreur lors de la récupération de la liste d\'amis');
   }
 }
 

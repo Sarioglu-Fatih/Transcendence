@@ -38,7 +38,7 @@ function getCookie(name) {
 
 async function makeApiRequest(endpoint) {
 	try {
-		const response = await fetch(`https://${IP}:8000/api/${endpoint}`, {
+		const response = await fetch(`https://${IP}:8000/api/${endpoint}/`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ async function makeApiRequest(endpoint) {
 
 async function makeApiRequestPost(endpoint, body) {
 	try {
-		await makeApiRequest('get_csrf_token');
+		await makeApiRequest('get_csrf_token/');
         const csrfToken = getCookie('csrftoken');
         const response = await fetch(`https://${IP}:8000/api/${endpoint}`, { // where we send data
             method: 'POST', // post = sending data

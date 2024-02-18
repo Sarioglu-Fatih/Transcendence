@@ -6,7 +6,7 @@ import {put_game_launcher_form_html} from "./renderDiv/game_laucher.js"
 import { put_friend_list_form_html } from "./renderDiv/friend_list.js"
 import { put_profil_card_html } from "./renderDiv/profil_card.js"
 import { put_match_history_html } from "./renderDiv/match_history.js"
-import { closeAllWebSockets } from "./utils.js";
+import { closeAllWebSockets, makeApiRequest } from "./utils.js";
 import { isUserLoggedIn } from "../main.js";
 
 var isTopBoxDisplayed = false;
@@ -45,7 +45,8 @@ async function displayProfilPage() {
     closeAllWebSockets();
 }
 
-function displayHomePage() {
+async function displayHomePage() {
+    await makeApiRequest('refresh_user_status');
     if (!isTopBoxDisplayed){
         put_top_box_form_html();
         isTopBoxDisplayed = true;
