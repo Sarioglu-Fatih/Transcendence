@@ -1,8 +1,7 @@
 import { makeApiRequest, getCookie } from "./utils.js";
 import { renderProfilPage } from "./renderDiv/profil_card.js"
 
-const profilPage = document.getElementById('profil_page');
-const avatar = document.getElementById('avatar');
+const top_box_div = document.getElementById('top_box_div');
 
 
 export async function isFriend(user) {
