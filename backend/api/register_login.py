@@ -34,10 +34,9 @@ def create_user(request):
 	except Exception  as e:
 		return HttpResponse(status=400, reason="Bad request: " + str(e))
 	regexUsername = r'^[a-zA-Z0-9_-]{1,16}$'															# register page parsing
-	regexEmail = r'\A\S+@\S+\.\S+\Z'
-	secRegexEmail = r'^[a-zA-Z0-9@.-]+$'
+	regexEmail = r'\A\S{1,20}@\S+\.\S{1,20}\Z'
+	secRegexEmail = r'^[a-zA-Z0-9@.-]{1,20}$'
 	regexPwd = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,16}$'
-	print("===========================")
 	if not re.match(regexUsername, data.username):
 		return JsonResponse({'error': 'Username not valide'}, status=419)
 	if not (re.match(regexEmail, data.email) and re.match(secRegexEmail, data.email)):
@@ -108,8 +107,8 @@ def updateUser(request):
 		return HttpResponse(status=400, reason="Bad request: " + str(e))
 	regexUsername = r'^[a-zA-Z0-9_-]{1,16}$'	
 	regexPseudo = r'^[a-zA-Z0-9_-]{1,16}$'																# register page parsing
-	regexEmail = r'\A[^%\s]+@\S+\.\S+\Z'
-	secRegexEmail = r'^[a-zA-Z0-9@.-]+$'
+	regexEmail = r'\A\S{1,20}@\S+\.\S{1,20}\Z'
+	secRegexEmail = r'^[a-zA-Z0-9@.-]{1,20}$'
 	regexPwd = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!#%?&])[^\s]{8,16}$'
 	payload = decode_Payload(request)
 	user_id = payload.get('user_id')
