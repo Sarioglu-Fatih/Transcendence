@@ -28,6 +28,49 @@ async function addPseudo() {
 
 }
 
+async function setPseudos(){
+    var pseudo_regex = /^[a-zA-Z0-9-_]+$/;
+    const player1 = document.getElementById('Player1').value;
+    const player2 = document.getElementById('Player2').value;
+    const player3 = document.getElementById('Player3').value;
+    const player4 = document.getElementById('Player4').value;
+    if (!pseudo_regex.test(player1)){
+        document.getElementById('Player1Error').innerHTML = "Please enter letters, numbers, '-' or '_'."
+        throw new Error('Failed to register pseudo');
+    }
+    if (!pseudo_regex.test(player2)){
+        document.getElementById('Player2Error').innerHTML = "Please enter letters, numbers, '-' or '_'."
+        throw new Error('Failed to register pseudo');
+    }
+    if (!pseudo_regex.test(player3)){
+        document.getElementById('Player3Error').innerHTML = "Please enter letters, numbers, '-' or '_'."
+        throw new Error('Failed to register pseudo');
+    }
+    if (!pseudo_regex.test(player4)){
+        document.getElementById('Player4Error').innerHTML = "Please enter letters, numbers, '-' or '_'."
+        throw new Error('Failed to register pseudo');
+    }
+    if (player2 === player1){
+        document.getElementById('Player2Error').innerHTML = "Pseudo already taken"
+        throw new Error('Failed to register pseudo');
+    }
+    if (player3 === player1 || player3 === player2){
+        document.getElementById('Player3Error').innerHTML = "Pseudo already taken"
+        throw new Error('Failed to register pseudo');
+    }
+    if (player4 === player1 || player4 === player2 || player4 === player3){
+        document.getElementById('Player4Error').innerHTML = "Pseudo already taken"
+        throw new Error('Failed to register pseudo');
+    }
+    const pseudos = {
+        player1,
+        player2,
+        player3,
+        player4
+    }
+    return pseudos;
+}
+
 async function pseudoCheck() {
     try {
         const response = await makeApiRequest('pseudo');
@@ -67,9 +110,48 @@ async function pseudoCheck() {
     }
 }
 
+async function localTournamentPseudo(){
+    let pseudos
+    await new Promise((resolve, reject) => {
+        const pong_launcher = document.getElementById("pong_launcher");
+        pong_launcher.innerHTML = `
+            <form id="local_tournament_form">
+                <label for="pseudo" class="form-label">Player1</label>
+                <input type="pseudo" class="form-control" id="Player1">
+                <span id="Player1Error" class="error-message"></span>
+
+                <label for="pseudo" class="form-label">Player2</label>
+                <input type="pseudo" class="form-control" id="Player2">
+                <span id="Player2Error" class="error-message"></span>
+
+                <label for="pseudo" class="form-label">Player3</label>
+                <input type="pseudo" class="form-control" id="Player3">
+                <span id="Player3Error" class="error-message"></span>
+
+                <label for="pseudo" class="form-label">Player4</label>
+                <input type="pseudo" class="form-control" id="Player4">
+                <span id="Player4Error" class="error-message"></span>
+                
+                <button id="submit_pseudo_tournament_button" class="btn btn-primary">Submit</button>
+            </form>`
+
+            const local_tournament_form = document.getElementById('local_tournament_form');
+            local_tournament_form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                try {
+                    pseudos = await setPseudos();
+                    resolve(pseudos); // Resolve the promise after pseudo is set
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        });
+    return (pseudos)
+}
 
 
-function launchGame(mode) {
+
+function launchGame(mode, pseudos) {
     const pong_launcher = document.getElementById("pong_launcher");
     const socketURL = `wss://${IP}:8000/ws/game/`;
     let canvas;
@@ -85,12 +167,24 @@ function launchGame(mode) {
 
     socket.addEventListener('open', (event) => {
         // Send a message to the server
-        const message = {
-            type: 'open',
-            content: 'Hello, server!',
-            mode: mode,
-            jwtToken: jwtToken,
-        };
+        var message;
+        if (mode === 'local_tournament'){
+            console.log(pseudos)
+            message = {
+                type: 'open',
+                content: 'Hello, server!',
+                mode: mode,
+                jwtToken: jwtToken,
+                pseudos : pseudos
+            };
+        } else {
+            message = {
+                type: 'open',
+                content: 'Hello, server!',
+                mode: mode,
+                jwtToken: jwtToken,
+            };
+        }
         socket.send(JSON.stringify(message));
     });
 
@@ -258,4 +352,4 @@ function drawPong(canvas, player1, player2, bx, by, p1, p2, score1, score2, winn
 }
 
 
-export { launchGame , drawPong, pseudoCheck }
+export { launchGame , drawPong, pseudoCheck, localTournamentPseudo }

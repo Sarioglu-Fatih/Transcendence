@@ -1,4 +1,4 @@
-import { launchGame , pseudoCheck} from "../pong.js"
+import { launchGame , pseudoCheck, localTournamentPseudo} from "../pong.js"
 import { hideDivs, showDivs, makeApiRequest } from "../utils.js";
 import {displayHomePage} from "../display_page_function.js"
 
@@ -16,6 +16,9 @@ function put_game_launcher_form_html() {
               </div>
               <div class="d-grid  col">
                 <button class="btn btn-primary btn-block btn-lg" id="local">Local</button>
+              </div>
+              <div class="d-grid  col">
+                <button class="btn btn-primary btn-block btn-lg" id="local_tournament">Local Tournament</button>
               </div>
               </div>
             <div id ="pong_launcher"></div>
@@ -65,6 +68,18 @@ function put_game_launcher_form_html() {
             hideDivs(['pong_button']);
             showDivs(['pong_launcher']);
             launchGame('local');
+        } catch (err) {
+            pong_launcher.innerHTML = `<p class="error-msg">${err.message}</p>`;
+        }
+    })
+
+    const localTournamentBtn = document.getElementById("local_tournament");
+    localTournamentBtn.addEventListener('click', async ()=> {
+        try {
+            hideDivs(['pong_button']);
+            showDivs(['pong_launcher']);
+            const pseudos = await localTournamentPseudo();
+            launchGame('local_tournament', pseudos);
         } catch (err) {
             pong_launcher.innerHTML = `<p class="error-msg">${err.message}</p>`;
         }

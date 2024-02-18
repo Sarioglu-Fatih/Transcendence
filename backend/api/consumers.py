@@ -25,6 +25,7 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 	PADDLE_Y = 60
 	PADDLE_SPEED = 6
 	MARGIN = 5
+	end = ""
 
 	async def connect(self):
 		await self.accept()
@@ -65,7 +66,7 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 			payload = jwt.decode(data.get('jwtToken'), key=settings.SECRET_KEY, algorithms=['HS256'])
 			user_id = payload.get('user_id')
 			player = self.players.get(user_id)
-			if (data.get('mode') == 'local'):
+			if (data.get('mode') == 'local' or data.get('mode') == 'local_tournament'):
 				async with self.update_lock:
 					if data.get('content') == 's':
 						if player['p1'] <= (self.GAME_Y - self.PADDLE_Y - self.MARGIN):
@@ -113,7 +114,10 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 				return
 			
 			if data.get('mode') == 'local':
-				asyncio.create_task(self.local_game_loop(user))
+				asyncio.create_task(self.local_game_loop(user, 'player1', 'player2', 'local'))
+
+			if data.get('mode') == 'local_tournament':
+				asyncio.create_task(self.local_tournament_loop(user, data))
 
 			if data.get('mode') == 'normal':
 				await self.update_user_status(user, 'match')
@@ -130,7 +134,11 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 				if (tournament):
 					asyncio.create_task(self.tournament_loop(user, tournament))
 				asyncio.create_task(self.tournament_check(user))
-	
+
+
+
+
+
 	async def tournament_loop(self, user, tournament):
 		p1 = self.players.get(tournament.match_1.player1_id.id)
 		p2 = self.players.get(tournament.match_1.player2_id.id)
@@ -444,8 +452,33 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 		user.user_is_in_game = False
 		user.save()
 
+	async def local_tournament_loop(self, user, data):
+		pseudos = data.get('pseudos')
+		p1 = pseudos.get('player1')
+		p2 = pseudos.get('player2')
+		p3 = pseudos.get('player3')
+		p4 = pseudos.get('player4')
+		self.end = ""
+		asyncio.create_task(self.local_game_loop(user, p1, p2, 'local_tournament'))
+		while (not self.end):
+			await asyncio.sleep(1)
+		win_game1 = self.end
+		self.end = ""
+		await asyncio.sleep(5)
+		asyncio.create_task(self.local_game_loop(user, p3, p4, 'local_tournament'))
+		while (not self.end):
+			await asyncio.sleep(1)
+		win_game2 = self.end
+		self.end = ""
+		await asyncio.sleep(5)
+		asyncio.create_task(self.local_game_loop(user, win_game1 , win_game2, 'local_tournament'))
+		while (not self.end):
+			await asyncio.sleep(1)
+		await self.disconnect(1)
+
+
 	
-	async def local_game_loop(self, user):
+	async def local_game_loop(self, user, p1, p2, mode):
 		self.player_id = user.id
 		async with self.update_lock:
 			self.players[self.player_id] = {
@@ -469,8 +502,8 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 		player = self.players.get(user.id)
 		await self.send(text_data=json.dumps({
 			'type': 'match_info',
-			'player1': 'player1',
-			'player2': 'player2',
+			'player1': p1,
+			'player2': p2,
 		}))
 		while p1_score < 5 and p2_score < 5:
 			b_pos_x += Vx * 6
@@ -517,12 +550,15 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 			}))
 			await asyncio.sleep(0.01)
 		if (p1_score == 5):
-			winner = 'player 1'
+			self.end = p1
+			winner = p1
 		else:
-			winner = 'player 2'
+			self.end = p2
+			winner = p2
 		await self.send(text_data=json.dumps({
 				'type': 'game_end',
 				'winner': winner
 		}))
-		await self.disconnect(1)
+		if (mode == 'local'):
+			await self.disconnect(1)
 
