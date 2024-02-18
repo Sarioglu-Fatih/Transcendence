@@ -140,9 +140,7 @@ def get_user(request, user_profil):
 def add_friend_request(request, userToAddName):
 	# Get the two user
 	currentUser = request.user
-	print(currentUser)
 	userToAdd = get_object_or_404(User, pseudo=userToAddName)
-	print(userToAdd)
 	# Add the userToAdd to the friendlist if is not already in
 	if userToAdd not in  currentUser.friendlist.all():
 		currentUser.friendlist.add(userToAdd)
@@ -150,6 +148,19 @@ def add_friend_request(request, userToAddName):
 		return HttpResponse("Friend added to the friendlist", status=200)
 	else:
 		return HttpResponse("Friend is already in the friendlist", status=400)
+	
+@login_required
+def remove_friend_request(request, userToAddName):
+	# Get the two user
+	currentUser = request.user
+	userToAdd = get_object_or_404(User, pseudo=userToAddName)
+	# Add the userToAdd to the friendlist if is not already in
+	if userToAdd in  currentUser.friendlist.all():
+		currentUser.friendlist.remove(userToAdd)
+		currentUser.save()
+		return HttpResponse("Friend removed to the friendlist", status=200)
+	else:
+		return HttpResponse("Friend is not already in the friendlist", status=400)
 
 @login_required
 def my_friends(request):
@@ -175,7 +186,7 @@ def isFriend(request, userToAddName):
 	is_friend = userToAdd in currentUser.friendlist.all()
 	if (is_friend or currentUser == userToAdd):
 		return HttpResponseNotFound(status=200)
-	return HttpResponseNotFound(status=400)
+	return HttpResponseNotFound({'error': 'not your friend'}, status=400)
 
 @login_required
 def username(request):

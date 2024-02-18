@@ -15,6 +15,7 @@ async function put_profil_card_html() {
            
         <div class="d-flex justify-content-center">
             <button class="btn btn-primary" id="addFriend_button">Add friend</button>
+            <button class="btn btn-danger" id="removeFriend_button">Remove friend</button>
         </div>
             <form id="update_form" class="update_form">
                 <div class="row">
@@ -114,6 +115,18 @@ async function put_profil_card_html() {
         const response = makeApiRequest(`add_friend/${lastSegment}`)
         displayProfilPage();
     })
+
+    const removeFriend = document.getElementById('removeFriend_button');
+    removeFriend.addEventListener('click', async function (event) {
+        event.preventDefault();
+        
+        const clientURL = window.location.href;
+        const segments = clientURL.split('/');
+        let lastSegment = segments[segments.length - 2];
+        lastSegment += "/";
+        const response = makeApiRequest(`remove_friend/${lastSegment}`)
+        displayProfilPage();
+    })
     
     window.uploadAvatar = async function () {
         handleAvatarUpload()
@@ -127,7 +140,7 @@ async function check_whos_profil() {
         let isHimself = await renderProfilPage();
         let is42u = await is42user();
         if (isHimself == true) {
-            hideDivs(["addFriend_button"]);
+            hideDivs(["addFriend_button", "removeFriend_button"]);
             if (is42u){
                 hideDivs(["input_username_div", "input_email_div", "input_pwd_div", "container_2fa"]);
                 showDivs(["pseudo42", "save"])
@@ -140,17 +153,17 @@ async function check_whos_profil() {
             const isFriends = await isFriend(userToAddName);
             if (isFriends){
                 hideDivs(["profilRightSide", "addFriend_button", "btn_2fa", "avatar_upload_form"]);
-                showDivs(["profilLeftSide"]);
+                showDivs(["profilLeftSide", "removeFriend_button"]);
             }
             else {
-                hideDivs(["profilRightSide", "btn_2fa", "avatar_upload_form"]);
+                hideDivs(["profilRightSide", "btn_2fa", "avatar_upload_form", "removeFriend_button"]);
                 showDivs(["profilLeftSide", "addFriend_button"]);
             }
         }
     }
     catch (error) {
         if (error.status === 400) {
-            hideDivs(["profilRightSide"])
+            hideDivs(["profilRightSide", "removeFriend_button"])
             showDivs(["profilLeftSide", "addFriend_button"]) 
         }
         else {
