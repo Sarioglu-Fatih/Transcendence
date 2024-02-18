@@ -28,6 +28,7 @@ async function updateUser() {
     var pseudo = document.getElementById("updatePseudo").value;
     var email = document.getElementById("updateEmail").value;
     var password = document.getElementById("updatePassword").value;
+    var alerte = document.getElementById("updateAlert")
     let body = {
         'username': username,
         'email': email,
@@ -39,6 +40,10 @@ async function updateUser() {
         const response = await  makeApiRequestPatch('update/', body)
         if (response.ok) {
             console.log('Update ok', response);
+            alerte.innerHTML = `
+            <div class="alert alert-primary" role="alert">
+                Update of your profil done.
+            </div>`
             alert('Update of your profil done.');
         }
         else {
