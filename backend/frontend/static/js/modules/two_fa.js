@@ -18,7 +18,7 @@ async function enable2fa() {
 		// If 2FA is not enabled, proceed to enable it
 		const body = {
 		}
-		const enable2faResponse = await makeApiRequestPost('enable_2fa', body);
+		const enable2faResponse = await makeApiRequestPost('enable_2fa/', body);
 		if (enable2faResponse.ok) {
 			const data = await enable2faResponse.json();
 			if (data.two_factor_confirmation) {
@@ -49,7 +49,7 @@ async function enable2fa() {
 
 async function enable2faWithTOTP(token) {
 	try {
-		const response = await makeApiRequestPost('enable_2fa', { token });
+		const response = await makeApiRequestPost('enable_2fa/', { token });
 		if (response.ok) {
 			const data = await response.json();
 			if (data.success) {
@@ -90,7 +90,7 @@ function displayQRCode(otpauthUrl) {
 
 async function disable2fa() {
 	try {
-		const response = await makeApiRequestPost('disable_2fa');
+		const response = await makeApiRequestPost('disable_2fa/');
 		if (response.ok) {
 			const data = await response.json();
 			const qrCodeContainer = document.getElementById('qrcode');

@@ -11,7 +11,7 @@ async function addPseudo() {
         const body = {
             'pseudo': pseudo,
         };
-        const response = await makeApiRequestPost("registerpseudo", body);
+        const response = await makeApiRequestPost("registerpseudo/", body);
         if (response.ok) {
         } else {
             document.getElementById('pseudoError').innerHTML = "Pseudo already taken"

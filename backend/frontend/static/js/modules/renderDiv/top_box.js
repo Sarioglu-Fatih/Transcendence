@@ -2,6 +2,7 @@ import { displayAvatar } from "../profilPage.js";
 import { makeApiRequest } from "../utils.js";
 import { displayProfilPage, displayLoginPage, displayHomePage } from "../display_page_function.js";
 import { logout } from "../logout.js";
+import { isUserLoggedIn } from "../../main.js";
 
 function put_top_box_form_html() {
     var top_box_div = document.getElementById("top_box_div");
@@ -46,7 +47,9 @@ function put_top_box_form_html() {
       await displayProfilPage();
     });
 
-    displayAvatar();
+    if (isUserLoggedIn()){
+      displayAvatar();
+    }
     const avatar_image = document.getElementById('avatar-image');
     avatar_image.addEventListener('click', (event) => {
       event.preventDefault();
@@ -55,7 +58,6 @@ function put_top_box_form_html() {
         return;
       }
       history.pushState({}, '', '/home');
-      makeApiRequest('refresh_user_status');
       displayHomePage();
     })
 }

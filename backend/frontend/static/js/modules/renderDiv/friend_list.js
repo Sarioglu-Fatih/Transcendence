@@ -36,7 +36,7 @@ async function friend_list() {
   const loadMoreButton = document.getElementById('load_more');
   var offset = 0;
   try {
-    const response = await fetch('/api/my_friends');
+    const response = await fetch('/api/my_friends/');
     const data = await response.json();
     
     const loadTwentyFriends = () => {

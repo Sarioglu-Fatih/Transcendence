@@ -7,7 +7,7 @@ async function fetchCode(code, state) {
         state: state,
     };
     try {
-        const response = await makeApiRequestPost('auth42', body);
+        const response = await makeApiRequestPost('auth42/', body);
         if (response.ok) {
             history.pushState({}, '', '/home');
             makeApiRequest('refresh_user_status');

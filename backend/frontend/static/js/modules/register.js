@@ -11,7 +11,7 @@ async function registerUser() {
         'pseudo': ""
     }
 
-    const response = await makeApiRequestPost("register", body)
+    const response = await makeApiRequestPost("register/", body)
     if (response.ok) {
         console.log('User registered successfully', response);
         alert('User registered successfully!');

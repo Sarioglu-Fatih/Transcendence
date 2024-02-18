@@ -8,7 +8,7 @@ async function send_TOTP(token, username) {
 			'token': token,
 			'username': username
 		};
-		const response = await makeApiRequestPost("check_totp", body);
+		const response = await makeApiRequestPost("check_totp/", body);
 		return response
 	}
 	catch (error) {
@@ -26,7 +26,7 @@ async function login() {
 		}
 		
 		try {
-			const response = await makeApiRequestPost("login", body)
+			const response = await makeApiRequestPost("login/", body)
 			if (response.ok) {
 				if (response.status === 222){
 					const token = prompt("Enter the code from your authenticator")
