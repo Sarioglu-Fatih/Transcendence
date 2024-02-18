@@ -29,12 +29,13 @@ function put_game_launcher_form_html() {
         <div class="card-body d-flex justify-content-center align-items-center text-center"  id="controls_card">
             <div class="row" id="controls_scheme">
                   <div class="d-grid  col">
-                  <button class="btn btn-primary btn-block btn-lg" id="up">Up: W or ↑</button>
-                  <button class="btn btn-primary btn-block btn-lg" id="down">Down: S or ↓</button>
+                  <b><font size="7">Game Controls:</font></b>
+                  <font size="6">Move Up: W or ↑</font>
+                  <font size="6">Move Down: S or ↓</font>
                   </div>
                   </div>
             <div id ="controls_scheme"></div>
-        </div>  
+        </div>
     </div>
     `;
 

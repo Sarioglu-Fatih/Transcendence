@@ -464,13 +464,13 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 			await asyncio.sleep(1)
 		win_game1 = self.end
 		self.end = ""
-		await asyncio.sleep(5)
+		await asyncio.sleep(15)
 		asyncio.create_task(self.local_game_loop(user, p3, p4, 'local_tournament'))
 		while (not self.end):
 			await asyncio.sleep(1)
 		win_game2 = self.end
 		self.end = ""
-		await asyncio.sleep(5)
+		await asyncio.sleep(15)
 		asyncio.create_task(self.local_game_loop(user, win_game1 , win_game2, 'local_tournament'))
 		while (not self.end):
 			await asyncio.sleep(1)
