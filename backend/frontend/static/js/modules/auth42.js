@@ -55,4 +55,12 @@ async function checkAuth42() {
     return ret;
 }
 
-export { checkAuth42 };
+async function auth42(){
+    if ((await checkAuth42()) === false) {
+        history.pushState({}, '', '/login');
+        displayLoginPage();
+        alert('42 authentification failed !');
+    }
+}
+
+export { auth42 };
