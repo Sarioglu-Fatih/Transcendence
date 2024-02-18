@@ -112,7 +112,7 @@ async function pseudoCheck() {
 
 async function localTournamentPseudo(){
     let pseudos
-    await new Promise((resolve, reject) => {
+    await new Promise((resolve) => {
         const pong_launcher = document.getElementById("pong_launcher");
         pong_launcher.innerHTML = `
         <div id="tournament_rule">
@@ -150,7 +150,7 @@ async function localTournamentPseudo(){
                     pseudos = await setPseudos();
                     resolve(pseudos); // Resolve the promise after pseudo is set
                 } catch (err) {
-                    reject(err);
+                    console.error(err.message);
                 }
             });
         });
