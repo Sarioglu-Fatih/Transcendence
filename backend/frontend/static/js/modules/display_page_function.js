@@ -46,10 +46,6 @@ async function displayProfilPage() {
 }
 
 function displayHomePage() {
-    if (!isUserLoggedIn()){
-        error404();
-        return;
-    }
     if (!isTopBoxDisplayed){
         put_top_box_form_html();
         isTopBoxDisplayed = true;
@@ -57,6 +53,10 @@ function displayHomePage() {
     put_game_launcher_form_html();
     put_friend_list_form_html();
     closeAllWebSockets();
+    if (!isUserLoggedIn()){
+        error404();
+        return;
+    }
     hideDivs(["login_page", "home_page", "profil_page", "error404", "top_box_div"]);
     showDivs(["home_page", "top_box_div"])
 }

@@ -26,7 +26,6 @@ def custom_redirect(request):
 	return redirect('/home')
 
 urlpatterns = [
-	path('', views.renderMainPage),
 	path('home', views.renderMainPage),
 	path('login', views.renderMainPage),
 	path('profil/<str:user_profil>/', views.renderProfilPage),

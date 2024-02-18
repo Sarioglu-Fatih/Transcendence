@@ -6,7 +6,7 @@ import { closeAllWebSockets } from "./utils.js";
 
 async function logout() {
     try {
-      const response = await  makeApiRequestPatch('logout/')
+      const response = await  fetch('https://localhost:8000/api/logout/')
       if (response.ok) {
         history.pushState({}, '', '/login');
         closeAllWebSockets();

@@ -115,6 +115,13 @@ async function localTournamentPseudo(){
     await new Promise((resolve, reject) => {
         const pong_launcher = document.getElementById("pong_launcher");
         pong_launcher.innerHTML = `
+        <div id="tournament_rule">
+            <h3>Tournament Rules</h3>
+            <p>Player1 and Player2 will play against each other first.</p>
+            <p>Then Player3 and Player4 will play against each other.</p>
+            <p>Finally the 2 winner will play against each other.</p>
+        </div>
+        <div>
             <form id="local_tournament_form">
                 <label for="pseudo" class="form-label">Player1</label>
                 <input type="pseudo" class="form-control" id="Player1">
@@ -133,7 +140,8 @@ async function localTournamentPseudo(){
                 <span id="Player4Error" class="error-message"></span>
                 
                 <button id="submit_pseudo_tournament_button" class="btn btn-primary">Submit</button>
-            </form>`
+            </form>
+        </div>`
 
             const local_tournament_form = document.getElementById('local_tournament_form');
             local_tournament_form.addEventListener('submit', async (event) => {

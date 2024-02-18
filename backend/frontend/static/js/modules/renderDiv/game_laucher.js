@@ -20,7 +20,7 @@ function put_game_launcher_form_html() {
               <div class="d-grid  col">
                 <button class="btn btn-primary btn-block btn-lg" id="local_tournament">Local Tournament</button>
               </div>
-              </div>
+            </div>
             <div id ="pong_launcher"></div>
             </div>
             <div class="card-footer text-center" id="replay">

@@ -24,10 +24,10 @@ class registerPostParameters():
 def refresh_user_status(request):
 	payload = decode_Payload(request)
 	if not payload:
-		return JsonResponse({'error': 'User ID not provided'}, status=400)
+		return JsonResponse({'error': 'User ID not provided'}, status=401)
 	user_id = payload.get('user_id')
 	if not user_id:
-		return JsonResponse({'error': 'User ID not provided'}, status=400)
+		return JsonResponse({'error': 'User ID not provided'}, status=401)
 	user = request.user
 	last_refresh_time[user.id] = datetime.datetime.now()
 	user.user_is_connected = True
@@ -40,10 +40,10 @@ def avatar(request):
 		return JsonResponse({'error': 'Invalid request method'}, status=405)
 	payload = decode_Payload(request)
 	if not payload:
-		return JsonResponse({'error': 'User ID not provided'}, status=400)
+		return JsonResponse({'error': 'User ID not provided'}, status=401)
 	user_id = payload.get('user_id')
 	if not user_id:
-		return JsonResponse({'error': 'User ID not provided'}, status=400)
+		return JsonResponse({'error': 'User ID not provided'}, status=401)
 	user = get_object_or_404(User, id=user_id)
 	avatar_data = None
 	if user.avatar and os.path.exists(user.avatar.path):
@@ -63,10 +63,10 @@ def upload_avatar(request):
 		return HttpResponse(status=405)
 	payload = decode_Payload(request)
 	if not payload:
-		return HttpResponse({'error': 'User ID not provided'}, status=400)
+		return HttpResponse({'error': 'Payload not provided'}, status=401)
 	user_id = payload.get('user_id')
 	if not user_id:
-		return HttpResponse({'error': 'User ID not provided'}, status=400)
+		return HttpResponse({'error': 'User ID not provided'}, status=401)
 	user = get_object_or_404(User, id=user_id)
 	form = AvatarUploadForm(request.POST, request.FILES, instance=request.user)
 	if form.is_valid() and request.user == form.instance:
@@ -83,9 +83,11 @@ def get_history(request, user_profil):
 	if request.method != 'GET':
 		return HttpResponseNotFound(status=404)
 	payload = decode_Payload(request)
+	if not payload:
+		return HttpResponse({'error': 'Payload not provided'}, status=401)
 	user_id = payload.get('user_id')
 	if (not user_id):
-		return HttpResponseNotFound(status=404)
+		return HttpResponseNotFound(status=401)
 	if (User.objects.filter(username=user_profil).exists()):
 		user = User.objects.get(username=user_profil)
 		all_games = user.get_all_games()
@@ -101,9 +103,11 @@ def get_user(request, user_profil):
 	if request.method != 'GET':
 		return HttpResponseNotFound(status=404)
 	payload = decode_Payload(request)
+	if not payload:
+		return HttpResponse({'error': 'Payload not provided'}, status=401)
 	user_id = payload.get('user_id')
 	if not user_id:
-		return HttpResponseNotFound(status=404)
+		return HttpResponseNotFound(status=401)
 	if (User.objects.filter(username=user_profil).exists()):
 		if (User.objects.get(username=user_profil).id == user_id):
 			user = User.objects.get(username=user_profil)
@@ -158,6 +162,8 @@ def isFriend(request, userToAddName):
 	if not request.method == 'GET':
 		return HttpResponseNotFound(status=404)
 	payload = decode_Payload(request)
+	if not payload:
+		return HttpResponse({'error': 'Payload not provided'}, status=401)
 	user_id = payload.get('user_id')
 	if (not user_id):
 		return HttpResponseNotFound(status=404)    
@@ -176,6 +182,8 @@ def username(request):
 	if not request.method == 'GET':
 		return HttpResponseNotFound(status=404)
 	payload = decode_Payload(request)
+	if not payload:
+		return HttpResponse({'error': 'Payload not provided'}, status=401)
 	user_id = payload.get('user_id')
 	if (not user_id):
 		return HttpResponseNotFound(status=404)
@@ -192,6 +200,8 @@ def pseudo(request):
 	if not request.method == 'GET':
 		return HttpResponseNotFound(status=404)
 	payload = decode_Payload(request)
+	if not payload:
+		return HttpResponse({'error': 'Payload not provided'}, status=401)
 	user_id = payload.get('user_id')
 	if (not user_id):
 		return HttpResponseNotFound(status=404)
@@ -208,6 +218,8 @@ def registerpseudo(request):
 	if not request.method == 'POST':
 		return HttpResponseNotFound(status=404)
 	payload = decode_Payload(request)
+	if not payload:
+		return HttpResponse({'error': 'Payload not provided'}, status=401)
 	user_id = payload.get('user_id')
 	if (not user_id):
 		return HttpResponseNotFound(status=404)
@@ -230,13 +242,13 @@ def registerpseudo(request):
 @login_required
 def isUserLoggedIn(request):
 	if request.method != 'GET':
-		return HttpResponseNotFound(status=404)
+		return HttpResponseNotFound(status=405)
 	payload = decode_Payload(request)
 	if (not payload):
-		return HttpResponseNotFound(status=404)
+		return HttpResponseNotFound(status=401)
 	user_id = payload.get('user_id')
 	if (not user_id):
-		return HttpResponseNotFound(status=404)
+		return HttpResponseNotFound(status=401)
 	else:
 		print("yeah")
 		return HttpResponseNotFound(status=200)
@@ -248,10 +260,10 @@ def change_user_status(request, status):
 		return HttpResponseNotFound(status=404)
 	payload = decode_Payload(request)
 	if (not payload):
-		return HttpResponseNotFound(status=404)
+		return HttpResponseNotFound(status=401)
 	user_id = payload.get('user_id')
 	if (not user_id):
-		return HttpResponseNotFound(status=404)
+		return HttpResponseNotFound(status=401)
 	if (not User.objects.filter(id=user_id)):
 		return HttpResponseNotFound(status=404)
 	user = User.objects.get(id=user_id)

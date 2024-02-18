@@ -182,10 +182,8 @@ h5 {
   /* display: flex; */
 }
 
-#tournament {
-  /* display: flex; */
-  margin-right: 5vh;
-  margin-left: 5vh;
+#tournament_rule {
+  margin-bottom: 5vh;
 }
 
 #local {

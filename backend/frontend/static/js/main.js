@@ -35,7 +35,7 @@ document.onvisibilitychange = function() {
 
 
 function isUserLoggedIn() {
-//   const response = await makeApiRequest("isUserLoggedIn");
+  // const response = await makeApiRequest("isUserLoggedIn");
   const jwtToken = getCookie('jwt_token');
   if (jwtToken !== null) {
       return (true)

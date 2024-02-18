@@ -4,6 +4,7 @@ from jwt.exceptions import InvalidTokenError
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.conf import settings
+from jwt.exceptions import DecodeError
 
 @ensure_csrf_cookie
 def get_csrf_token(request):
@@ -13,11 +14,15 @@ def get_csrf_token(request):
 	print(token)
 	return response
 
+# def refresh
+
 def decode_Payload(request):
-	# Decode the JWT token to get the payload
-	jwt_token = request.COOKIES.get('jwt_token')
-	if (not jwt_token):
-		return
-	decoded_payload = jwt.decode(jwt_token, key=settings.SECRET_KEY, algorithms=['HS256'])
-	print("PAYLOAD DECODED : ", decoded_payload)
-	return (decoded_payload)
+    jwt_token = request.COOKIES.get('jwt_token')
+    if not jwt_token:
+        return
+    try:
+        decoded_payload = jwt.decode(jwt_token, key=settings.SECRET_KEY, algorithms=['HS256'])
+        print("PAYLOAD DECODED : ", decoded_payload)
+        return decoded_payload
+    except DecodeError:
+        return None

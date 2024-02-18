@@ -98,19 +98,23 @@ async function makeApiRequestPatch(endpoint, body) {
 }
 
 async function handleTokenExpiration() {
-	const response = await fetch(`https://${IP}:8000/api/token/refresh/`, {
+	console.log("ici")
+	const refreshToken = getCookie('refresh_token');
+	console.log(refreshToken)
+	const response = await fetch(`https://localhost:8000/api/token/refresh/`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify({ refresh: refreshToken }),
 	});
-
+	console.log(response)
 	try {
 		if (response.ok) {
 			const data = await response.json();
 			const newAccessToken = data.access;
-			localStorage.setItem('jwt_token', newAccessToken);
+			console.log(newAccessToken)
+			document.cookie = `jwt_token=${newAccessToken}`
 		}
 		else {
 			// Check if the response contains an error message
