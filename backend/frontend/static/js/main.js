@@ -12,7 +12,7 @@ window.onload = function() {
 	var path = window.location.pathname;
 	if (path === "/home")
 		displayHomePage();
-	else if (path === '/login'){
+	else if (path === '/login' || path === '/'){
 		displayLoginPage();}
 	else if (path.startsWith('/profil/'))
 		displayProfilPage();
@@ -22,7 +22,7 @@ window.onpopstate = async function() {
   var path = window.location.pathname;
   if (path === "/home")
     displayHomePage();
-  else if (path === '/login')
+  else if (path === '/login' || path === '/')
     displayLoginPage();
   else if (path.startsWith('/profil/'))
     displayProfilPage();
