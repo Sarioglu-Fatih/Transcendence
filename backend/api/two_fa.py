@@ -21,15 +21,18 @@ class registerPostParameters():
 def enable2fa(request):
 	try:
 		user = request.user
-		# Check if the user already has a TOTP device enabled
-		if TOTPDevice.objects.filter(user=user, confirmed=True).exists():
-			return JsonResponse({'success': False, 'error': 'TOTP device already enabled'}, status=400)
-		totp_device = TOTPDevice.objects.create(user=user)
-		totp_device.save()
-		# Get the TOTPDevice instance associated with the user
-		otpauth_url = totp_device.config_url
-		user.qrcode = otpauth_url
-		print(user.qrcode)
+		data = json.loads(request.body)
+		token = data.get('token')
+		if not token and not TOTPDevice.objects.filter(user=user, confirmed=True).exists():
+			totp_device = TOTPDevice.objects.create(user=user)
+			totp_device.save()
+			otpauth_url = totp_device.config_url
+			user.qrcode = otpauth_url
+			user.save()
+			return JsonResponse({'success': True, 'two_factor_confirmation': True, 'qrcode': user.qrcode}, status=200)
+		# Verify TOTP token
+		if not verify_totp(user, token):
+			return JsonResponse({'success': False, 'error': 'Invalid TOTP token'}, status=452)
 		user.status_2fa = True
 		user.save()
 		return JsonResponse({'success': True, 'qrcode': user.qrcode}, status=200)
@@ -55,7 +58,6 @@ def get_2fa_status(request):
 	try:
 		user = request.user
 		if (user.status_2fa == True):
-			print("========================")
 			return JsonResponse({
 				'two_factor_enabled': True,
 				'qrcode': user.qrcode
