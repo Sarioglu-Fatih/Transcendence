@@ -116,10 +116,11 @@ async function localTournamentPseudo(){
         const pong_launcher = document.getElementById("pong_launcher");
         pong_launcher.innerHTML = `
         <div id="tournament_rule">
-            <h3>Tournament Rules</h3>
-            <p>Player1 and Player2 will play against each other first.</p>
-            <p>Then Player3 and Player4 will play against each other.</p>
-            <p>Finally the 2 winner will play against each other.</p>
+            <h3><font size="7">Tournament Rules<font></h3>
+            <p><font size="5">Player1 and Player2 will play against each other first.<font></p>
+            <p><font size="5">Then Player3 and Player4 will play against each other.<font></p>
+            <p><font size="5">Finally the 2 winners will play against each other.<font></p>
+            <p><font size="5">Next match will start 15 seconds after the end of the last one<font></p>
         </div>
         <div>
             <form id="local_tournament_form">
