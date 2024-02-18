@@ -45,9 +45,9 @@ def create_user(request):
 	if  not re.match(regexPwd, data.password):
 		return JsonResponse({'error': "Special characters allowed : @$!%#?&"}, status=421)
 	if User.objects.filter(username=data.username).exists():
-		return HttpResponse(reason="Conflict: Username already exists.", status=409)
+		return JsonResponse({'error': "Conflict: Username already exists."}, status=409)
 	if User.objects.filter(email=data.email).exists():
-		return HttpResponse(reason="Conflict: Email already exists.", status=409)
+		return JsonResponse({'error': "Conflict: Email already exists."}, status=409)
 	new_user = User(username=data.username, email=data.email, password=make_password(data.password))
 	new_user.save()
 	return HttpResponse(status=200)
@@ -130,14 +130,14 @@ def updateUser(request):
 		return HttpResponseNotFound(status=404)
 	user = User.objects.get(id=user_id)
 	if User.objects.filter(username=data.username).exists():
-		return HttpResponse(reason="Conflict: Username already exists.", status=409)
+		return JsonResponse({'error': 'Conflict: Username already exists.'}, status=409)
 	if (data.pseudo != ""):
 		if User.objects.filter(pseudo=data.pseudo).exists():
-			return HttpResponse(reason="Conflict: Pseudo already exists.", status=410)
+			return JsonResponse({'error': 'Conflict: Pseudo already exists.'}, status=410)
 	if User.objects.filter(email=data.email).exists():
-		return HttpResponse(reason="Conflict: Email already exists.", status=411)
+		return JsonResponse({'error': 'Conflict: Email already exists.'}, status=411)
 	if (user.user_is_in_game or user.user_is_looking_tournament or user.user_is_looking_game):
-		return HttpResponse(reason="Can't change info while in game.", status=454)
+		return JsonResponse({'error': 'Can\'t change info while in game.'}, status=454)
 	if (data.username):
 		if not re.match(regexUsername, data.username):
 			return JsonResponse({'error': 'Username not valid'}, status=452)

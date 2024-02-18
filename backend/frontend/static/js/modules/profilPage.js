@@ -67,13 +67,14 @@ async function handleAvatarUpload() {
 	  });
   
 	  if (response.ok) {
-		// Optionally, update the displayed avatar immediately
-		await displayAvatar();
-		// Provide feedback to the user if needed
-	  } else {
-		console.error('Avatar upload failed');
+		  await displayAvatar();
 	  }
-	} catch (error) {
+    else {
+		  console.error('Avatar upload failed');
+      alert('Avatar upload failed.')
+	  }
+	}
+  catch (error) {
 	  console.error('Avatar upload failed:', error);
 	}
 }
