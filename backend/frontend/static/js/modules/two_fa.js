@@ -2,24 +2,72 @@ import { makeApiRequestPost, makeApiRequest} from "./utils.js";
 
 async function enable2fa() {
 	try {
-		const response = await makeApiRequestPost('enable_2fa');
-		if (response.ok) {
-			const data = await response.json();
-
-			if (data.success) {
-				// Generate the OTP URL
+		// Check if the user already has a TOTP token
+		const totpEnabledResponse = await makeApiRequest('get_2fa_status');
+		if (totpEnabledResponse.ok) {
+			const totpEnabledData = await totpEnabledResponse.json();
+			if (totpEnabledData.two_factor_enabled) {
+				console.log('2FA already enabled for the user.');
+				return; // Exit function if 2FA is already enabled
+			}
+		}
+		else {
+			console.error('Error checking 2FA status:', totpEnabledResponse.status);
+			return;
+		}
+		// If 2FA is not enabled, proceed to enable it
+		const body = {
+		}
+		const enable2faResponse = await makeApiRequestPost('enable_2fa', body);
+		if (enable2faResponse.ok) {
+			const data = await enable2faResponse.json();
+			if (data.two_factor_confirmation) {
+				// Prompt the user to enter the TOTP token
 				const qrcode = data.qrcode;
 				displayQRCode(qrcode);
+				await new Promise(resolve => setTimeout(resolve, 500));
+				const token = prompt('Please enter the TOTP token to activate 2FA:');
+				if (token) {
+					await enable2faWithTOTP(token);
+				}
+				else {
+					console.error('Error enabling 2FA: TOTP token not provided');
+				}
 			}
 			else {
 				console.error('Error enabling 2FA:', data.error);
 			}
 		}
 		else {
-			console.error('Error enabling 2FA:', response.status);
+			console.error('Error enabling 2FA:', enable2faResponse.status);
 		}
 	}
 	catch (error) {
+		console.error('Error enabling 2FA:', error);
+	}
+}
+
+async function enable2faWithTOTP(token) {
+	try {
+		const response = await makeApiRequestPost('enable_2fa', { token });
+		if (response.ok) {
+			const data = await response.json();
+			if (data.success) {
+				// 2FA enabled successfully
+				console.log('2FA enabled successfully');
+			}
+			else {
+				console.error('Error enabling 2FA:', data.error);
+			}
+		}
+		else {
+			await disable2fa();
+			await check2faStatus();
+			console.error('Invalid TOTP token', response.status);
+		}
+	}
+	catch (error)
+	{
 		console.error('Error enabling 2FA:', error);
 	}
 }
@@ -57,28 +105,28 @@ async function disable2fa() {
 }
 
 async function check2faStatus() {
-    try {
+	try {
 		const switchbox2FA = document.getElementById('switchbox2FA');
 		const response = await makeApiRequest('get_2fa_status');
-        if (response.ok) {
-            const data = await response.json();
-            if (data.two_factor_enabled) {
-                switchbox2FA.checked = true
+		if (response.ok) {
+			const data = await response.json();
+			if (data.two_factor_enabled) {
+				switchbox2FA.checked = true
 				const qrcode = data.qrcode;
 				displayQRCode(qrcode);
-            }
+			}
 			else {
-                switchbox2FA.checked = false
-            }
+				switchbox2FA.checked = false
+			}
 			return switchbox2FA;
-        }
+		}
 		else {
-            console.error('Error checking 2FA status:', response.status);
-        }
-    }
+			console.error('Error checking 2FA status:', response.status);
+		}
+	}
 	catch (error) {
-        console.error('Error checking 2FA status:', error);
-    }
+		console.error('Error checking 2FA status:', error);
+	}
 }
 
 export { enable2fa, disable2fa, check2faStatus }
