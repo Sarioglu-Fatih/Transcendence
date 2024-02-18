@@ -33,10 +33,10 @@ def create_user(request):
 		data = registerPostParameters(**json.loads(request.body))
 	except Exception  as e:
 		return HttpResponse(status=400, reason="Bad request: " + str(e))
-	regexUsername = r'^[a-zA-Z0-9_-]+$'																# register page parsing
+	regexUsername = r'^[a-zA-Z0-9_-]{1,16}$'															# register page parsing
 	regexEmail = r'\A\S+@\S+\.\S+\Z'
 	secRegexEmail = r'^[a-zA-Z0-9@.-]+$'
-	regexPwd = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,}$'
+	regexPwd = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,16}$'
 	print("===========================")
 	if not re.match(regexUsername, data.username):
 		return JsonResponse({'error': 'Username not valide'}, status=419)
