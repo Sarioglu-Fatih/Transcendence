@@ -1,4 +1,4 @@
-import { makeApiRequestPost } from './utils.js'
+import { makeApiRequest, makeApiRequestPost } from './utils.js'
 import { displayLoginPage, displayHomePage } from './display_page_function.js'
 
 async function fetchCode(code, state) {
@@ -9,16 +9,19 @@ async function fetchCode(code, state) {
     try {
         const response = await makeApiRequestPost('auth42', body);
         if (response.ok) {
+            history.pushState({}, '', '/home');
+            makeApiRequest('refresh_user_status');
             displayHomePage();
+            return true;
         }
         else {
             console.error('Error login user:', response.status);
-            displayLoginPage();
+            return false;
         }
     }
     catch (error) {
         console.error('Error login user:', error);
-        displayLoginPage();
+        return false;
     }
 }
 
@@ -27,14 +30,17 @@ async function checkAuth42() {
     var urlSearchParams = new URLSearchParams(urlSearch);
     var urlPathname = window.location.pathname;
     var totalPath = urlPathname + urlSearch;
-
     // Vérifie si l'URL contient "/home"
     if (!totalPath.match(/^\/home/)) {
-        return;
+        return true;
     }
     // Vérifie si la partie parser.search ne commence pas par "error"
     if (!urlSearch.startsWith("?code")) {
-        return;
+        if (urlSearch.startsWith("?error"))
+            return false;
+        else{
+            return true;
+        }
     }
     var codeValue = urlSearchParams.get("code");
     var stateValue = urlSearchParams.get("state");
@@ -42,11 +48,19 @@ async function checkAuth42() {
     if (state === null || (urlSearchParams.size !== 2 && stateValue !== state))
     {
         console.error("State value not corresponding.");
-        displayLoginPage();
-        return;
+        return false;
     }
-    await fetchCode(codeValue, stateValue);
+    var ret = await fetchCode(codeValue, stateValue);
     localStorage.removeItem('state');
+    return ret;
 }
 
-export { checkAuth42 };
+async function auth42(){
+    if ((await checkAuth42()) === false) {
+        history.pushState({}, '', '/login');
+        displayLoginPage();
+        alert('42 authentification failed !');
+    }
+}
+
+export { auth42 };
