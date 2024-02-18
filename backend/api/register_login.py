@@ -143,6 +143,8 @@ def updateUser(request):
 	if (data.password):
 		if  not re.match(regexPwd, data.password):
 			return JsonResponse({'error': "Special characters allowed : @$!%#?&"}, status=453)
+		if (check_password(data.password, user.password)):
+			return JsonResponse({'error': "Can't use the same password"}, status=457)
 		user.password = make_password(data.password)
 	user.save()
 	print(user.password, user.pseudo)
@@ -175,16 +177,6 @@ def auth42(request):
 		print("Token response content : ")
 		print(response.content)
 		response_data = json.loads(response.content.decode('utf-8'))
-		# print("JSON response_data : ")
-		# {
-		#     'access_token': 'd5sg45g4s54g5sg', 
-		#     'token_type': 'bearer', 
-		#     'expires_in': 354, 
-		#     'refresh_token': '84d4s5g454dg545g4', 
-		#     'scope': 'public', 
-		#     'created_at': 9921, 
-		#     'secret_valid_until': 99845
-		# }
 		access_token = response_data.get('access_token')
 		authorization = "Bearer " + access_token
 		url = "https://api.intra.42.fr/v2/me"
@@ -193,27 +185,6 @@ def auth42(request):
 		}
 		response = requests.get(url, headers=headers)
 		json_response = response.json()
-
-		# print("Réponse en JSON :", json_response)
-		# {
-		#     'id': 12345,
-		#     'email': 'xxx@student.42lyon.fr',
-		#     'login': 'xxx',
-		#     'first_name': 'Xxx',
-		#     'last_name': 'Xxx',
-		#     'usual_full_name': 'Xxx Xxx',
-		#     'usual_first_name': None,
-		#     'url': 'https://api.intra.42.fr/v2/users/xxx',
-		#     'phone': 'hidden',
-		#     'displayname': 'Xxx Xxx',
-		#     'kind': 'student',
-		#     'image': {'link': 'https://cdn.intra.42.fr/users/f1d5f1d5f1gfhdfsh/xxx.jpg',
-		#     'versions': {
-		#     'large': 'https://cdn.intra.42.fr/users/848d4g8d4g8d48gsggrhgfhg/large_xxx.jpg',
-		#     'medium': 'https://cdn.intra.42.fr/users/8d4g84dg84dg84dg84ftyh/medium_xxx.jpg',
-		#     'small': 'https://cdn.intra.42.fr/users/8ds4g845fd46s5g4g5s4g6s/small_xxx.jpg',
-		#     'micro': 'https://cdn.intra.42.fr/users/sd56g4564dsg54ds6g54sd5/micro_xxx.jpg'}}
-		# }
 
 		user_login = json_response.get('login')
 		user_email = json_response.get('email')

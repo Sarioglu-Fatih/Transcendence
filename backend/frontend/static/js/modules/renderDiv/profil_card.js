@@ -49,6 +49,7 @@ async function put_profil_card_html() {
                         </div>
                         <div class="card-footer text-center element" id="save">
                             <button class="btn btn-primary" id="save_button">Save Change</button>
+                            <div id="updateAlert"></div>
                         </div>
                         
                     </div>

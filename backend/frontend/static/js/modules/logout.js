@@ -1,12 +1,12 @@
 import { displayLoginPage } from "./display_page_function.js";
 import { hideDivs, showDivs } from "./utils.js";
 import { makeApiRequest, makeApiRequestPatch, getCookie } from "./utils.js";
-import { closeAllWebSockets } from "./utils.js";
+import { closeAllWebSockets, IP } from "./utils.js";
 
 
 async function logout() {
     try {
-      const response = await  fetch('https://localhost:8000/api/logout/')
+      const response = await  fetch(`https://${IP}:8000/api/logout/`)
       if (response.ok) {
         history.pushState({}, '', '/login');
         closeAllWebSockets();
