@@ -101,7 +101,7 @@ async function makeApiRequestPatch(endpoint, body) {
 
 async function handleTokenExpiration() {
 	const refreshToken = await getCookie('refresh_token');
-	const response = await fetch(`https://localhost:8000/api/token/refresh/`, {
+	const response = await fetch(`https://${IP}:8000/api/token/refresh/`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
