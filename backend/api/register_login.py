@@ -80,6 +80,7 @@ def user_login(request):
 		'token': jwt_token,
 		'refresh_token': refresh_token
 	})
+	print("login cookie")
 	response.set_cookie('refresh_token',refresh_token)
 	response.set_cookie('jwt_token', jwt_token)
 	return response
@@ -93,6 +94,7 @@ def user_logout(request):
 				'status': 'success',
 				'message': 'User logged out',
 			})
+	print("logout cookie")
 	response.set_cookie('refresh_token', '', expires=0)
 	response.set_cookie('jwt_token', '', expires=0)
 	return response
@@ -228,6 +230,7 @@ def user_login42(request, data):
 				'token': jwt_token,
 				'refresh_token': refresh_token
 			})
+		print("42 login cookie")
 		response.set_cookie('refresh_token',refresh_token)
 		response.set_cookie('jwt_token', jwt_token)
 		return response

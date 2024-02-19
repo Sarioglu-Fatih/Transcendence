@@ -13,7 +13,6 @@ async function registerUser() {
 
     const response = await makeApiRequestPost("register/", body)
     if (response.ok) {
-        console.log('User registered successfully', response);
         alert('User registered successfully!');
     }
     else {
@@ -39,11 +38,6 @@ async function updateUser() {
     try {
         const response = await  makeApiRequestPatch('update/', body)
         if (response.ok) {
-            console.log('Update ok', response);
-            alerte.innerHTML = `
-            <div class="alert alert-primary" role="alert">
-                Update of your profil done.
-            </div>`
             alert('Update of your profil done.');
         }
         else {

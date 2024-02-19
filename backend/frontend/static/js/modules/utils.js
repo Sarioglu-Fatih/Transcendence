@@ -1,6 +1,6 @@
 import { logout } from './logout.js'
 
-var IP = '10.12.7.4';
+var IP = '10.12.3.2';
 
 function hideDivs(divIds) {
 divIds.forEach(function (divId) {
@@ -38,6 +38,7 @@ function getCookie(name) {
 
 async function makeApiRequest(endpoint) {
 	try {
+		const jwt_token = getCookie('jwt_token');
 		const response = await fetch(`https://${IP}:8000/api/${endpoint}/`, {
 			method: 'GET',
 			headers: {
@@ -46,9 +47,10 @@ async function makeApiRequest(endpoint) {
 		});
 		if (response.status === 401) {
 			// Token expired, use refresh token to get a new access token
-			await handleTokenExpiration();
+			const response = await handleTokenExpiration();
 			// Retry the original request
-			return makeApiRequest(endpoint);
+			if (response === true)
+				return await makeApiRequest(endpoint);
 		}
 		return response
 	}
@@ -98,9 +100,7 @@ async function makeApiRequestPatch(endpoint, body) {
 }
 
 async function handleTokenExpiration() {
-	console.log("ici")
-	const refreshToken = getCookie('refresh_token');
-	console.log(refreshToken)
+	const refreshToken = await getCookie('refresh_token');
 	const response = await fetch(`https://localhost:8000/api/token/refresh/`, {
 		method: 'POST',
 		headers: {
@@ -108,13 +108,12 @@ async function handleTokenExpiration() {
 		},
 		body: JSON.stringify({ refresh: refreshToken }),
 	});
-	console.log(response)
 	try {
 		if (response.ok) {
 			const data = await response.json();
 			const newAccessToken = data.access;
-			console.log(newAccessToken)
-			document.cookie = `jwt_token=${newAccessToken}`
+			document.cookie = `jwt_token=${newAccessToken}; path=/`
+			return true;
 		}
 		else {
 			// Check if the response contains an error message
@@ -122,11 +121,13 @@ async function handleTokenExpiration() {
 			const errorMessage = errorData.detail || 'Token refresh failed';
 			console.error(`Error refreshing token: ${errorMessage}`);
 			logout(); // Handle refresh token failure
+			return false;
 		}
 	}
 	catch (error) {
 		console.error('Error handling token expiration:', error);
 		logout(); // Handle refresh token failure
+		return false;
 	}
 }
 

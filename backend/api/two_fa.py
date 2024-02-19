@@ -92,6 +92,7 @@ def check_totp(request):
 		'token': jwt_token,
 		'refresh_token': refresh_token
 	})
+	print("check_totp cookie")
 	response.set_cookie('refresh_token',refresh_token)
 	response.set_cookie('jwt_token', jwt_token)
 	return response

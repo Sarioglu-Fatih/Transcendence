@@ -90,7 +90,6 @@ function put_game_launcher_form_html() {
     const logoutBtn = document.getElementById('replay_button');
         logoutBtn.addEventListener('click', () => {
             event.preventDefault();
-            makeApiRequest('refresh_user_status');
             displayHomePage();
         });
 }

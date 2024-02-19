@@ -63,7 +63,7 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 	async def receive(self, text_data):
 		data = json.loads(text_data)      
 		if data.get('type') == 'keyPress':
-			payload = jwt.decode(data.get('jwtToken'), key=settings.SECRET_KEY, algorithms=['HS256'])
+			payload = jwt.decode(data.get('jwtToken'), key=str(settings.SECRET_KEY), algorithms=['HS256'])
 			user_id = payload.get('user_id')
 			player = self.players.get(user_id)
 			if (data.get('mode') == 'local' or data.get('mode') == 'local_tournament'):
@@ -317,8 +317,13 @@ class MultiplayerConsumer(AsyncWebsocketConsumer):
 		
 	@database_sync_to_async
 	def get_user_id(self, data):
-		payload = jwt.decode(data.get('jwtToken'), key=settings.SECRET_KEY, algorithms=['HS256'])
+		print(data)
+		if (not data.get('jwtToken')):
+			return (0)
+		payload = jwt.decode(data.get('jwtToken'), key=str(settings.SECRET_KEY), algorithms=['HS256'])
 		user_id = payload.get('user_id')
+		if (not user_id):
+			return (0)
 		if (not user_id): #check if token contain a user_id
 			return(0)
 		try:

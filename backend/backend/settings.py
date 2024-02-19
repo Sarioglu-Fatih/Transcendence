@@ -22,12 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5ku3tfr%jfod2m-06u^q6^63(v4&2=mg4lle!n(k@)vkb$d$tz'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 TOKEN_EXPIRATION_TIME = 36000
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -175,17 +175,14 @@ CSRF_COOKIE_SECURE = True
 ip_value = os.getenv('IP')
 CSRF_TRUSTED_ORIGINS = [
   f'https://{ip_value}:8000',
-  'https://10.12.4.8:8000'
 ]
 
 CORS_TRUSTED_ORIGINS = [
 	f'https://{ip_value}:8000',
-	'https://10.12.4.8:8000'
 ]
 
 CORS_ALLOWED_ORIGINS = [
 	f'https://{ip_value}:8000',
-	'https://10.12.4.8:8000',
 ]
 
 
@@ -214,5 +211,5 @@ SIMPLE_JWT = {
 	'SLIDING_TOKEN_LIFETIME': timedelta(days=2),
 	'ROTATE_REFRESH_TOKENS': False,
 	'ALGORITHM': 'HS256',
-	'SIGNING_KEY': SECRET_KEY,
+	'SIGNING_KEY': str(SECRET_KEY),
 }

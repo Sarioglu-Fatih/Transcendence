@@ -4,10 +4,6 @@ import { getCookie, makeApiRequest } from './modules/utils.js';
 
 await auth42();
 
-
-makeApiRequest('refresh_user_status');
-
-
 window.onload = function() {
 	var path = window.location.pathname;
 	if (path === "/home")

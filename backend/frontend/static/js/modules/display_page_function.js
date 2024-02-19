@@ -29,6 +29,7 @@ function error404() {
 }
 
 async function displayProfilPage() {
+    await makeApiRequest('refresh_user_status');
     if (!isTopBoxDisplayed){
         put_top_box_form_html();
         isTopBoxDisplayed = true;

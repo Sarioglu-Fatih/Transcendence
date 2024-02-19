@@ -21,7 +21,7 @@ def decode_Payload(request):
     if not jwt_token:
         return
     try:
-        decoded_payload = jwt.decode(jwt_token, key=settings.SECRET_KEY, algorithms=['HS256'])
+        decoded_payload = jwt.decode(jwt_token, key=str(settings.SECRET_KEY), algorithms=['HS256'])
         print("PAYLOAD DECODED : ", decoded_payload)
         return decoded_payload
     except DecodeError:

@@ -33,7 +33,6 @@ async function match_history() {
         const currentPath = window.location.pathname.substring(1);
         const newPath = currentPath.replace(/^profil/, 'history');
         // const Path = newPath.substring(0, newPath.length);
-        console.log(newPath)
         const response = await makeApiRequest(newPath);
         const userData = await response.json();
         // if (!userData)

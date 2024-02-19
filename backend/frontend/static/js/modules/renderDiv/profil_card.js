@@ -150,7 +150,16 @@ async function check_whos_profil() {
             const userToAddName = currentPath.replace(/^profil/, 'isFriend');
             
             const isFriends = await isFriend(userToAddName);
-            if (isFriends){
+            const response = await makeApiRequest('pseudo');
+            if (!response.ok){
+                return;
+            }
+            const userData = await response.json();
+            if (userToAddName.endsWith(userData.pseudo) && userData.pseudo !== ""){
+                hideDivs(["profilRightSide", "addFriend_button", "btn_2fa", "avatar_upload_form", "removeFriend_button"]);
+                showDivs(["profilLeftSide"]);
+            }
+            else if (isFriends){
                 hideDivs(["profilRightSide", "addFriend_button", "btn_2fa", "avatar_upload_form"]);
                 showDivs(["profilLeftSide", "removeFriend_button"]);
             }

@@ -178,7 +178,6 @@ function launchGame(mode, pseudos) {
         // Send a message to the server
         var message;
         if (mode === 'local_tournament'){
-            console.log(pseudos)
             message = {
                 type: 'open',
                 content: 'Hello, server!',

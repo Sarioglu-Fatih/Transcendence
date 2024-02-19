@@ -12,8 +12,7 @@ def decode_Payload(request):
 	jwt_token = request.COOKIES.get('jwt_token')
 	if (not jwt_token):
 		return
-	decoded_payload = jwt.decode(jwt_token, key=settings.SECRET_KEY, algorithms=['HS256'])
-	print("PAYLOAD DECODED : ", decoded_payload)
+	decoded_payload = jwt.decode(jwt_token, key=str(settings.SECRET_KEY), algorithms=['HS256'])
 	return (decoded_payload)
 
 def custom_redirect(request):
@@ -29,5 +28,6 @@ urlpatterns = [
 	path('home', views.renderMainPage),
 	path('login', views.renderMainPage),
 	path('profil/<str:user_profil>', views.renderProfilPage),
+	re_path(r'^profil/.*$', custom_redirect),
 	re_path(r'^(?!api/|home$|login$|profil/).*$', custom_redirect),
 ]
