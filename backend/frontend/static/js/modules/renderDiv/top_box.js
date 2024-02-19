@@ -43,8 +43,7 @@ function put_top_box_form_html() {
         return;
       }
       history.pushState({}, '', `/profil/${data.username}`);
-      await makeApiRequest('refresh_user_status');
-      await displayProfilPage();
+      displayProfilPage();
     });
 
     if (isUserLoggedIn()){
