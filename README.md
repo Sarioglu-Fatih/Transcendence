@@ -1,6 +1,6 @@
 Ubuntu 23.08
 
-Ce projet a pour but de nous initier au monde du web avec la création d'un site web.
+Ce projet a pour but de nous initier au monde du web avec la création d'un site.
 
 Le site en question reproduit le jeu pong avec différente fonctionnalité comme l'enregistrement d'utilisateur manuellement ou avec l'API42, la possibilité de changer ses informations personnelle ainsi que son avatar, de pouvoir jouer contre d'autre joueurs local et distant, de se connecter avec la double authentification, de voir son historique, ceux des autres et de pouvoirs les ajouter en ami, le tout en Single Page Application.
 
