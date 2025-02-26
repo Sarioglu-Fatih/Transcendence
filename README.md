@@ -8,8 +8,6 @@ Etant un travail de groupe nous avons plannifié et coordonnée le projet avec J
 Pour la réalisation du projet nous avons utilisé PostgreSQL, Python, Django, Javascript et Bootstrap.
 
 
-Plus d'info dans subject.
-
 
 
 ![pong7](https://github.com/Sarioglu-Fatih/Transcendence/assets/111273279/086cafc0-1c9e-4ae7-9bfa-592d1cd706a5)
